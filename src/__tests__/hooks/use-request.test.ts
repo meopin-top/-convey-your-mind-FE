@@ -1,10 +1,10 @@
 import {renderHook} from "@testing-library/react-hooks" // react 17 warning 발생
 import useRequest from "@/hooks/use-request"
-import request from "@/api"
+import {get} from "@/api"
 
 jest.mock("../../api", () => ({
   __esModule: true,
-  default: jest.fn(),
+  get: jest.fn(),
 }))
 
 describe("useRequest", () => {
@@ -14,7 +14,7 @@ describe("useRequest", () => {
 
   it("처음에는 초기 state를 반환한다.", () => {
     // given, when
-    const {result} = renderHook(() => useRequest<unknown>("/api/data"))
+    const {result} = renderHook(() => useRequest<unknown>("/data"))
 
     // then
     expect(result.current.error).toBeNull()
@@ -25,10 +25,10 @@ describe("useRequest", () => {
   it("데이터 request에 성공하면 전달받은 데이터와 isLoaded false로 state를 변환한 후 반환한다.", async () => {
     // given
     const mockData = {id: 1, name: "John Doe"}
-    ;(request as jest.Mock).mockResolvedValueOnce({data: mockData})
+    ;(get as jest.Mock).mockResolvedValueOnce({data: mockData})
 
     const {result, waitForNextUpdate} = renderHook(() =>
-      useRequest<typeof mockData>("/api/data")
+      useRequest<typeof mockData>("/data")
     )
 
     expect(result.current.error).toBeNull()
@@ -47,10 +47,10 @@ describe("useRequest", () => {
   it("데이터 request에 실패하면 에러와 isLoaded false로 state를 변환한 후 반환한다.", async () => {
     // given
     const mockError = new Error("API Error")
-    ;(request as jest.Mock).mockRejectedValueOnce(mockError)
+    ;(get as jest.Mock).mockRejectedValueOnce(mockError)
 
     const {result, waitForNextUpdate} = renderHook(() =>
-      useRequest<unknown>("/api/data")
+      useRequest<unknown>("/data")
     )
 
     expect(result.current.error).toBeNull()
