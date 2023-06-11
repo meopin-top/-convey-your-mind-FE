@@ -1,0 +1,46 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      # - main # TODO: 주석 해제
+      - feature/#1 # TODO: 제거
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18.16.0"
+
+      - name: Install dependencies
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install # issue: https://github.com/yarnpkg/berry/discussions/3486
+
+      - name: Run lint
+        run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+  # deploy:
+  #   needs: build
+  #   runs-on: ubuntu-20.04
+
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up SSH
+  #       uses: webfactory/ssh-agent@v0.5.0
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+  #     - name: Deploy to server
+  #       run: |
+  #         ssh user@your-server-ip "cd /path/to/project && git pull && yarn start"
