@@ -1,0 +1,131 @@
+@import "./variables";
+
+@mixin danger {
+  border: 1px solid map-get($COLOR, DANGER);
+}
+
+@mixin fill-danger {
+  color: #fff;
+
+  background-color: map-get($COLOR, DANGER);
+}
+
+@mixin warning {
+  border: 1px solid map-get($COLOR, WARNING);
+}
+
+@mixin fill-warning {
+  color: #fff;
+
+  background-color: map-get($COLOR, WARNING);
+}
+
+@mixin normal {
+  border: 1px solid map-get($COLOR, NORMAL);
+}
+
+@mixin fill-normal {
+  color: #fff;
+
+  background-color: map-get($COLOR, NORMAL);
+}
+
+@mixin info {
+  border: 1px solid map-get($COLOR, INFO);
+}
+
+@mixin fill-info {
+  color: #fff;
+
+  background-color: map-get($COLOR, INFO);
+}
+
+@mixin light-4 {
+  border: 1px solid map-get($COLOR, LIGHT_4);
+}
+
+@mixin fill-light-4 {
+  color: #fff;
+
+  background-color: map-get($COLOR, LIGHT_4);
+}
+
+@mixin light-3 {
+  border: 1px solid map-get($COLOR, LIGHT_3);
+}
+
+@mixin fill-light-3 {
+  color: #fff;
+
+  background-color: map-get($COLOR, LIGHT_3);
+}
+
+@mixin light-2 {
+  border: 1px solid map-get($COLOR, LIGHT_2);
+}
+
+@mixin fill-light-2 {
+  color: #fff;
+
+  background-color: map-get($COLOR, LIGHT_2);
+}
+
+@mixin light-1 {
+  border: 1px solid map-get($COLOR, LIGHT_1);
+}
+
+@mixin fill-light-1 {
+  color: #fff;
+
+  background-color: map-get($COLOR, LIGHT_1);
+}
+
+@mixin default {
+  border: 1px solid map-get($COLOR, DEFAULT);
+}
+
+@mixin fill-default {
+  color: #fff;
+
+  background-color: map-get($COLOR, DEFAULT);
+}
+
+@mixin dark-1 {
+  border: 1px solid map-get($COLOR, DARK_1);
+}
+
+@mixin fill-dark-1 {
+  color: #fff;
+
+  background-color: map-get($COLOR, DARK_1);
+}
+
+@mixin dark-2 {
+  border: 1px solid map-get($COLOR, DARK_2);
+}
+
+@mixin fill-dark-2 {
+  color: #fff;
+
+  background-color: map-get($COLOR, DARK_2);
+}
+
+@mixin dark-3 {
+  border: 1px solid map-get($COLOR, DARK_3);
+}
+
+@mixin fill-dark-3 {
+  color: #fff;
+
+  background-color: map-get($COLOR, DARK_3);
+}
+
+@mixin dark-4 {
+  border: 1px solid map-get($COLOR, DARK_4);
+}
+
+@mixin fill-dark-4 {
+  color: #fff;
+
+  background-color: map-get($COLOR, DARK_4);
+}

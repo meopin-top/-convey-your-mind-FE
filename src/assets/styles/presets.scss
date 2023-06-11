@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  color: #000;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: unset;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+svg {
+  height: auto;
+}
+
+button {
+  background-color: transparent;
+
+  border: none;
+
+  outline: none;
+}
+
+textarea {
+  border: none;
+
+  outline: none;
+  // resize: none; // TODO: 이거 키면 resize가 안됨.
+}
+
+#portal > * {
+  position: fixed;
+  inset: 0;
+}

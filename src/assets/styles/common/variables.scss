@@ -1,0 +1,25 @@
+$COLOR: (
+  // system
+  DANGER: #d32f2f,
+  WARNING: #f9a825,
+  NORMAL: #4caf50,
+  INFO: #0091ea,
+
+  // brand
+  LIGHT_4: #c5cae9,
+  LIGHT_3: #9fa8da,
+  LIGHT_2: #7986cb,
+  LIGHT_1: #5c6bc0,
+  DEFAULT: #3f51b5,
+  DARK_1: #3949ab,
+  DARK_2: #303f9f,
+  DARK_3: #283593,
+  DARK_4: #1a237e
+);
+
+$STEP: 4;
+$SIZE: (
+  1: $STEP * 1,
+  2: $STEP * 2,
+  4: $STEP * 4,
+);

@@ -1,0 +1,54 @@
+$PAD: 4;
+$HEIGHT: 4;
+
+@mixin box-xxxs {
+  height: #{$HEIGHT * 6}px;
+}
+
+@mixin box-xxs {
+  padding: 0 #{$PAD * 1}px;
+
+  height: #{$HEIGHT * 7}px;
+}
+
+@mixin box-xs {
+  padding: 0 #{$PAD * 2}px;
+
+  height: #{$HEIGHT * 8}px;
+}
+
+@mixin box-sm {
+  padding: 0 #{$PAD * 3}px;
+
+  height: #{$HEIGHT * 9}px;
+}
+
+@mixin box-md {
+  padding: 0 #{$PAD * 4}px;
+
+  height: #{$HEIGHT * 10}px;
+}
+
+@mixin box-lg {
+  padding: 0 #{$PAD * 5}px;
+
+  height: #{$HEIGHT * 11}px;
+}
+
+@mixin box-xl {
+  padding: 0 #{$PAD * 6}px;
+
+  height: #{$HEIGHT * 12}px;
+}
+
+@mixin box-xxl {
+  padding: 0 #{$PAD * 7}px;
+
+  height: #{$HEIGHT * 13}px;
+}
+
+@mixin box-xxxl {
+  padding: 0 #{$PAD * 8}px;
+
+  height: #{$HEIGHT * 14}px;
+}
