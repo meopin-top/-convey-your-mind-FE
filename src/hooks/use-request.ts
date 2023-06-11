@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react"
-import request from "../api"
+import {get} from "../api"
 
 export default function useRequest<T>(path: string) {
   const [error, setError] = useState<unknown | null>(null)
@@ -9,7 +9,7 @@ export default function useRequest<T>(path: string) {
   useEffect(() => {
     async function loadData() {
       try {
-        const {data} = await request(path)
+        const {data} = await get(path)
         setData(data)
       } catch (error) {
         setError(error)
