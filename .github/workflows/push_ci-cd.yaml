@@ -32,28 +32,21 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Connect SSH
+      - name: Start server
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.WEB_SERVER_HOST }}
           username: ${{ secrets.WEB_SERVER_USERNAME }}
           password: ${{ secrets.WEB_SERVER_PASSWORD }}
           port: ${{ secrets.WEB_SERVER_SSH_PORT }}
-          script: pwd && ls -al && cd convey-your-mind-FE
+          script: |
+            fuser -n tcp -k 3000
+            echo "======Server shutdown======"
 
-      - name: Shutdown server
-        run: fuser -n tcp -k 3000
+            cd convey-your-mind-FE
+            git pull origin main
+            YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+            yarn build
+            echo "======Server restart======"
 
-      # - name: Restart server
-      #   run: |
-      #     git pull origin main
-      #     yarn
-      #     yarn build
-      #     yarn start &
-      - name: Restart server
-        run: |
-          git clone https://github.com/meopin-top/convey-your-mind-FE
-          cd convey-your-mind-FE
-          yarn
-          yarn build
-          yarn start &
+            yarn start &
