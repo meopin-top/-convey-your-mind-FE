@@ -1,0 +1,59 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main # merge-request시에도 push event 발생: https://stackoverflow.com/questions/60710209/trigger-github-actions-only-when-pr-is-merged
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3 # {소유자}/{저장소명}@{참조자, 버전}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.16.0"
+
+      - name: Install dependencies
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install # issue: https://github.com/yarnpkg/berry/discussions/3486
+
+      - name: Run lint
+        run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Connect SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.WEB_SERVER_HOST }}
+          username: ${{ secrets.WEB_SERVER_USERNAME }}
+          password: ${{ secrets.WEB_SERVER_PASSWORD }}
+          port: ${{ secrets.WEB_SERVER_SSH_PORT }}
+          script: pwd && ls -al && cd convey-your-mind-FE
+
+      - name: Shutdown server
+        run: fuser -n tcp -k 3000
+
+      # - name: Restart server
+      #   run: |
+      #     git pull origin main
+      #     yarn
+      #     yarn build
+      #     yarn start &
+      - name: Restart server
+        run: |
+          git clone https://github.com/meopin-top/convey-your-mind-FE
+          cd convey-your-mind-FE
+          yarn
+          yarn build
+          yarn start &
