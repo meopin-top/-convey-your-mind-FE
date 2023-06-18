@@ -10,7 +10,7 @@ export default class Storage {
   }
 
   get(key: string) {
-    return localStorage.getItem(key) || "저장된 데이터가 없습니다"
+    return localStorage.getItem(key)
   }
 
   set(key: string, value: string) {
