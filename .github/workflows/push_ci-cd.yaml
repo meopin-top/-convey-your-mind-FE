@@ -7,7 +7,6 @@ on:
 
 env:
   APP_VERSION: "0.1.0"
-  PREVIOUS_APP_VERSION: "0.1.0"
   CONTAINER_NAME: next-server
 
 jobs:
