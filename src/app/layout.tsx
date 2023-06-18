@@ -1,4 +1,4 @@
-import "@/assets/styles/app.scss"
+import "@/assets/styles/index.scss"
 
 export const metadata = {
   title: "마음을 전해요",
