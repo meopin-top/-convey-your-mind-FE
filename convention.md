@@ -65,6 +65,9 @@ export default function Button({disabled, children, onClick}: TProps) {
 3. 스타일 코드에서 스코프(`{}`) 사이에는 반드시 하나의 개행을 가진다.
 4. 스타일 코드는 다음과 같은 순서대로 선언하고, 그룹화한다.
 
+- 가상선택자 `::after`, `::before`에 대한 `content`
+- 변수 선언
+- mixin
 - `display`와 `display` 설정으로 필요한 스타일 관련
 - `margin`, `padding` 관련
 - `position`과 `position` 설정으로 필요한 스타일 관련
