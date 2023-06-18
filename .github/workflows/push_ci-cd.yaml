@@ -5,8 +5,13 @@ on:
     branches:
       - main # merge-request시에도 push event 발생: https://stackoverflow.com/questions/60710209/trigger-github-actions-only-when-pr-is-merged
 
+env:
+  APP_VERSION: "0.1.0"
+  PREVIOUS_APP_VERSION: "0.1.0"
+  CONTAINER_NAME: next-server
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-20.04
 
     steps:
@@ -18,21 +23,29 @@ jobs:
         with:
           node-version: "18.16.0"
 
-      - name: Install dependencies
-        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install # issue: https://github.com/yarnpkg/berry/discussions/3486
+      - name: Set up envs
+        run: |
+          touch .env
+          echo NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }} >> .env
 
-      - name: Run lint
-        run: yarn lint
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Build
-        run: yarn build
+      - name: Login to docker hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-20.04
+      - name: Docker build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_REPOSITORY }}:${{ env.APP_VERSION }}
 
-    steps:
-      - name: Start server
+      - name: Download image from docker hub and restart container
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.WEB_SERVER_HOST }}
@@ -40,13 +53,14 @@ jobs:
           password: ${{ secrets.WEB_SERVER_PASSWORD }}
           port: ${{ secrets.WEB_SERVER_SSH_PORT }}
           script: |
-            fuser -n tcp -k 3000
-            echo "======Server shutdown======"
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            docker pull ${{ secrets.DOCKER_REPOSITORY }}:${{ env.APP_VERSION }}
+            echo "downloaded docker image"
 
-            cd convey-your-mind-FE
-            git pull origin main
-            YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
-            yarn build
-            echo "======Server restart======"
+            docker stop ${{ env.CONTAINER_NAME }}
+            docker rm ${{ env.CONTAINER_NAME }}
 
-            yarn start &
+            docker run -d -p 3000:3000 --name ${{ env.CONTAINER_NAME }} ${{ secrets.DOCKER_REPOSITORY }}:${{ env.APP_VERSION }}
+            echo "started container"
+
+            docker image prune -f
