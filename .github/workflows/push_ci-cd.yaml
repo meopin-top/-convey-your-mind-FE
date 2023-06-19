@@ -6,6 +6,7 @@ on:
       - main # merge-request시에도 push event 발생: https://stackoverflow.com/questions/60710209/trigger-github-actions-only-when-pr-is-merged
 
 env:
+  PREVIOUS_APP_VERSION: "0.0.0"
   APP_VERSION: "0.1.0"
   CONTAINER_NAME: next-server
 
@@ -62,4 +63,9 @@ jobs:
             docker run -d -p 3000:3000 --name ${{ env.CONTAINER_NAME }} ${{ secrets.DOCKER_REPOSITORY }}:${{ env.APP_VERSION }}
             echo "started container"
 
+            if [[ $(docker images -q ${{ secrets.DOCKER_REPOSITORY }}:${{ env.PREVIOUS_APP_VERSION }}) ]]; then
+              docker rmi ${{ secrets.DOCKER_REPOSITORY }}:${{ env.PREVIOUS_APP_VERSION }} --no-prune
+              echo "Removed previous docker image version: ${{ env.PREVIOUS_APP_VERSION }}"
+            fi
             docker image prune -f
+            echo "cleaned disk"
