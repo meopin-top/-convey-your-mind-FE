@@ -16,4 +16,14 @@ export default class Storage {
   set(key: string, value: string) {
     localStorage.setItem(key, value)
   }
+
+  remove(key: string): boolean {
+    if (localStorage.getItem(key)) {
+      localStorage.removeItem(key)
+
+      return true
+    }
+
+    return false
+  }
 }
