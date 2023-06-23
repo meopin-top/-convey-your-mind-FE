@@ -1,6 +1,6 @@
 import {useState, type ChangeEvent} from "react"
 
-type TInputChangeEvent = ChangeEvent<HTMLInputElement>
+export type TInputChangeEvent = ChangeEvent<HTMLInputElement>
 
 export default function useInput(
   defaultValue: string = "",
