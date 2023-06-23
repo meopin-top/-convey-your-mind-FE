@@ -4,7 +4,7 @@ import {home} from "@/assets/images" // TODO: 슬로건 사진으로 교체
 
 const Home = () => {
   return (
-    <div className="home">
+    <div className="home root-wrapper">
       <header className="header">
         <Image src={home} alt="슬로건" loading="eager" height={60} />
         <section className="subtitle">
