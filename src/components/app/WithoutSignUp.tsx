@@ -1,13 +1,9 @@
 "use client"
 
-import {useState, type ChangeEvent} from "react"
+import useInput from "@/hooks/use-input"
 
 const WithoutSignUp = () => {
-  const [sharedCode, setSharedCode] = useState("")
-
-  function handleSharedCode(event: ChangeEvent<HTMLInputElement>) {
-    setSharedCode(event.target.value)
-  }
+  const [sharedCode, handleSharedCode] = useInput()
 
   // TODO: 버튼 추가될 듯
 

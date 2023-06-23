@@ -1,28 +1,21 @@
 "use client"
 
-import {useState, type ChangeEvent, type KeyboardEvent} from "react"
+import {type KeyboardEvent} from "react"
 import {post} from "@/api"
 import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
 import {NICK_NAME_STORAGE_KEY} from "@/constants/authentication"
+import useInput from "@/hooks/use-input"
 
 const WithSignUp = () => {
-  const [userId, setUserId] = useState("")
-  const [password, setPassword] = useState("")
+  const [userId, handleUserId] = useInput()
+  const [password, handlePassword] = useInput()
 
   function handleSignInUsingKeyboard(event: KeyboardEvent<HTMLInputElement>) {
     const isEnterKeyDowned = event.key === "Enter"
     if (isEnterKeyDowned) {
       signIn()
     }
-  }
-
-  function handleUserId(event: ChangeEvent<HTMLInputElement>) {
-    setUserId(event.target.value)
-  }
-
-  function handlePassword(event: ChangeEvent<HTMLInputElement>) {
-    setPassword(event.target.value)
   }
 
   async function signIn() {
