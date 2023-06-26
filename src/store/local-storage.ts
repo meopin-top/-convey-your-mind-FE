@@ -1,3 +1,5 @@
+import type {TLocalStorageKey} from "@/@types/storage"
+
 export default class Storage {
   static #instance: Storage
 
@@ -9,15 +11,15 @@ export default class Storage {
     Storage.#instance = this
   }
 
-  get(key: string) {
+  get(key: TLocalStorageKey) {
     return localStorage.getItem(key)
   }
 
-  set(key: string, value: string) {
+  set(key: TLocalStorageKey, value: string) {
     localStorage.setItem(key, value)
   }
 
-  remove(key: string): boolean {
+  remove(key: TLocalStorageKey): boolean {
     if (localStorage.getItem(key)) {
       localStorage.removeItem(key)
 

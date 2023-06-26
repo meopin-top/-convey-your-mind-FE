@@ -4,7 +4,6 @@ import {type KeyboardEvent} from "react"
 import {post} from "@/api"
 import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
-import {NICK_NAME_STORAGE_KEY} from "@/constants/authentication"
 import useInput from "@/hooks/use-input"
 
 const WithSignUp = () => {
@@ -26,7 +25,7 @@ const WithSignUp = () => {
     })
 
     if (code === SIGN_IN.SUCCESS) {
-      new Storage().set(NICK_NAME_STORAGE_KEY, data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
+      new Storage().set("accessToken", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
     }
 
     alert(message)

@@ -3,7 +3,6 @@ import {post} from "@/api"
 import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
 import WithSignUp from "@/components/app/WithSignUp"
-import {NICK_NAME_STORAGE_KEY} from "@/constants/authentication"
 
 jest.mock("../../../api", () => ({
   post: jest.fn(),
@@ -116,10 +115,7 @@ describe("WithSignUp", () => {
     // then
     await waitFor(() => {
       expect(storageSetMock).toHaveBeenCalledTimes(1)
-      expect(storageSetMock).toHaveBeenCalledWith(
-        NICK_NAME_STORAGE_KEY,
-        nickName
-      )
+      expect(storageSetMock).toHaveBeenCalledWith("accessToken", nickName)
     })
   })
 })
