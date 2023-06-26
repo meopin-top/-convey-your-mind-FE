@@ -10,6 +10,8 @@ export default function useNeedLoggedIn() {
     const isNotLoggedIn = !new Storage().get("accessToken")
 
     if (isNotLoggedIn) {
+      alert("로그인 후에 서비스 이용해주세요.")
+
       router.replace(ROUTE.LOGIN)
     }
   }, [router])
