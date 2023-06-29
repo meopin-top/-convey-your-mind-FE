@@ -1,7 +1,7 @@
 "use client"
 
-import {TColor} from "@/@types/color"
-import {type MouseEvent, type HTMLAttributes, type ReactNode} from "react"
+import type {TColor} from "@/@types/color"
+import type {MouseEvent, HTMLAttributes, ReactNode} from "react"
 
 type TProps = {
   isAlerting: boolean
