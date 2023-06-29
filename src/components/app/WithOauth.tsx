@@ -2,7 +2,7 @@ import Image from "next/image"
 import {kakaoLogo, emailLogo} from "@/assets/images"
 
 const WithOauth = () => {
-  const logoSize = 72
+  const LOGO_SIZE = 72
 
   // TODO: 로고 누르면 이동하기
 
@@ -17,8 +17,8 @@ const WithOauth = () => {
             className="mb-2"
             src={kakaoLogo}
             alt="카카오톡 로고"
-            width={logoSize}
-            height={logoSize}
+            width={LOGO_SIZE}
+            height={LOGO_SIZE}
           />
           <section>카카오 로그인</section>
         </div>
@@ -27,8 +27,8 @@ const WithOauth = () => {
             className="mb-2"
             src={emailLogo}
             alt="이메일 로고"
-            width={logoSize}
-            height={logoSize}
+            width={LOGO_SIZE}
+            height={LOGO_SIZE}
           />
           <section>이메일 로그인</section>
         </div>
