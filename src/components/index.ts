@@ -1,5 +1,6 @@
+import Alert from "./Alert"
 import Loading from "./Loading"
-import PortalLoading from "./PortalLoading"
+import Portal from "./Portal"
 import SecretInput from "./SecretInput"
 
-export {Loading, PortalLoading, SecretInput}
+export {Alert, Loading, Portal, SecretInput}
