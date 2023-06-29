@@ -62,11 +62,16 @@
   }
 }
 
-// text ellipsis
+// text
 .txt-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.highlight {
+  color: #ff0000;
+  text-decoration: underline;
 }
 
 // border
