@@ -92,6 +92,17 @@
   }
 }
 
+// float
+.fl {
+  &-l {
+    float: left;
+  }
+
+  &-r {
+    float: right;
+  }
+}
+
 // box-shadow
 .shadow {
   &-sm {
