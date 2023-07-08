@@ -38,4 +38,33 @@ describe("SecretInput", () => {
     // then
     expect(eyeOpenIcon).toBeInTheDocument()
   })
+
+  it("input의 값이 올바르게 바뀐다.", () => {
+    // given
+    const initialValue = "test1"
+    const nextValue = "test2"
+    const testId = "input"
+
+    render(
+      <SecretInput
+        defaultValue={initialValue}
+        onChange={jest.fn()}
+        data-testid={testId}
+      />
+    )
+
+    const input = screen.getByTestId(testId) as HTMLInputElement
+
+    expect(input.value).toEqual(initialValue)
+
+    // when
+    fireEvent.change(input, {
+      target: {
+        value: nextValue,
+      },
+    })
+
+    // then
+    expect(input.value).toEqual(nextValue)
+  })
 })

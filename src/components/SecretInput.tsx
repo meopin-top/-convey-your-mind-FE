@@ -4,7 +4,10 @@ import {useState, type InputHTMLAttributes, type MutableRefObject} from "react"
 import {EyeClose, EyeOpen} from "@/assets/icons"
 import type {TIconSize} from "@/@types/style"
 
-type TProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size"> & {
+export type TProps = Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "size"
+> & {
   inputRef?: MutableRefObject<HTMLInputElement | null>
   size?: TIconSize
 }
