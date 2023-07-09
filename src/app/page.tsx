@@ -1,5 +1,5 @@
 import Image from "next/image"
-import {WithoutSignUp, WithSignUp, WithOauth} from "@/components/app" // TODO: WithOAuth lazy loading
+import {WithoutSignUp, WithSignUp, WithOauth} from "@/components/app"
 import {home} from "@/assets/images" // TODO: 슬로건 사진으로 교체
 
 const Home = () => {
