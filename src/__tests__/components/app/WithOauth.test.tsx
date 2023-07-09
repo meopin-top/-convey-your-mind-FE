@@ -1,6 +1,20 @@
 import {render, screen} from "@testing-library/react"
 import WithOauth from "@/components/app/WithOauth"
 
+window.Kakao = {
+  init: jest.fn(),
+  Auth: {
+    authorize: jest.fn(),
+  },
+  isInitialized: jest.fn().mockReturnValue(true),
+}
+
+window.naver = {
+  LoginWithNaverId: jest.fn().mockImplementation(() => ({
+    init: jest.fn(),
+  })),
+}
+
 describe("WithOauth", () => {
   it("가이드를 올바르게 렌더링한다.", () => {
     // given, when
@@ -32,4 +46,6 @@ describe("WithOauth", () => {
     expect(emailSection).toBeInTheDocument()
     expect(emailLogo).toBeInTheDocument()
   })
+
+  // TODO: OAuth 토큰 관리 내용이 추가되면 그 이후에 테스트 내용 추가하기
 })
