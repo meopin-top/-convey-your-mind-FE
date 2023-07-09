@@ -22,11 +22,11 @@ describe("WithOauth", () => {
     expect(kakaoLogo).toBeInTheDocument()
   })
 
-  it("이메일 로그인으로 바로가기를 올바르게 렌더링한다.", () => {
+  it("네이버 로그인으로 바로가기를 올바르게 렌더링한다.", () => {
     // given, when
     render(<WithOauth />)
-    const emailSection = screen.getByText("이메일 로그인")
-    const emailLogo = screen.getByAltText("이메일 로고")
+    const emailSection = screen.getByText("네이버 로그인")
+    const emailLogo = screen.getByAltText("네이버 로고")
 
     // then
     expect(emailSection).toBeInTheDocument()
