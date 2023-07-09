@@ -1,5 +1,5 @@
 import Image from "next/image"
-import {kakaoLogo, emailLogo} from "@/assets/images"
+import {kakaoLogo, naverLogo} from "@/assets/images"
 
 const WithOauth = () => {
   const LOGO_SIZE = 72
@@ -25,12 +25,12 @@ const WithOauth = () => {
         <div className="email f-center">
           <Image
             className="mb-2"
-            src={emailLogo}
-            alt="이메일 로고"
+            src={naverLogo}
+            alt="네이버 로고"
             width={LOGO_SIZE}
             height={LOGO_SIZE}
           />
-          <section>이메일 로그인</section>
+          <section>네이버 로그인</section>
         </div>
       </div>
     </>

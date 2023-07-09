@@ -1,0 +1,145 @@
+@import "../common/colors";
+
+.alert {
+  &.blur {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .wrapper {
+    padding: 24px 10px 20px;
+
+    min-width: 300px;
+
+    background-color: #fff;
+
+    border: 1px solid black;
+  }
+
+  .title {
+    text-align: center;
+  }
+
+  .content {
+    font-size: 12px;
+  }
+
+  .button-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+    width: 100%;
+
+    button {
+      height: 100%;
+
+      font-size: 15px;
+
+      cursor: pointer;
+
+      &.danger {
+        @include danger;
+      }
+
+      &.fill-danger {
+        @include fill-danger;
+      }
+
+      &.warning {
+        @include warning;
+      }
+
+      &.fill-warning {
+        @include fill-warning;
+      }
+
+      &.normal {
+        @include normal;
+      }
+
+      &.fill-normal {
+        @include fill-normal;
+      }
+
+      &.info {
+        @include info;
+      }
+
+      &.fill-info {
+        @include fill-info;
+      }
+
+      &.light-4 {
+        @include light-4;
+      }
+
+      &.fill-light-4 {
+        @include fill-light-4;
+      }
+
+      &.light-3 {
+        @include light-3;
+      }
+
+      &.fill-light-3 {
+        @include fill-light-3;
+      }
+
+      &.light-2 {
+        @include light-2;
+      }
+
+      &.fill-light-2 {
+        @include fill-light-2;
+      }
+
+      &.light-1 {
+        @include light-1;
+      }
+
+      &.fill-light-1 {
+        @include fill-light-1;
+      }
+
+      &.default {
+        @include default;
+      }
+
+      &.fill-default {
+        @include fill-default;
+      }
+
+      &.dark-1 {
+        @include fill-dark-1;
+      }
+
+      &.fill-dark-1 {
+        @include dark-1;
+      }
+
+      &.dark-2 {
+        @include dark-2;
+      }
+
+      &.fill-dark-2 {
+        @include fill-dark-2;
+      }
+
+      &.dark-3 {
+        @include dark-3;
+      }
+
+      &.fill-dark-3 {
+        @include fill-dark-3;
+      }
+
+      &.dark-4 {
+        @include dark-4;
+      }
+
+      &.fill-dark-4 {
+        @include fill-dark-4;
+      }
+    }
+  }
+}

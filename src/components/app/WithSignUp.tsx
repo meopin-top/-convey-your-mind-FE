@@ -1,63 +1,50 @@
 "use client"
 
-import {type KeyboardEvent} from "react"
-import {post} from "@/api"
-import Storage from "@/store/local-storage"
-import {SIGN_IN} from "@/constants/response-code"
-import useInput from "@/hooks/use-input"
+import {useState, type MouseEvent} from "react"
+import {SignIn, SignUp} from "./"
+
+type TTab = "signIn" | "signUp"
 
 const WithSignUp = () => {
-  const [userId, handleUserId] = useInput()
-  const [password, handlePassword] = useInput()
+  const [tab, setTab] = useState<TTab>("signIn")
 
-  function handleSignInUsingKeyboard(event: KeyboardEvent<HTMLInputElement>) {
-    const isEnterKeyDowned = event.key === "Enter"
-    if (isEnterKeyDowned) {
-      signIn()
-    }
-  }
-
-  async function signIn() {
-    // TODO: 유효성 검사 필요할 수도
-    const {message, code, data} = await post("/users/sign-in", {
-      userId,
-      password,
-    })
-
-    if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("accessToken", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
-    }
-
-    alert(message)
+  function handleTab(event: MouseEvent) {
+    setTab(event.currentTarget.getAttribute("data-tab") as TTab)
   }
 
   return (
     <>
       <section>or</section>
       <section className="tooltip mt-4 mb-4">
-        <span className="description pt-2 pb-2">
-          롤링페이퍼를 새로 만들고 싶다면?!
-        </span>
+        {tab === "signIn" && (
+          <span className="description pt-2 pb-2 fl-l">
+            롤링페이퍼를 새로 만들고 싶다면?!
+          </span>
+        )}
+        {tab === "signUp" && (
+          <span className="description pt-2 pb-2 fl-r">
+            개인정보 없이 쉽고, 빠르게 가입하기!
+          </span>
+        )}
       </section>
-      <input
-        type="text"
-        className="user-id radius-sm mb-2"
-        placeholder="나만의 ID로 시작하기"
-        value={userId}
-        onKeyDown={handleSignInUsingKeyboard}
-        onChange={handleUserId}
-      />
-      <input
-        type="password"
-        className="password radius-sm mb-2"
-        placeholder="나만의 PW로 시작하기"
-        value={password}
-        onKeyDown={handleSignInUsingKeyboard}
-        onChange={handlePassword}
-      />
-      <button className="login md shadow-sm radius-md" onClick={signIn}>
-        로그인
-      </button>
+      <div className="tab-wrapper mb-2">
+        <button
+          className={`tab ${tab === "signIn" ? "active" : ""}`}
+          data-tab="signIn"
+          onClick={handleTab}
+        >
+          로그인
+        </button>
+        <button
+          className={`tab ${tab === "signUp" ? "active" : ""}`}
+          data-tab="signUp"
+          onClick={handleTab}
+        >
+          회원가입
+        </button>
+      </div>
+      {tab === "signIn" && <SignIn />}
+      {tab === "signUp" && <SignUp />}
     </>
   )
 }

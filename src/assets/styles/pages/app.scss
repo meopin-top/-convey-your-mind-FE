@@ -5,6 +5,7 @@
   .header {
     text-align: center;
 
+    .slogan,
     .subtitle {
       font-family: dohyeon;
     }
@@ -20,29 +21,41 @@
     }
 
     .shared-code {
+      gap: 4px;
+
       margin: 12px 0 24px;
 
       width: 90%;
       height: 56px;
 
       font-size: 16px;
+
+      input {
+        width: 100%;
+        height: 100%;
+      }
+
+      button {
+        @include fill-light-1;
+
+        width: 50px;
+        height: 100%;
+      }
     }
 
     .tooltip {
-      position: relative;
-
       width: calc(90% - $PAGE_ROOT_MARGIN);
 
-      float: left;
-
       .description {
-        $DESCRIPTION_HEIGHT: 20px;
-
         @include fill-default;
+
+        $DESCRIPTION_HEIGHT: 20px;
 
         display: inline-flex;
         align-items: center;
         justify-content: center;
+
+        position: relative;
 
         width: 160px;
         height: $DESCRIPTION_HEIGHT;
@@ -57,7 +70,6 @@
 
           position: absolute;
           top: $DESCRIPTION_HEIGHT;
-          left: 10px;
 
           border: {
             top: $BORDER_WIDTH solid map-get($COLOR, DEFAULT);
@@ -66,6 +78,56 @@
             left: $BORDER_WIDTH solid transparent;
           }
         }
+
+        &.fl-l::after {
+          left: 10px;
+        }
+
+        &.fl-r::after {
+          right: 10px;
+        }
+      }
+    }
+
+    .tab-wrapper {
+      position: relative;
+
+      width: 90%;
+
+      .tab {
+        $BORDER_WIDTH: 2px;
+        $BORDER: $BORDER_WIDTH solid map-get($COLOR, DARK_2);
+
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 50%;
+        height: 40px;
+
+        color: #bebebe;
+        font-size: 12px;
+
+        border-bottom: $BORDER;
+
+        cursor: pointer;
+
+        &.active {
+          color: map-get($COLOR, DARK_2);
+          font-weight: 600;
+
+          border: {
+            top: $BORDER;
+            right: $BORDER;
+            bottom: none;
+            left: $BORDER;
+          }
+        }
+
+        &:nth-child(2) {
+          position: relative;
+          left: -$BORDER_WIDTH;
+        }
       }
     }
 
@@ -73,7 +135,16 @@
     .password {
       width: 90%;
 
-      font-size: 10px;
+      &,
+      input {
+        font-size: 10px;
+      }
+    }
+
+    a.my-account {
+      color: map-get($COLOR, INFO);
+      font-size: 12px;
+      text-decoration: underline;
     }
 
     .login {
