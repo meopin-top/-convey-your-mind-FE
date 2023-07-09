@@ -4,7 +4,7 @@ import type {ReactNode} from "react"
 import {createPortal} from "react-dom"
 import usePortal from "@/hooks/use-portal"
 
-type TProps = {
+export type TProps = {
   render: (...args: any) => ReactNode
 }
 

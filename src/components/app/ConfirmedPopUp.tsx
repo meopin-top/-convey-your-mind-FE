@@ -6,7 +6,7 @@ import useInput from "@/hooks/use-input"
 import {post} from "@/api"
 import {SIGN_UP} from "@/constants/response-code"
 
-type TProps = {
+export type TProps = {
   isAlerting: boolean
   userId: string
   password: string

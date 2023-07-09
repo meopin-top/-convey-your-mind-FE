@@ -6,12 +6,9 @@ import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 
-const Portal = dynamic(
-  () => import("../").then((Components) => Components.Portal),
-  {
-    loading: () => <></>,
-  }
-)
+const Portal = dynamic(() => import("../Portal"), {
+  loading: () => <></>,
+})
 const ConfirmedPopUp = dynamic(
   () => import("./").then((Components) => Components.ConfirmedPopUp),
   {
