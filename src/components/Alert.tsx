@@ -1,6 +1,6 @@
 "use client"
 
-import type {TColor} from "@/@types/color"
+import type {TColor} from "@/@types/style"
 import type {MouseEvent, HTMLAttributes, ReactNode} from "react"
 
 type TProps = {
