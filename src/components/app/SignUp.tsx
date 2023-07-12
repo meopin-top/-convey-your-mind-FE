@@ -5,16 +5,15 @@ import dynamic from "next/dynamic"
 import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
+import {post} from "@/api"
+import {SIGN_UP} from "@/constants/response-code"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
 })
-const ConfirmedPopUp = dynamic(
-  () => import("./").then((Components) => Components.ConfirmedPopUp),
-  {
-    loading: () => <></>,
-  }
-)
+const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
+  loading: () => <></>,
+})
 
 const SignUp = () => {
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
@@ -56,6 +55,21 @@ const SignUp = () => {
     setIsPopUpOpened(!isPopUpOpened)
   }
 
+  async function signUp(confirmedPassword: string) {
+    // TODO: API 요청 보내면 loading 처리(button disabled), use-request 리팩토링
+    const {message, code} = await post("/users/sign-up", {
+      userId: userId.trim(),
+      password: password.trim(),
+      passwordCheck: confirmedPassword.trim(),
+    })
+
+    if (code === SIGN_UP.SUCCESS) {
+      // TODO: 정책 결정 필요
+    } else {
+      alert(message)
+    }
+  }
+
   return (
     <>
       <input
@@ -95,6 +109,7 @@ const SignUp = () => {
             userId={userId}
             password={password}
             onClose={handlePopUp}
+            onSubmit={signUp}
           />
         )}
       />

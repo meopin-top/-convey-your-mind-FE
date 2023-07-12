@@ -3,17 +3,22 @@
 import {useState, type ChangeEvent, type KeyboardEvent} from "react"
 import {Alert, SecretInput} from "../"
 import useInput from "@/hooks/use-input"
-import {post} from "@/api"
-import {SIGN_UP} from "@/constants/response-code"
 
 export type TProps = {
   isAlerting: boolean
   userId: string
   password: string
   onClose: () => void
+  onSubmit: (confirmedPassword: string) => void
 }
 
-const ConfirmedPopUp = ({isAlerting, userId, password, onClose}: TProps) => {
+const ConfirmedPopUp = ({
+  isAlerting,
+  userId,
+  password,
+  onClose,
+  onSubmit,
+}: TProps) => {
   const [email, setEmail] = useState("")
 
   const [confirmedPassword, setConfirmedPassword] = useInput("")
@@ -45,22 +50,7 @@ const ConfirmedPopUp = ({isAlerting, userId, password, onClose}: TProps) => {
       return
     }
 
-    signUp()
-  }
-
-  async function signUp() {
-    // TODO: API 요청 보내면 loading 처리(button disabled), use-request 리팩토링
-    const {message, code} = await post("/users/sign-up", {
-      userId: userId.trim(),
-      password: password.trim(),
-      passwordCheck: confirmedPassword.trim(),
-    })
-
-    if (code === SIGN_UP.SUCCESS) {
-      // TODO: 정책 결정 필요
-    } else {
-      alert(message)
-    }
+    onSubmit(confirmedPassword)
   }
 
   return (

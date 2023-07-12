@@ -27,6 +27,7 @@ function renderConfirmedPopUp({
   userId = testUserId,
   password = testPassword,
   onClose = jest.fn(),
+  onSubmit = jest.fn(),
 }: Partial<TConfirmedPopUpProps>) {
   render(
     <ConfirmedPopUp
@@ -34,6 +35,7 @@ function renderConfirmedPopUp({
       userId={userId}
       password={password}
       onClose={onClose}
+      onSubmit={onSubmit}
     />
   )
 }
