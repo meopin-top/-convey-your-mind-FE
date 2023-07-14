@@ -5,9 +5,23 @@
 }
 
 @font-face {
+  font-family: "dohyeon fallback";
+  src: local("Segoe UI"), local("Helvetica Neue"), local(sans-serif);
+  ascent-override: 80%; // TODO: 육안으로 체감이 안됨. 배포 후에 성능 평가 지표에 반영되는지 확인 필요
+  descent-override: 40%;
+}
+
+@font-face {
   font-family: euljiro;
   src: url("../fonts/bm-euljiro.woff2") format("woff2"),
     url("../fonts/bm-euljiro.woff") format("woff");
+}
+
+@font-face {
+  font-family: "euljiro fallback";
+  src: local("Segoe UI"), local("Helvetica Neue"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 32%;
 }
 
 @font-face {
@@ -17,9 +31,23 @@
 }
 
 @font-face {
+  font-family: "hanna-11-years fallback";
+  src: local("Segoe UI"), local("Roboto"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 20%;
+}
+
+@font-face {
   font-family: hanna-air;
   src: url("../fonts/bm-hanna-air.woff2") format("woff2"),
     url("../fonts/bm-hanna-air.woff") format("woff");
+}
+
+@font-face {
+  font-family: "hanna-air fallback";
+  src: local("Segoe UI"), local("Roboto"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 20%;
 }
 
 @font-face {
@@ -29,13 +57,34 @@
 }
 
 @font-face {
+  font-family: "hanna-pro fallback";
+  src: local("Segoe UI"), local("Roboto"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 20%;
+}
+
+@font-face {
   font-family: jua;
   src: url("../fonts/bm-jua.woff2") format("woff2"),
     url("../fonts/bm-jua.woff") format("woff");
 }
 
 @font-face {
+  font-family: "jua fallback";
+  src: local("Segoe UI"), local("Roboto"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 20%;
+}
+
+@font-face {
   font-family: yeonsung;
   src: url("../fonts/bm-yeonsung.woff2") format("woff2"),
     url("../fonts/bm-yeonsung.woff") format("woff");
+}
+
+@font-face {
+  font-family: "yeonsung fallback";
+  src: local("Segoe UI"), local("Roboto"), local(sans-serif);
+  ascent-override: 80%;
+  descent-override: 40%;
 }
