@@ -7,7 +7,7 @@ export default function useNeedLoggedIn() {
   const router = useRouter()
 
   useLayoutEffect(() => {
-    const isNotLoggedIn = !new Storage().get("accessToken")
+    const isNotLoggedIn = !new Storage().get("nickName")
 
     if (isNotLoggedIn) {
       alert("로그인 후에 서비스 이용해주세요.")
@@ -16,3 +16,5 @@ export default function useNeedLoggedIn() {
     }
   }, [router])
 }
+
+// export function

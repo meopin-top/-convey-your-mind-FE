@@ -2,7 +2,7 @@ import {renderHook} from "@testing-library/react-hooks"
 import {useRouter} from "next/navigation"
 import ROUTE from "@/constants/route"
 import Storage from "@/store/local-storage"
-import useNeedLoggedIn from "@/hooks/use-need-logged-in"
+import useNeedLoggedIn from "@/hooks/use-logged-in"
 import type {TLocalStorageKey} from "@/@types/storage"
 
 jest.mock("next/navigation", () => ({
