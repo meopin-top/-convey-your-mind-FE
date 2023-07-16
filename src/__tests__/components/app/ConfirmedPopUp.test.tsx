@@ -3,17 +3,12 @@ import ConfirmedPopUp, {
   type TProps as TConfirmedPopUpProps,
 } from "@/components/app/ConfirmedPopUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
-import {post} from "@/api"
 import {
   validUserId as testUserId,
   validPassword as testPassword,
   invalidEmails,
+  validEmails,
 } from "@/__mocks__/fixtures/input"
-
-jest.mock("../../../api", () => ({
-  __esModule: true,
-  post: jest.fn(),
-}))
 
 jest.mock("../../../components/SecretInput", () => ({
   __esModule: true,
@@ -99,20 +94,17 @@ describe("ConfirmedPopUp", () => {
     expect(signUpButton).toBeInTheDocument()
   })
 
-  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 API를 호출하지 않고, alert를 호출한다", () => {
+  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 onSubmit를 호출하지 않고, alert를 호출한다", () => {
     // given
-    renderConfirmedPopUp({})
+    const onSubmit = jest.fn()
+
+    renderConfirmedPopUp({onSubmit})
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
     )[0] as HTMLInputElement
     const signUpButton = screen.getByRole("button", {
       name: "가입하기",
-    })
-
-    ;(post as jest.Mock).mockResolvedValueOnce({
-      message: "",
-      code: 0,
     })
 
     // when
@@ -122,17 +114,15 @@ describe("ConfirmedPopUp", () => {
     fireEvent.click(signUpButton)
 
     // then
-    expect(post).not.toBeCalled()
+    expect(onSubmit).not.toBeCalled()
     expect(windowAlertMock).toBeCalled()
   })
 
-  it("이메일 형식이 다르면 API를 호출하지 않고, alert를 호출한다.", () => {
+  it("이메일 형식이 다르면 onSubmit를 호출하지 않고, alert를 호출한다.", () => {
     // given
-    renderConfirmedPopUp({})
-    ;(post as jest.Mock).mockResolvedValueOnce({
-      message: "",
-      code: 0,
-    })
+    const onSubmit = jest.fn()
+
+    renderConfirmedPopUp({onSubmit})
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
@@ -154,7 +144,38 @@ describe("ConfirmedPopUp", () => {
       fireEvent.click(signUpButton)
 
       // then
-      expect(post).not.toBeCalled()
+      expect(onSubmit).not.toBeCalled()
+      expect(windowAlertMock).toBeCalled()
+    })
+  })
+
+  it("기존에 입력한 비밀번호와 확인용 비밀번호가 같고 이메일 형식이 일치하면, onSubmit을 호출한다.", () => {
+    // given
+    const onSubmit = jest.fn()
+
+    renderConfirmedPopUp({onSubmit})
+
+    const confirmedPasswordInput = screen.getAllByDisplayValue(
+      ""
+    )[0] as HTMLInputElement
+    const emailInput = screen.getAllByDisplayValue("")[1] as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(confirmedPasswordInput, {
+      target: {value: testPassword},
+    })
+
+    validEmails.forEach((email) => {
+      fireEvent.change(emailInput, {
+        target: {value: email},
+      })
+      fireEvent.click(signUpButton)
+
+      // then
+      expect(onSubmit).toBeCalled()
       expect(windowAlertMock).toBeCalled()
     })
   })
@@ -175,6 +196,4 @@ describe("ConfirmedPopUp", () => {
     // then
     expect(onClose).toBeCalled()
   })
-
-  // TODO: validEmails 기획 나온 뒤에 추가
 })
