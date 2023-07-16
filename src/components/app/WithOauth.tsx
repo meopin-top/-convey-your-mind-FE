@@ -22,6 +22,8 @@ const WithOauth = () => {
       window.Kakao.Auth.authorize({
         redirectUri: `${process.env.NEXT_PUBLIC_HOST}/${ROUTE.OAUTH_MIDDLEWARE}`,
       })
+    } else {
+      alert("카카오 로그인이 준비되지 않았습니다. 조금 이따 다시 클릭해주세요.")
     }
   }
 
