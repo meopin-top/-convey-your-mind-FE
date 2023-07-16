@@ -1,6 +1,5 @@
 "use client"
 
-import {useEffect} from "react"
 import {useRouter} from "next/navigation"
 import Image from "next/image"
 import {kakaoLogo, naverLogo} from "@/assets/images"
@@ -11,20 +10,10 @@ const WithOauth = () => {
 
   const LOGO_SIZE = 72
 
-  useEffect(() => {
-    if (!window.Kakao.isInitialized()) {
-      window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY)
-    }
-  }, [])
-
   function loginWithKakao() {
-    if (window.Kakao.isInitialized()) {
-      window.Kakao.Auth.authorize({
-        redirectUri: `${process.env.NEXT_PUBLIC_HOST}/${ROUTE.OAUTH_MIDDLEWARE}`,
-      })
-    } else {
-      alert("카카오 로그인이 준비되지 않았습니다. 조금 이따 다시 클릭해주세요.")
-    }
+    router.push(
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}/${ROUTE.OAUTH_MIDDLEWARE}`
+    )
   }
 
   function loginWithNaver() {
@@ -40,24 +29,28 @@ const WithOauth = () => {
       </section>
       <div className="oauth-redirection">
         <button className="kakao f-center" onClick={loginWithKakao}>
-          <Image
-            className="mb-2"
-            src={kakaoLogo}
-            alt="카카오 로고"
-            width={LOGO_SIZE}
-            height={LOGO_SIZE}
-          />
-          <section>카카오 로그인</section>
+          <a href="#">
+            <Image
+              className="mb-2"
+              src={kakaoLogo}
+              alt="카카오 로고"
+              width={LOGO_SIZE}
+              height={LOGO_SIZE}
+            />
+            <section>카카오 로그인</section>
+          </a>
         </button>
         <button className="naver f-center" onClick={loginWithNaver}>
-          <Image
-            className="mb-2"
-            src={naverLogo}
-            alt="네이버 로고"
-            width={LOGO_SIZE}
-            height={LOGO_SIZE}
-          />
-          <section>네이버 로그인</section>
+          <a href="#">
+            <Image
+              className="mb-2"
+              src={naverLogo}
+              alt="네이버 로고"
+              width={LOGO_SIZE}
+              height={LOGO_SIZE}
+            />
+            <section>네이버 로그인</section>
+          </a>
         </button>
       </div>
     </>
