@@ -7,25 +7,7 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }))
 
-window.Kakao = {
-  init: jest.fn(),
-  Auth: {
-    authorize: jest.fn(),
-  },
-  isInitialized: jest.fn(),
-}
-
 describe("WithOauth", () => {
-  let windowAlertMock: jest.SpyInstance
-
-  beforeEach(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
-  })
-
-  afterEach(() => {
-    windowAlertMock.mockRestore()
-  })
-
   it("가이드를 올바르게 렌더링한다.", () => {
     // given, when
     render(<WithOauth />)
@@ -64,28 +46,12 @@ describe("WithOauth", () => {
     expect(naverLoginButton).toBeInTheDocument()
   })
 
-  it("카카오 로그인 버튼 클릭 시 카카오 script가 준비되었다면 카카오 로그인 페이지로 이동한다.", () => {
+  it("카카오 로그인 버튼 클릭 시 카카오 로그인 페이지로 이동한다.", () => {
     // given
-    ;(window.Kakao.isInitialized as jest.Mock).mockReturnValue(true)
-
-    render(<WithOauth />)
-
-    const kakaoLoginButton = screen
-      .getByAltText("카카오 로고")
-      .closest("button") as HTMLButtonElement
-
-    // when
-    fireEvent.click(kakaoLoginButton)
-
-    // then
-    expect(window.Kakao.Auth.authorize).toBeCalledWith({
-      redirectUri: `${process.env.NEXT_PUBLIC_HOST}/${ROUTE.OAUTH_MIDDLEWARE}`,
+    const routerPushMock = jest.fn()
+    ;(useRouter as jest.Mock).mockReturnValue({
+      push: routerPushMock,
     })
-  })
-
-  it("카카오 로그인 버튼 클릭 시 카카오 script가 준비되지 않았다면 alert가 호출된다.", () => {
-    // given
-    ;(window.Kakao.isInitialized as jest.Mock).mockReturnValue(false)
 
     render(<WithOauth />)
 
@@ -97,7 +63,9 @@ describe("WithOauth", () => {
     fireEvent.click(kakaoLoginButton)
 
     // then
-    expect(windowAlertMock).toBeCalled()
+    expect(routerPushMock).toBeCalledWith(
+      `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}/${ROUTE.OAUTH_MIDDLEWARE}`
+    )
   })
 
   it("네이버 로그인 버튼 클릭 시 네이버 로그인 페이지로 이동한다.", () => {
