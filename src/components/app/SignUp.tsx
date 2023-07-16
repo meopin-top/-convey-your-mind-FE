@@ -7,6 +7,7 @@ import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import {post} from "@/api"
 import {SIGN_UP} from "@/constants/response-code"
+import {VALIDATOR} from "@/constants/input"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -31,18 +32,13 @@ const SignUp = () => {
   }
 
   function checkValidation() {
-    const userIdValidation =
-      /^[a-zA-Z0-9!@#$%^&*()-_=+{}\[\]|\\;:'",.<>/?]{6,20}$/
-    const passWordValidation =
-      /^(?=.*[a-zA-Z])(?=.*[0-9!@#$%^&*()-_=+{}\[\]|\\;:'",.<>/?])[a-zA-Z0-9!@#$%^&*()-_=+{}\[\]|\\;:'",.<>/?]{8,20}$/
-
-    if (!userIdValidation.test(userId)) {
+    if (!VALIDATOR.USER_ID.test(userId)) {
       alert("아이디 형식을 확인해주세요.")
 
       return
     }
 
-    if (!passWordValidation.test(password)) {
+    if (!VALIDATOR.PASSWORD.test(password)) {
       alert("비밀번호 형식을 확인해주세요.")
 
       return
