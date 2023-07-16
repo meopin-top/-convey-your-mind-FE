@@ -3,6 +3,7 @@
 import {useState, type ChangeEvent, type KeyboardEvent} from "react"
 import {Alert, SecretInput} from "../"
 import useInput from "@/hooks/use-input"
+import {VALIDATOR} from "@/constants/input"
 
 export type TProps = {
   isAlerting: boolean
@@ -35,16 +36,13 @@ const ConfirmedPopUp = ({
   }
 
   function checkValidation() {
-    const emailValidation =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]*[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$/
-
     if (password !== confirmedPassword) {
       alert("비밀번호가 일치하지 않습니다.")
 
       return
     }
 
-    if (email.length !== 0 && !emailValidation.test(email)) {
+    if (email.length !== 0 && !VALIDATOR.EMAIL.test(email)) {
       alert("이메일 형식을 확인해주세요.")
 
       return
