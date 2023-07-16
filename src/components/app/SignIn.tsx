@@ -29,7 +29,7 @@ const SignIn = () => {
     })
 
     if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("accessToken", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
+      new Storage().set("nickName", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
     }
 
     alert(message)

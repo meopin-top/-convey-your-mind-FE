@@ -131,7 +131,7 @@ describe("SignIn", () => {
     // then
     await waitFor(() => {
       expect(storageSetMock).toHaveBeenCalledTimes(1)
-      expect(storageSetMock).toHaveBeenCalledWith("accessToken", nickName)
+      expect(storageSetMock).toHaveBeenCalledWith("nickName", nickName)
     })
   })
 
