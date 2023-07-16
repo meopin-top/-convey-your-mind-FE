@@ -1,3 +1,5 @@
+@import "./common/variables";
+
 * {
   margin: 0;
   padding: 0;
@@ -44,7 +46,23 @@ textarea {
   // resize: none; // TODO: 이거 키면 resize가 안됨.
 }
 
+input {
+  padding: 10px 15px;
+
+  font-weight: 300;
+
+  border: 1px solid #020202;
+
+  &::placeholder {
+    color: #979797;
+  }
+}
+
 #portal > * {
   position: fixed;
   inset: 0;
+}
+
+.root-wrapper {
+  margin: $PAGE_ROOT_MARGIN;
 }
