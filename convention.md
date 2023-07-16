@@ -109,6 +109,7 @@ export default function Button({disabled, children, onClick}: TProps) {
 
 1. 테스트 코드에는 반드시 "given", "when", "then"을 주석으로 작성한다.
 2. `toBe`, `toEqual`은 의미상 하는 일이 동일하기 때문에 `toEqual`로 통일하여 작성한다.
+3. 컴포넌트 테스트 시 특별한 경우가 아니라면 given은 다음과 같은 순서로 작성하며 개행으로 구분한다. 모킹 => 렌더링 => get / query / find element.
 
 ## 기타
 
