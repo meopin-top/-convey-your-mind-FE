@@ -16,7 +16,9 @@ describe("useInput", () => {
     // given
     const value = "test"
     const setInputValue = jest.fn()
+
     renderTestComponent(setInputValue)
+
     const input = screen.getByTestId("input") as HTMLInputElement
 
     // when
@@ -30,7 +32,9 @@ describe("useInput", () => {
   test("값이 올바르게 업데이트되고, 콜백 함수가 호출되지 않는다.", () => {
     // given
     const value = "test"
+
     renderTestComponent()
+
     const input = screen.getByTestId("input") as HTMLInputElement
 
     // when

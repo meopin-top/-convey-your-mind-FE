@@ -30,6 +30,7 @@ describe("SignIn", () => {
   it("유저 아이디가 올바르게 변경된다.", () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement
@@ -45,6 +46,7 @@ describe("SignIn", () => {
   it("유저 비밀번호가 올바르게 변경된다.", () => {
     // given
     render(<SignIn />)
+
     const passwordInput = screen.getByPlaceholderText(
       "나의 PW 입력하기"
     ) as HTMLInputElement
@@ -60,6 +62,7 @@ describe("SignIn", () => {
   it("로그인을 시도하면 post가 호출되고, 로그인 성공 유무와 상관 없이 alert가 호출된다.", async () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement
@@ -96,6 +99,7 @@ describe("SignIn", () => {
   it("로그인 인증에 성공하면 Storage에 닉네임이 저장된다.", async () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement

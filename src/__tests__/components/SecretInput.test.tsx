@@ -11,6 +11,7 @@ describe("SecretInput", () => {
   it("input 타입이 password이며 EyeOpen 아이콘을 렌더링한다.", () => {
     // given, when
     const testId = "input"
+
     render(<SecretInput data-testid={testId} />)
 
     const input = screen.getByTestId(testId) as HTMLInputElement

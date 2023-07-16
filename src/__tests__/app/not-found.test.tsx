@@ -15,6 +15,7 @@ describe("not-found", () => {
   it("이미지가 올바르게 렌더링된다.", () => {
     // given, when
     render(<NotFound />)
+
     const image = screen.getByAltText("존재하지 않는 페이지입니다.")
 
     // then

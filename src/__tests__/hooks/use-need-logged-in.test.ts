@@ -21,9 +21,9 @@ describe("useNeedLoggedIn", () => {
   })
 
   it("로그인되지 않았다면 alert을 노출하고 LOGIN route로 redirect 되어야 한다.", () => {
-    const mockRouterReplace = jest.fn()
+    const routerReplaceMock = jest.fn()
     ;(useRouter as jest.Mock).mockReturnValue({
-      replace: mockRouterReplace,
+      replace: routerReplaceMock,
     })
 
     const storageGetMock = jest
@@ -35,13 +35,13 @@ describe("useNeedLoggedIn", () => {
 
     expect(storageGetMock).toHaveBeenCalled()
     expect(windowAlertMock).toHaveBeenCalled()
-    expect(mockRouterReplace).toHaveBeenCalledWith(ROUTE.LOGIN)
+    expect(routerReplaceMock).toHaveBeenCalledWith(ROUTE.LOGIN)
   })
 
   it("로그인되었다면 alert을 노출하지 않고 LOGIN route로 redirect 되지 않아야 한다.", () => {
-    const mockRouterReplace = jest.fn()
+    const routerReplaceMock = jest.fn()
     ;(useRouter as jest.Mock).mockReturnValue({
-      replace: mockRouterReplace,
+      replace: routerReplaceMock,
     })
 
     const storageGetMock = jest
@@ -53,6 +53,6 @@ describe("useNeedLoggedIn", () => {
 
     expect(storageGetMock).toHaveBeenCalled()
     expect(windowAlertMock).not.toHaveBeenCalled()
-    expect(mockRouterReplace).not.toHaveBeenCalledWith(ROUTE.LOGIN)
+    expect(routerReplaceMock).not.toHaveBeenCalledWith(ROUTE.LOGIN)
   })
 })

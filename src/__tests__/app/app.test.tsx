@@ -17,6 +17,7 @@ describe("Home", () => {
   it("헤더 내용과 컴포넌트를 올바르게 렌더링한다.", () => {
     // given, when
     render(<Home />)
+
     const slogan = screen.getByAltText("슬로건")
     const subtitle = screen.getByText(
       "subtitle 영역, 최대 2줄 정도 소개 문구? 느낌으로 넣으면 좋을듯!"

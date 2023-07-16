@@ -101,6 +101,11 @@ describe("ConfirmedPopUp", () => {
 
   it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 API를 호출하지 않고, alert를 호출한다", () => {
     // given
+    ;(post as jest.Mock).mockResolvedValueOnce({
+      message: "",
+      code: 0,
+    })
+
     renderConfirmedPopUp({})
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
@@ -108,11 +113,6 @@ describe("ConfirmedPopUp", () => {
     )[0] as HTMLInputElement
     const signUpButton = screen.getByRole("button", {
       name: "가입하기",
-    })
-
-    ;(post as jest.Mock).mockResolvedValueOnce({
-      message: "",
-      code: 0,
     })
 
     // when
@@ -128,11 +128,12 @@ describe("ConfirmedPopUp", () => {
 
   it("이메일 형식이 다르면 API를 호출하지 않고, alert를 호출한다.", () => {
     // given
-    renderConfirmedPopUp({})
     ;(post as jest.Mock).mockResolvedValueOnce({
       message: "",
       code: 0,
     })
+
+    renderConfirmedPopUp({})
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""

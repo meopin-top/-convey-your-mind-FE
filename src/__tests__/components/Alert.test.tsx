@@ -19,7 +19,9 @@ describe("Alert", () => {
   it("props로 blur가 전달되지 않으면 wrapper의 부모는 blur 클래스를 가지지 않는다.", () => {
     // given, when
     const text = "children"
+
     render(<Alert isAlerting={true}>{text}</Alert>)
+
     const wrapper = screen.getByText(text).parentElement
 
     // then
@@ -29,6 +31,7 @@ describe("Alert", () => {
   test("제목, 내용, 버튼이 렌더링되고 버튼을 클릭할 수 있다.", () => {
     // given
     const handleButtonClick = jest.fn()
+
     render(
       <Alert isAlerting={true}>
         <Alert.Title title="Test Title" />
