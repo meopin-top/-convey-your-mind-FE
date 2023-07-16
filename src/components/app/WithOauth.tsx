@@ -43,7 +43,7 @@ const WithOauth = () => {
           <Image
             className="mb-2"
             src={kakaoLogo}
-            alt="카카오톡 로고"
+            alt="카카오 로고"
             width={LOGO_SIZE}
             height={LOGO_SIZE}
           />
