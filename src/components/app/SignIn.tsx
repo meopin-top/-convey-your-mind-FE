@@ -1,6 +1,7 @@
 "use client"
 
 import type {KeyboardEvent, MutableRefObject} from "react"
+import {redirect} from "next/navigation"
 import Link from "next/link"
 import {SecretInput} from "../"
 import {post} from "@/api"
@@ -8,6 +9,19 @@ import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
+import ROUTE from "@/constants/route"
+
+type TResponse = {
+  message: string
+  code: (typeof SIGN_IN)[keyof typeof SIGN_IN]
+  data: {
+    userId: string
+    email: string
+    nickName: string
+    authMethod: string
+    profile: string
+  }
+}
 
 const SignIn = () => {
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
@@ -23,13 +37,15 @@ const SignIn = () => {
   }
 
   async function signIn() {
-    const {message, code, data} = await post("/users/sign-in", {
+    const {message, code, data}: TResponse = await post("/users/sign-in", {
       userId,
       password,
     })
 
     if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("nickName", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
+      new Storage().set("nickName", data.nickName)
+      new Storage().set("profile", data.profile)
+      redirect(ROUTE.MY_PAGE)
     }
 
     alert(message)
