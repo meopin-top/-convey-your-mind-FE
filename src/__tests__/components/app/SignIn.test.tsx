@@ -1,9 +1,11 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
+import {redirect} from "next/navigation"
 import SignIn from "@/components/app/SignIn"
 import type {TProps} from "@/components/SecretInput"
 import {post} from "@/api"
 import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
+import ROUTE from "@/constants/route"
 
 jest.mock("../../../components", () => ({
   __esModule: true,
@@ -14,6 +16,10 @@ jest.mock("../../../components", () => ({
 
 jest.mock("../../../api", () => ({
   post: jest.fn(),
+}))
+
+jest.mock("next/navigation", () => ({
+  redirect: jest.fn(),
 }))
 
 describe("SignIn", () => {
@@ -96,7 +102,7 @@ describe("SignIn", () => {
     })
   })
 
-  it("로그인 인증에 성공하면 Storage에 닉네임이 저장된다.", async () => {
+  it("로그인 인증에 성공하면 Storage에 닉네임과 프로필이 저장되고 redirect된다.", async () => {
     // given
     render(<SignIn />)
 
@@ -109,6 +115,7 @@ describe("SignIn", () => {
     const signInButton = screen.getByText("로그인")
 
     const nickName = "nickName"
+    const profile = "https://profile.com"
     const userId = "userId"
     const password = "password"
 
@@ -117,6 +124,7 @@ describe("SignIn", () => {
       message: "로그인 성공",
       data: {
         nickName,
+        profile,
       },
     })
     const storageSetMock = jest
@@ -130,8 +138,11 @@ describe("SignIn", () => {
 
     // then
     await waitFor(() => {
-      expect(storageSetMock).toHaveBeenCalledTimes(1)
+      expect(storageSetMock).toHaveBeenCalledTimes(2)
       expect(storageSetMock).toHaveBeenCalledWith("nickName", nickName)
+      expect(storageSetMock).toHaveBeenCalledWith("profile", profile)
+      expect(redirect).toHaveBeenCalledTimes(1)
+      expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
   })
 
