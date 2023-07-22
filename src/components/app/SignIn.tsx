@@ -57,8 +57,8 @@ const SignIn = () => {
         type="text"
         className="user-id radius-sm mb-2"
         placeholder="나의 ID 입력하기"
-        minLength={6}
-        maxLength={20}
+        minLength={1}
+        maxLength={100}
         required
         value={userId}
         onKeyDown={handleUserIdInput}
@@ -67,8 +67,8 @@ const SignIn = () => {
       <SecretInput
         className="password radius-sm mb-2"
         placeholder="나의 PW 입력하기"
-        minLength={8}
-        maxLength={20}
+        minLength={1}
+        maxLength={100}
         required
         inputRef={passwordInput as MutableRefObject<HTMLInputElement | null>}
         value={password}
