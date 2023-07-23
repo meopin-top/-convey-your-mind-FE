@@ -30,7 +30,7 @@ export function useNeedNotLoggedIn(): boolean {
     const isLoggedIn = new Storage().get("nickName")
 
     if (isLoggedIn) {
-      router.push(ROUTE.MAIN)
+      router.push(ROUTE.MY_PAGE)
     }
 
     setIsPainted(true)
