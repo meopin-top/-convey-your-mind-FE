@@ -1,20 +1,26 @@
 import {useLayoutEffect} from "react"
-import {useRouter} from "next/navigation"
+import {redirect} from "next/navigation"
 import Storage from "@/store/local-storage"
 import ROUTE from "@/constants/route"
 
-export default function useNeedLoggedIn() {
-  const router = useRouter()
-
+export function useNeedLoggedIn() {
   useLayoutEffect(() => {
     const isNotLoggedIn = !new Storage().get("nickName")
 
     if (isNotLoggedIn) {
       alert("로그인 후에 서비스 이용해주세요.")
 
-      router.replace(ROUTE.LOGIN)
+      redirect(ROUTE.MAIN)
     }
-  }, [router])
+  }, [])
 }
 
-// export function
+export function useNeedNotLoggedIn() {
+  useLayoutEffect(() => {
+    const isLoggedIn = new Storage().get("nickName")
+
+    if (isLoggedIn) {
+      redirect(ROUTE.MY_PAGE)
+    }
+  }, [])
+}
