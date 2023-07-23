@@ -58,7 +58,8 @@ input {
   }
 }
 
-#portal > * {
+#portal > *,
+#redirecting {
   position: fixed;
   inset: 0;
 }
