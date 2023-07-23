@@ -5,11 +5,14 @@ import dynamic from "next/dynamic"
 import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
-import {post} from "@/api"
+import useRequest from "@/hooks/use-request"
 import {SIGN_UP} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
 
 const Portal = dynamic(() => import("../Portal"), {
+  loading: () => <></>,
+})
+const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
 const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
@@ -18,6 +21,8 @@ const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
 
 const SignUp = () => {
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
+
+  const {isLoading, request} = useRequest()
 
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
 
@@ -52,11 +57,14 @@ const SignUp = () => {
   }
 
   async function signUp(confirmedPassword: string) {
-    // TODO: API 요청 보내면 loading 처리(button disabled), use-request 리팩토링
-    const {message, code} = await post("/users/sign-up", {
-      userId: userId.trim(),
-      password: password.trim(),
-      passwordCheck: confirmedPassword.trim(),
+    const {message, code} = await request({
+      path: "/users/sign-up",
+      method: "post",
+      body: {
+        userId: userId.trim(),
+        password: password.trim(),
+        passwordCheck: confirmedPassword.trim(),
+      },
     })
 
     if (code === SIGN_UP.SUCCESS) {
@@ -100,13 +108,16 @@ const SignUp = () => {
       </button>
       <Portal
         render={() => (
-          <ConfirmedPopUp
-            isAlerting={isPopUpOpened}
-            userId={userId}
-            password={password}
-            onClose={handlePopUp}
-            onSubmit={signUp}
-          />
+          <>
+            <ConfirmedPopUp
+              isAlerting={isPopUpOpened}
+              userId={userId}
+              password={password}
+              onClose={handlePopUp}
+              onSubmit={signUp}
+            />
+            <Loading isLoading={isLoading} />
+          </>
         )}
       />
     </>

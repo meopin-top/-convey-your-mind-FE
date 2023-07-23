@@ -2,14 +2,22 @@
 
 import type {KeyboardEvent, MutableRefObject} from "react"
 import {redirect} from "next/navigation"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import {SecretInput} from "../"
-import {post} from "@/api"
-import Storage from "@/store/local-storage"
-import {SIGN_IN} from "@/constants/response-code"
+import useRequest from "@/hooks/use-request"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
+import Storage from "@/store/local-storage"
+import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
+
+const Portal = dynamic(() => import("../Portal"), {
+  loading: () => <></>,
+})
+const Loading = dynamic(() => import("../Loading"), {
+  loading: () => <></>,
+})
 
 type TResponse = {
   message: string
@@ -24,6 +32,8 @@ type TResponse = {
 }
 
 const SignIn = () => {
+  const {isLoading, request} = useRequest()
+
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
 
   const [userId, handleUserId] = useInput()
@@ -37,9 +47,13 @@ const SignIn = () => {
   }
 
   async function signIn() {
-    const {message, code, data}: TResponse = await post("/users/sign-in", {
-      userId,
-      password,
+    const {message, code, data}: TResponse = await request({
+      path: "/users/sign-in",
+      method: "post",
+      body: {
+        userId,
+        password,
+      },
     })
 
     if (code === SIGN_IN.SUCCESS) {
@@ -81,6 +95,7 @@ const SignIn = () => {
       <Link className="my-account" href="#">
         내 계정 정보 찾기
       </Link>
+      <Portal render={() => <Loading isLoading={isLoading} />} />
     </>
   )
 }
