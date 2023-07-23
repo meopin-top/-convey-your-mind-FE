@@ -4,7 +4,7 @@ import Storage from "@/store/local-storage"
 import ROUTE from "@/constants/route"
 
 function useCheckLoginStatus(shouldBeLoggedIn: boolean): boolean {
-  const [isPainted, setIsPainted] = useState(false)
+  const [isRedirecting, setIsRedirecting] = useState(true)
   const router = useRouter()
 
   useLayoutEffect(() => {
@@ -15,12 +15,12 @@ function useCheckLoginStatus(shouldBeLoggedIn: boolean): boolean {
       router.push(ROUTE.MAIN)
     } else if (!shouldBeLoggedIn && isLoggedIn) {
       router.push(ROUTE.MY_PAGE)
+    } else {
+      setIsRedirecting(false)
     }
-
-    setIsPainted(true)
   }, [router, shouldBeLoggedIn])
 
-  return isPainted
+  return isRedirecting
 }
 
 export function useNeedLoggedIn(): boolean {
