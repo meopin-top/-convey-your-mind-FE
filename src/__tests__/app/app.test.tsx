@@ -13,6 +13,10 @@ jest.mock("../../components/app", () => ({
   )),
 }))
 
+jest.mock("../../components/LoginChecker.tsx", () => ({
+  NeedNotLoggedIn: () => <></>,
+}))
+
 describe("Home", () => {
   it("헤더 내용과 컴포넌트를 올바르게 렌더링한다.", () => {
     // given, when
