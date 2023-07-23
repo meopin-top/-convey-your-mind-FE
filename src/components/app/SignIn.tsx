@@ -11,6 +11,7 @@ import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
+import type {TSignInResponse} from "@/@types/auth"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -18,18 +19,6 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
-
-type TResponse = {
-  message: string
-  code: (typeof SIGN_IN)[keyof typeof SIGN_IN]
-  data: {
-    userId: string
-    email: string
-    nickName: string
-    authMethod: string
-    profile: string
-  }
-}
 
 const SignIn = () => {
   const {isLoading, request} = useRequest()
@@ -47,7 +36,7 @@ const SignIn = () => {
   }
 
   async function signIn() {
-    const {message, code, data}: TResponse = await request({
+    const {message, code, data}: TSignInResponse = await request({
       path: "/users/sign-in",
       method: "post",
       body: {
@@ -59,6 +48,7 @@ const SignIn = () => {
     if (code === SIGN_IN.SUCCESS) {
       new Storage().set("nickName", data.nickName)
       new Storage().set("profile", data.profile)
+
       redirect(ROUTE.MY_PAGE)
     }
 
