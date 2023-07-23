@@ -8,6 +8,8 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }))
 
+// renderHook이 useLayoutEffect 이후의 결과를 반환해서 state 초기값에 대한 expect는 작성하지 못함
+
 describe("useNeedLoggedIn", () => {
   let windowAlertMock: jest.SpyInstance
   let routerPushMock: jest.SpyInstance = jest.fn()
@@ -25,7 +27,7 @@ describe("useNeedLoggedIn", () => {
     window.localStorage.clear()
   })
 
-  it("로그인되지 않았다면 alert을 노출하고 MAIN route로 redirect 되어야 한다.", () => {
+  it("로그인되지 않았다면 alert을 노출하고 MAIN로 리다이렉트되어야 한다.", () => {
     // given, when
     renderHook(() => useNeedLoggedIn())
 
@@ -34,7 +36,15 @@ describe("useNeedLoggedIn", () => {
     expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MAIN)
   })
 
-  it("로그인되었다면 alert을 노출하지 않고 MAIN route로 redirect 되지 않아야 한다.", () => {
+  it("로그인되지 않았다면 리다이렉트 여부로 true를 반환해야 한다.", () => {
+    // given, when
+    const {result: isRedirecting} = renderHook(() => useNeedLoggedIn())
+
+    // then
+    expect(isRedirecting.current).toBeTruthy()
+  })
+
+  it("로그인되었다면 alert을 노출하지 않고 MAIN로 리다이렉트되지 않아야 한다.", () => {
     // given, when
     window.localStorage.setItem("nickName", "something")
 
@@ -45,18 +55,18 @@ describe("useNeedLoggedIn", () => {
     expect(routerPushMock).not.toHaveBeenCalledWith(ROUTE.MAIN)
   })
 
-  it("페인트 여부를 반환해야 한다.", () => {
-    // renderHook이 setState 이후의 결과를 반환해서 이전 state에 대한 expect는 작성하지 못함
-
+  it("로그인되었다면 리다이렉트 여부로 false를 반환해야 한다.", () => {
     // given, when
-    const {result: isPainted} = renderHook(() => useNeedLoggedIn())
+    window.localStorage.setItem("nickName", "something")
+
+    const {result: isRedirecting} = renderHook(() => useNeedLoggedIn())
 
     // then
-    expect(isPainted.current).toBeTruthy()
+    expect(isRedirecting.current).toBeFalsy()
   })
 })
 
-describe("useNeedLoggedIn", () => {
+describe("useNeedNotLoggedIn", () => {
   let routerPushMock: jest.SpyInstance = jest.fn()
 
   beforeEach(() => {
@@ -71,7 +81,7 @@ describe("useNeedLoggedIn", () => {
     window.localStorage.clear()
   })
 
-  it("로그인되지 않았다면 MY_PAGE route로 redirect 되지 않아야 한다.", () => {
+  it("로그인되지 않았다면 MY_PAGE로 리다이렉트되지 않아야 한다.", () => {
     // given, when
     renderHook(() => useNeedNotLoggedIn())
 
@@ -79,7 +89,15 @@ describe("useNeedLoggedIn", () => {
     expect(routerPushMock).not.toHaveBeenCalledWith(ROUTE.MY_PAGE)
   })
 
-  it("로그인되었다면 MY_PAGE route로 redirect 되어야 한다.", () => {
+  it("로그인되지 않았다면 리다이렉트 여부로 false를 반환해야 한다.", () => {
+    // given, when
+    const {result: isRedirecting} = renderHook(() => useNeedNotLoggedIn())
+
+    // then
+    expect(isRedirecting.current).toBeFalsy()
+  })
+
+  it("로그인되었다면 MY_PAGE로 리다이렉트되어야 한다.", () => {
     // given, when
     window.localStorage.setItem("nickName", "something")
 
@@ -89,13 +107,13 @@ describe("useNeedLoggedIn", () => {
     expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MY_PAGE)
   })
 
-  it("페인트 여부를 반환해야 한다.", () => {
-    // renderHook이 setState 이후의 결과를 반환해서 이전 state에 대한 expect는 작성하지 못함
-
+  it("로그인되었다면 리다이렉트 여부로 true를 반환해야 한다.", () => {
     // given, when
-    const {result: isPainted} = renderHook(() => useNeedLoggedIn())
+    window.localStorage.setItem("nickName", "something")
+
+    const {result: isRedirecting} = renderHook(() => useNeedNotLoggedIn())
 
     // then
-    expect(isPainted.current).toBeTruthy()
+    expect(isRedirecting.current).toBeTruthy()
   })
 })
