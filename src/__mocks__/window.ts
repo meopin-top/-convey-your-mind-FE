@@ -24,5 +24,13 @@ export function createLocalStorageMock(storage: TStorage = {}) {
 
   Object.defineProperty(window, "localStorage", {
     value: localStorageMock,
+    configurable: true,
+  })
+}
+
+export function createFetchMock(fetchMock: jest.SpyInstance) {
+  Object.defineProperty(window, "fetch", {
+    value: fetchMock,
+    configurable: true,
   })
 }
