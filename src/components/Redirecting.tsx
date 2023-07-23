@@ -23,7 +23,7 @@ const Redirecting = ({isRedirecting, blur = false, ...props}: TProps) => {
           onClick={preventEvent}
           {...props}
         >
-          <Image src={FadingSquares} alt="리다이렉션 중..." />
+          <Image src={FadingSquares} alt="리다이렉션 중..." role="status" />
         </div>
       )}
     </>
