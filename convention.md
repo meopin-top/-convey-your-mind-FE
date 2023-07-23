@@ -110,6 +110,25 @@ export default function Button({disabled, children, onClick}: TProps) {
 1. 테스트 코드에는 반드시 "given", "when", "then"을 주석으로 작성한다.
 2. `toBe`, `toEqual`은 의미상 하는 일이 동일하기 때문에 `toEqual`로 통일하여 작성한다.
 3. 컴포넌트 테스트 시 특별한 경우가 아니라면 given은 다음과 같은 순서로 작성하며 개행으로 구분한다. 모킹 => 렌더링 => get / query / find element.
+4. 불필요한(호출 여부 테스트하는 부분이 아닌 곳 등) `jest.fn()` 선언은 지양한다.
+
+```tsx
+// 예시
+jest.mock("../../components/app", () => ({
+  __esModule: true,
+  WithoutSignUp: jest.fn(() => (
+    <div data-testid="without-signup">WithoutSignUp Component</div>
+  )),
+}))
+
+// 아래와 같은 방법으로 작성
+jest.mock("../../components/app", () => ({
+  __esModule: true,
+  WithoutSignUp: () => (
+    <div data-testid="without-signup">WithoutSignUp Component</div>
+  ),
+}))
+```
 
 ## 기타
 
