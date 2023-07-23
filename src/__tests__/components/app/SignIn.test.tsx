@@ -2,9 +2,9 @@ import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import {redirect} from "next/navigation"
 import SignIn from "@/components/app/SignIn"
 import type {TProps} from "@/components/SecretInput"
-import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
+import {createLocalStorageMock} from "@/__mocks__/window"
 
 const requestMock = jest.fn()
 
@@ -31,10 +31,12 @@ describe("SignIn", () => {
 
   beforeAll(() => {
     windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
+    createLocalStorageMock()
   })
 
   afterAll(() => {
     windowAlertMock.mockRestore()
+    window.localStorage.clear()
   })
 
   it("유저 아이디가 올바르게 변경된다.", async () => {
@@ -131,9 +133,6 @@ describe("SignIn", () => {
         profile,
       },
     })
-    const storageSetMock = jest
-      .spyOn(new Storage(), "set")
-      .mockImplementation(() => {})
 
     // when
     fireEvent.change(userIdInput, {target: {value: userId}})
@@ -142,9 +141,15 @@ describe("SignIn", () => {
 
     // then
     await waitFor(() => {
-      expect(storageSetMock).toHaveBeenCalledTimes(2)
-      expect(storageSetMock).toHaveBeenCalledWith("nickName", nickName)
-      expect(storageSetMock).toHaveBeenCalledWith("profile", profile)
+      expect(window.localStorage.setItem).toHaveBeenCalledTimes(2)
+      expect(window.localStorage.setItem).toHaveBeenCalledWith(
+        "nickName",
+        nickName
+      )
+      expect(window.localStorage.setItem).toHaveBeenCalledWith(
+        "profile",
+        profile
+      )
       expect(redirect).toHaveBeenCalledTimes(1)
       expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
