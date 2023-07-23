@@ -1,12 +1,11 @@
 import {renderHook} from "@testing-library/react-hooks"
-import {useRouter} from "next/navigation"
+import {redirect} from "next/navigation"
+import {useNeedLoggedIn, useNeedNotLoggedIn} from "@/hooks/use-logged-in"
 import ROUTE from "@/constants/route"
-import Storage from "@/store/local-storage"
-import useNeedLoggedIn from "@/hooks/use-logged-in"
-import type {TLocalStorageKey} from "@/@types/storage"
+import {createLocalStorageMock} from "@/__mocks__/store"
 
 jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(),
+  redirect: jest.fn(),
 }))
 
 describe("useNeedLoggedIn", () => {
@@ -14,45 +13,59 @@ describe("useNeedLoggedIn", () => {
 
   beforeEach(() => {
     windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
+    createLocalStorageMock()
   })
 
   afterEach(() => {
     jest.clearAllMocks()
+    window.localStorage.clear()
   })
 
-  it("로그인되지 않았다면 alert을 노출하고 LOGIN route로 redirect 되어야 한다.", () => {
-    const routerReplaceMock = jest.fn()
-    ;(useRouter as jest.Mock).mockReturnValue({
-      replace: routerReplaceMock,
-    })
-
-    const storageGetMock = jest
-      .spyOn(new Storage(), "get")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .mockImplementation((_: TLocalStorageKey) => null)
-
+  it("로그인되지 않았다면 alert을 노출하고 MAIN route로 redirect 되어야 한다.", () => {
+    // given, when
     renderHook(() => useNeedLoggedIn())
 
-    expect(storageGetMock).toHaveBeenCalled()
+    // then
     expect(windowAlertMock).toHaveBeenCalled()
-    expect(routerReplaceMock).toHaveBeenCalledWith(ROUTE.LOGIN)
+    expect(redirect).toHaveBeenCalledWith(ROUTE.MAIN)
   })
 
-  it("로그인되었다면 alert을 노출하지 않고 LOGIN route로 redirect 되지 않아야 한다.", () => {
-    const routerReplaceMock = jest.fn()
-    ;(useRouter as jest.Mock).mockReturnValue({
-      replace: routerReplaceMock,
-    })
-
-    const storageGetMock = jest
-      .spyOn(new Storage(), "get")
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .mockImplementation((_: TLocalStorageKey) => "something")
+  it("로그인되었다면 alert을 노출하지 않고 MAIN route로 redirect 되지 않아야 한다.", () => {
+    // given, when
+    window.localStorage.setItem("nickName", "something")
 
     renderHook(() => useNeedLoggedIn())
 
-    expect(storageGetMock).toHaveBeenCalled()
+    // then
     expect(windowAlertMock).not.toHaveBeenCalled()
-    expect(routerReplaceMock).not.toHaveBeenCalledWith(ROUTE.LOGIN)
+    expect(redirect).not.toHaveBeenCalledWith(ROUTE.MAIN)
+  })
+})
+
+describe("useNeedLoggedIn", () => {
+  beforeEach(() => {
+    createLocalStorageMock()
+  })
+
+  afterEach(() => {
+    window.localStorage.clear()
+  })
+
+  it("로그인되지 않았다면 MY_PAGE route로 redirect 되지 않아야 한다.", () => {
+    // given, when
+    renderHook(() => useNeedNotLoggedIn())
+
+    // then
+    expect(redirect).not.toHaveBeenCalledWith(ROUTE.MY_PAGE)
+  })
+
+  it("로그인되었다면 MY_PAGE route로 redirect 되어야 한다.", () => {
+    // given, when
+    window.localStorage.setItem("nickName", "something")
+
+    renderHook(() => useNeedNotLoggedIn())
+
+    // then
+    expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
   })
 })
