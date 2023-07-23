@@ -4,7 +4,7 @@ import SignIn from "@/components/app/SignIn"
 import type {TProps} from "@/components/SecretInput"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
-import {createLocalStorageMock} from "@/__mocks__/window"
+import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 
 const requestMock = jest.fn()
 
@@ -27,15 +27,12 @@ jest.mock("../../../hooks/use-request.ts", () => ({
 }))
 
 describe("SignIn", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
+    createAlertMock()
     createLocalStorageMock()
   })
 
   afterAll(() => {
-    windowAlertMock.mockRestore()
     window.localStorage.clear()
   })
 
@@ -103,8 +100,8 @@ describe("SignIn", () => {
     await waitFor(() => {
       expect(requestMock).toHaveBeenCalledTimes(1)
 
-      expect(windowAlertMock).toBeCalledTimes(1)
-      expect(windowAlertMock).toHaveBeenCalledWith(message)
+      expect(window.alert).toBeCalledTimes(1)
+      expect(window.alert).toHaveBeenCalledWith(message)
     })
   })
 

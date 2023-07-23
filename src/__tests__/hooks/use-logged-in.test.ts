@@ -2,7 +2,7 @@ import {renderHook} from "@testing-library/react-hooks"
 import {useRouter} from "next/navigation"
 import {useNeedLoggedIn, useNeedNotLoggedIn} from "@/hooks/use-logged-in"
 import ROUTE from "@/constants/route"
-import {createLocalStorageMock} from "@/__mocks__/window"
+import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
@@ -11,14 +11,13 @@ jest.mock("next/navigation", () => ({
 // renderHook이 useLayoutEffect 이후의 결과를 반환해서 state 초기값에 대한 expect는 작성하지 못함
 
 describe("useNeedLoggedIn", () => {
-  let windowAlertMock: jest.SpyInstance
   let routerPushMock: jest.SpyInstance = jest.fn()
 
   beforeEach(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
     ;(useRouter as jest.Mock).mockReturnValue({
       push: routerPushMock,
     })
+    createAlertMock()
     createLocalStorageMock()
   })
 
@@ -32,7 +31,7 @@ describe("useNeedLoggedIn", () => {
     renderHook(() => useNeedLoggedIn())
 
     // then
-    expect(windowAlertMock).toHaveBeenCalled()
+    expect(window.alert).toHaveBeenCalled()
     expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MAIN)
   })
 
@@ -51,7 +50,7 @@ describe("useNeedLoggedIn", () => {
     renderHook(() => useNeedLoggedIn())
 
     // then
-    expect(windowAlertMock).not.toHaveBeenCalled()
+    expect(window.alert).not.toHaveBeenCalled()
     expect(routerPushMock).not.toHaveBeenCalledWith(ROUTE.MAIN)
   })
 

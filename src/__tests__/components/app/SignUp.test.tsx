@@ -12,6 +12,7 @@ import {
   invalidPasswords,
 } from "@/__mocks__/fixtures/input"
 import ROUTE from "@/constants/route"
+import {createAlertMock} from "@/__mocks__/window"
 
 const testid = "confirmed-pop-up"
 
@@ -34,14 +35,8 @@ jest.mock("../../../components/app", () => ({
 }))
 
 describe("SignUp", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
-  })
-
-  afterAll(() => {
-    windowAlertMock.mockRestore()
+    createAlertMock()
   })
 
   it("유저 아이디가 올바르게 변경된다.", async () => {
@@ -109,7 +104,7 @@ describe("SignUp", () => {
         const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
 
         // then
-        expect(windowAlertMock).toBeCalled()
+        expect(window.alert).toBeCalled()
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     })
@@ -140,7 +135,7 @@ describe("SignUp", () => {
         const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
 
         // then
-        expect(windowAlertMock).toBeCalled()
+        expect(window.alert).toBeCalled()
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     })
@@ -169,7 +164,7 @@ describe("SignUp", () => {
 
         await waitFor(() => {
           // then
-          expect(windowAlertMock).not.toBeCalled()
+          expect(window.alert).not.toBeCalled()
           expect(redirect).toBeCalledWith(ROUTE.MY_PAGE)
         })
       })

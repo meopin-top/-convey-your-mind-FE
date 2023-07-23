@@ -34,3 +34,10 @@ export function createFetchMock(fetchMock: jest.SpyInstance) {
     configurable: true,
   })
 }
+
+export function createAlertMock() {
+  Object.defineProperty(window, "alert", {
+    value: jest.fn(),
+    configurable: true,
+  })
+}

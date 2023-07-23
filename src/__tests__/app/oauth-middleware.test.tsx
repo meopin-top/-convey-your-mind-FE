@@ -3,7 +3,7 @@ import {redirect} from "next/navigation"
 import OauthMiddleware from "@/app/oauth-middleware/page"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
-import {createLocalStorageMock} from "@/__mocks__/window"
+import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 
 const requestMock = jest.fn()
 const getSearchParamsMock = jest.fn()
@@ -29,10 +29,8 @@ jest.mock("../../components/Redirecting.tsx", () => ({
 }))
 
 describe("OAuthMiddleware", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
+    createAlertMock()
     createLocalStorageMock()
   })
 
@@ -41,7 +39,7 @@ describe("OAuthMiddleware", () => {
   })
 
   afterAll(() => {
-    windowAlertMock.mockRestore()
+    window.localStorage.clear()
   })
 
   it("카카오 로그인에 성공하면 API 요청 후 MY_PAGE로 리다이렉트되어야 한다.", async () => {
@@ -132,7 +130,7 @@ describe("OAuthMiddleware", () => {
     await waitFor(() => {
       expect(redirect).toHaveBeenCalledTimes(1)
       expect(redirect).toHaveBeenCalledWith(ROUTE.MAIN)
-      expect(windowAlertMock).toHaveBeenCalledTimes(1)
+      expect(window.alert).toHaveBeenCalledTimes(1)
     })
   })
 })
