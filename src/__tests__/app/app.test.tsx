@@ -2,18 +2,16 @@ import {render, screen} from "@testing-library/react"
 import Home from "@/app/page"
 
 jest.mock("../../components/app", () => ({
-  WithoutSignUp: jest.fn(() => (
+  __esModule: true,
+  WithoutSignUp: () => (
     <div data-testid="without-signup">WithoutSignUp Component</div>
-  )),
-  WithSignUp: jest.fn(() => (
-    <div data-testid="with-signup">WithSignUp Component</div>
-  )),
-  WithOauth: jest.fn(() => (
-    <div data-testid="with-oauth">WithOauth Component</div>
-  )),
+  ),
+  WithSignUp: () => <div data-testid="with-signup">WithSignUp Component</div>,
+  WithOauth: () => <div data-testid="with-oauth">WithOauth Component</div>,
 }))
 
 jest.mock("../../components/LoginChecker.tsx", () => ({
+  __esModule: true,
   NeedNotLoggedIn: () => <></>,
 }))
 
