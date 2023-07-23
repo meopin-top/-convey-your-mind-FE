@@ -1,6 +1,7 @@
 "use client"
 
 import {useState, type KeyboardEvent, type MutableRefObject} from "react"
+import {redirect} from "next/navigation"
 import dynamic from "next/dynamic"
 import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
@@ -8,6 +9,7 @@ import useFocus from "@/hooks/use-focus"
 import useRequest from "@/hooks/use-request"
 import {SIGN_UP} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
+import ROUTE from "@/constants/route"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -68,7 +70,7 @@ const SignUp = () => {
     })
 
     if (code === SIGN_UP.SUCCESS) {
-      // TODO: 정책 결정 필요
+      redirect(ROUTE.MY_PAGE)
     } else {
       alert(message)
     }
