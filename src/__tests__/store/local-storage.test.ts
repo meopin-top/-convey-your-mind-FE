@@ -1,5 +1,5 @@
 import Storage from "@/store/local-storage"
-import {createLocalStorageMock} from "@/__mocks__/store"
+import {createLocalStorageMock} from "@/__mocks__/window"
 
 describe("Storage", () => {
   beforeEach(() => {
