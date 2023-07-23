@@ -46,7 +46,7 @@ describe("without onClose 버튼", () => {
     expect(spinner).toBeInTheDocument()
   })
 
-  it("props로 blur가 true로 전달되면 wrapper는 blur 클래스를 가지게 된다.", () => {
+  it("props로 blur가 true로 전달되면 wrapper는 blur클래스를 가지게 된다.", () => {
     // given, when
     renderLoading({isLoading: true, blur: true})
 
@@ -56,7 +56,7 @@ describe("without onClose 버튼", () => {
     expect(wrapper).toHaveClass("blur")
   })
 
-  it("props로 blur가 전달되지 않으면 wrapper는 blur 클래스를 가지지 않는다.", () => {
+  it("props로 blur가 전달되지 않으면 wrapper는 blur클래스를 가지지 않는다.", () => {
     // given, when
     renderLoading({isLoading: true})
 
