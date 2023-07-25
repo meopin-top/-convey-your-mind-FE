@@ -52,7 +52,7 @@ const ConfirmedPopUp = ({
   }
 
   return (
-    <Alert isAlerting={isAlerting} blur style={{width: "90%"}}>
+    <Alert isAlerting={isAlerting} blur style={{width: "90%", padding: "24px"}}>
       <Alert.Title title="정보를 확인해주세요" style={{marginBottom: "20px"}} />
       <Alert.Content>
         <div
@@ -90,12 +90,15 @@ const ConfirmedPopUp = ({
           />
         </div>
         <div className="f-center" style={{flexDirection: "column", gap: "4px"}}>
-          <span>예비 이메일 등록 시, 추후 회원정보 찾기가 가능합니다.</span>
+          <span>
+            예비 이메일 등록하지 않을 경우, 추후 회원정보 찾기가{" "}
+            <span className="highlight">불가</span>합니다.
+          </span>
           <input
             className="radius-sm"
             style={{
               padding: "4px 8px",
-              width: "90%",
+              width: "100%",
               height: "38px",
               fontSize: "10px",
             }}
