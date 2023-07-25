@@ -1,19 +1,21 @@
 import {render, waitFor} from "@testing-library/react"
-import {redirect} from "next/navigation"
 import OauthMiddleware from "@/app/oauth-middleware/page"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 
-const requestMock = jest.fn()
 const getSearchParamsMock = jest.fn()
+const routerReplacementMock = jest.fn()
+const requestMock = jest.fn()
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
   useSearchParams: () => ({
     get: getSearchParamsMock,
   }),
-  redirect: jest.fn(),
+  useRouter: () => ({
+    replace: routerReplacementMock,
+  }),
 }))
 
 jest.mock("../../hooks/use-request.ts", () => ({
@@ -70,8 +72,8 @@ describe("OAuthMiddleware", () => {
         "profile",
         profile
       )
-      expect(redirect).toHaveBeenCalledTimes(1)
-      expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
+      expect(routerReplacementMock).toHaveBeenCalledTimes(1)
+      expect(routerReplacementMock).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
   })
 
@@ -105,8 +107,8 @@ describe("OAuthMiddleware", () => {
         "profile",
         profile
       )
-      expect(redirect).toHaveBeenCalledTimes(1)
-      expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
+      expect(routerReplacementMock).toHaveBeenCalledTimes(1)
+      expect(routerReplacementMock).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
   })
 
@@ -128,8 +130,8 @@ describe("OAuthMiddleware", () => {
 
     // then
     await waitFor(() => {
-      expect(redirect).toHaveBeenCalledTimes(1)
-      expect(redirect).toHaveBeenCalledWith(ROUTE.MAIN)
+      expect(routerReplacementMock).toHaveBeenCalledTimes(1)
+      expect(routerReplacementMock).toHaveBeenCalledWith(ROUTE.MAIN)
       expect(window.alert).toHaveBeenCalledTimes(1)
     })
   })
