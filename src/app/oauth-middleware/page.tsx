@@ -1,17 +1,59 @@
 "use client"
 
 import {useEffect} from "react"
-// import {useSearchParams} from "next/navigation"
+import {useSearchParams, redirect} from "next/navigation"
+import {Redirecting} from "@/components"
+import useRequest from "@/hooks/use-request"
+import Storage from "@/store/local-storage"
+import ROUTE from "@/constants/route"
+import {SIGN_IN} from "@/constants/response-code"
+import type {TSignInResponse} from "@/@types/auth"
 
-const OAuthMiddleware = () => {
-  // const searchParams = useSearchParams()
+const OauthMiddleware = () => {
+  const searchParams = useSearchParams()
+
+  const {request} = useRequest()
+
+  const isKakaoSucceeded = Boolean(
+    searchParams.get("code") && !searchParams.get("state")
+  )
+  const isNaverSucceeded = Boolean(
+    searchParams.get("code") &&
+      searchParams.get("state") === process.env.NEXT_PUBLIC_NAVER_STATE
+  )
+  const failureMessage = searchParams.get("error")
+    ? searchParams.get("error_description")
+    : "로그인에 실패했습니다."
 
   useEffect(() => {
-    // const
-    // TODO: naver / kakao 구분
+    async function requestOauth(path: string) {
+      const {message, code, data}: TSignInResponse = await request({
+        path: `${path}?code=${searchParams.get("code")}`,
+      })
+
+      if (code === SIGN_IN.SUCCESS) {
+        new Storage().set("nickName", data.nickName)
+        new Storage().set("profile", data.profile)
+
+        redirect(ROUTE.MY_PAGE)
+      }
+
+      alert(message)
+    }
+
+    if (isKakaoSucceeded) {
+      requestOauth("/oauth/kakao/callback")
+    } else if (isNaverSucceeded) {
+      requestOauth("/oauth/naver/callback")
+    } else {
+      alert(failureMessage)
+
+      redirect(ROUTE.MAIN)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return <div className="root-wrapper">asdf</div>
+  return <Redirecting isRedirecting={true} blur />
 }
 
-export default OAuthMiddleware
+export default OauthMiddleware
