@@ -1,7 +1,7 @@
 "use client"
 
 import {useEffect} from "react"
-import {useSearchParams, redirect} from "next/navigation"
+import {useSearchParams, useRouter} from "next/navigation"
 import {Redirecting} from "@/components"
 import useRequest from "@/hooks/use-request"
 import Storage from "@/store/local-storage"
@@ -10,6 +10,7 @@ import {SIGN_IN} from "@/constants/response-code"
 import type {TSignInResponse} from "@/@types/auth"
 
 const OauthMiddleware = () => {
+  const router = useRouter()
   const searchParams = useSearchParams()
 
   const {request} = useRequest()
@@ -35,7 +36,7 @@ const OauthMiddleware = () => {
         new Storage().set("nickName", data.nickName)
         new Storage().set("profile", data.profile)
 
-        redirect(ROUTE.MY_PAGE)
+        router.replace(ROUTE.MY_PAGE)
       }
 
       alert(message)
@@ -48,10 +49,10 @@ const OauthMiddleware = () => {
     } else {
       alert(failureMessage)
 
-      redirect(ROUTE.MAIN)
+      router.replace(ROUTE.MAIN)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [router])
 
   return <Redirecting isRedirecting={true} blur />
 }
