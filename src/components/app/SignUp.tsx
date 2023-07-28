@@ -39,14 +39,28 @@ const SignUp = () => {
   }
 
   function checkValidation() {
+    if (userId.length === 0) {
+      alert("ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
+
+      return
+    }
+
+    if (password.length === 0) {
+      alert("PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
+
+      return
+    }
+
     if (!VALIDATOR.USER_ID.test(userId)) {
-      alert("아이디 형식을 확인해주세요.")
+      alert("영문, 숫자 특수문자만 사용 가능합니다.")
 
       return
     }
 
     if (!VALIDATOR.PASSWORD.test(password)) {
-      alert("비밀번호 형식을 확인해주세요.")
+      alert(
+        "안전을 위해 영문, 숫자, 특수문자 중 두 가지 이상 혼합해서 설정해 주세요."
+      )
 
       return
     }
