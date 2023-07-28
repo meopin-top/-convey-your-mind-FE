@@ -37,13 +37,13 @@ const ConfirmedPopUp = ({
 
   function checkValidation() {
     if (password !== confirmedPassword) {
-      alert("비밀번호가 일치하지 않습니다.")
+      alert("PW가 일치하지 않습니다. 다시 한 번 입력해 주세요.")
 
       return
     }
 
     if (email.length !== 0 && !VALIDATOR.EMAIL.test(email)) {
-      alert("이메일 형식을 확인해주세요.")
+      alert("유효하지 않은 이메일입니다. 다시 한 번 확인해 주세요.")
 
       return
     }
