@@ -8,35 +8,36 @@ jest.mock("../../assets/icons/index.ts", () => ({
 }))
 
 describe("SecretInput", () => {
-  it("input 타입이 password이며 EyeClose 아이콘을 렌더링한다.", () => {
+  it("input 타입이 password이며 EyeOpen 아이콘을 렌더링한다.", () => {
     // given, when
     const testId = "input"
+
     render(<SecretInput data-testid={testId} />)
 
     const input = screen.getByTestId(testId) as HTMLInputElement
-    const eyeCloseIcon = screen.getByText("eye-close")
+    const eyeOpenIcon = screen.getByText("eye-open")
 
     // then
     expect(input).toBeInTheDocument()
     expect(input.type).toEqual("password")
-    expect(eyeCloseIcon).toBeInTheDocument()
+    expect(eyeOpenIcon).toBeInTheDocument()
   })
 
-  it("EyeClose 아이콘 Wrapper을 누르면 input 타입이 text이며 EyeOpen 아이콘을 렌더링한다.", async () => {
+  it("EyeOpen 아이콘 Wrapper을 누르면 input 타입이 text이며 EyeClose 아이콘을 렌더링한다.", async () => {
     // given
     render(<SecretInput />)
 
-    const eyeCloseIconWrapper = screen
-      .getByText("eye-close")
+    const eyeOpenIconWrapper = screen
+      .getByText("eye-open")
       .closest("div") as HTMLElement
 
     // when
-    fireEvent.click(eyeCloseIconWrapper)
+    fireEvent.click(eyeOpenIconWrapper)
 
-    const eyeOpenIcon = await screen.findByText("eye-open")
+    const eyeCloseIcon = await screen.findByText("eye-close")
 
     // then
-    expect(eyeOpenIcon).toBeInTheDocument()
+    expect(eyeCloseIcon).toBeInTheDocument()
   })
 
   it("input의 값이 올바르게 바뀐다.", () => {

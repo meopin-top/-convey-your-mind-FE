@@ -1,32 +1,25 @@
 "use client"
 
-import {useEffect} from "react"
+import {useRouter} from "next/navigation"
 import Image from "next/image"
 import {kakaoLogo, naverLogo} from "@/assets/images"
 import ROUTE from "@/constants/route"
 
 const WithOauth = () => {
+  const router = useRouter()
+
   const LOGO_SIZE = 72
 
-  // TODO: OAuth 토큰 관리 이야기 후 토큰 관리 추가하기
-  // redirect 이후 생기는 해시 값 또는 쿼리 스트링 관리할 방법 구상하기(네이버의 경우 이 내용이 토큰임)
-
-  useEffect(() => {
-    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY)
-
-    new window.naver.LoginWithNaverId({
-      clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      callbackUrl: `${process.env.NEXT_PUBLIC_HOST}/${ROUTE.MY_PAGE}`,
-      isPopup: false,
-    }).init()
-  }, [])
-
   function loginWithKakao() {
-    if (window.Kakao.isInitialized()) {
-      window.Kakao.Auth.authorize({
-        redirectUri: `${process.env.NEXT_PUBLIC_HOST}/${ROUTE.MY_PAGE}`,
-      })
-    }
+    router.push(
+      `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}${ROUTE.OAUTH_MIDDLEWARE}&response_type=code`
+    )
+  }
+
+  function loginWithNaver() {
+    router.push(
+      `https://nid.naver.com/oauth2.0/authorize?client_id=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&state=${process.env.NEXT_PUBLIC_NAVER_STATE}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}${ROUTE.OAUTH_MIDDLEWARE}&response_type=code`
+    )
   }
 
   return (
@@ -36,25 +29,28 @@ const WithOauth = () => {
       </section>
       <div className="oauth-redirection">
         <button className="kakao f-center" onClick={loginWithKakao}>
-          <Image
-            className="mb-2"
-            src={kakaoLogo}
-            alt="카카오톡 로고"
-            width={LOGO_SIZE}
-            height={LOGO_SIZE}
-          />
-          <section>카카오 로그인</section>
+          <a href="#">
+            <Image
+              className="mb-2"
+              src={kakaoLogo}
+              alt="카카오 로고"
+              width={LOGO_SIZE}
+              height={LOGO_SIZE}
+            />
+            <section>카카오 로그인</section>
+          </a>
         </button>
-        <button className="naver f-center">
-          <Image
-            className="mb-2"
-            src={naverLogo}
-            alt="네이버 로고"
-            width={LOGO_SIZE}
-            height={LOGO_SIZE}
-          />
-          <section>네이버 로그인</section>
-          <div id="naverIdLogin" />
+        <button className="naver f-center" onClick={loginWithNaver}>
+          <a href="#">
+            <Image
+              className="mb-2"
+              src={naverLogo}
+              alt="네이버 로고"
+              width={LOGO_SIZE}
+              height={LOGO_SIZE}
+            />
+            <section>네이버 로그인</section>
+          </a>
         </button>
       </div>
     </>

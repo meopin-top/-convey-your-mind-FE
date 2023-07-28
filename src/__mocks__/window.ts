@@ -24,5 +24,20 @@ export function createLocalStorageMock(storage: TStorage = {}) {
 
   Object.defineProperty(window, "localStorage", {
     value: localStorageMock,
+    configurable: true,
+  })
+}
+
+export function createFetchMock(fetchMock: jest.SpyInstance) {
+  Object.defineProperty(window, "fetch", {
+    value: fetchMock,
+    configurable: true,
+  })
+}
+
+export function createAlertMock() {
+  Object.defineProperty(window, "alert", {
+    value: jest.fn(),
+    configurable: true,
   })
 }

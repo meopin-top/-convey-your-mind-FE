@@ -1,9 +1,16 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
+import {redirect} from "next/navigation"
 import SignIn from "@/components/app/SignIn"
 import type {TProps} from "@/components/SecretInput"
-import {post} from "@/api"
-import Storage from "@/store/local-storage"
 import {SIGN_IN} from "@/constants/response-code"
+import ROUTE from "@/constants/route"
+import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
+
+const requestMock = jest.fn()
+
+jest.mock("next/navigation", () => ({
+  redirect: jest.fn(),
+}))
 
 jest.mock("../../../components", () => ({
   __esModule: true,
@@ -12,24 +19,27 @@ jest.mock("../../../components", () => ({
   ),
 }))
 
-jest.mock("../../../api", () => ({
-  post: jest.fn(),
+jest.mock("../../../hooks/use-request.ts", () => ({
+  __esModule: true,
+  default: () => ({
+    request: requestMock,
+  }),
 }))
 
 describe("SignIn", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
+    createAlertMock()
+    createLocalStorageMock()
   })
 
   afterAll(() => {
-    windowAlertMock.mockRestore()
+    window.localStorage.clear()
   })
 
-  it("유저 아이디가 올바르게 변경된다.", () => {
+  it("유저 아이디가 올바르게 변경된다.", async () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement
@@ -39,12 +49,15 @@ describe("SignIn", () => {
     fireEvent.change(userIdInput, {target: {value}})
 
     // then
-    expect(userIdInput.value).toEqual(value)
+    await waitFor(() => {
+      expect(userIdInput.value).toEqual(value)
+    })
   })
 
-  it("유저 비밀번호가 올바르게 변경된다.", () => {
+  it("유저 비밀번호가 올바르게 변경된다.", async () => {
     // given
     render(<SignIn />)
+
     const passwordInput = screen.getByPlaceholderText(
       "나의 PW 입력하기"
     ) as HTMLInputElement
@@ -54,12 +67,15 @@ describe("SignIn", () => {
     fireEvent.change(passwordInput, {target: {value}})
 
     // then
-    expect(passwordInput.value).toEqual(value)
+    await waitFor(() => {
+      expect(passwordInput.value).toEqual(value)
+    })
   })
 
-  it("로그인을 시도하면 post가 호출되고, 로그인 성공 유무와 상관 없이 alert가 호출된다.", async () => {
+  it("로그인을 시도하면 request가 호출되고, 로그인 성공 유무와 상관 없이 alert가 호출된다.", async () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement
@@ -72,7 +88,7 @@ describe("SignIn", () => {
     const userId = "userId"
     const password = "password"
 
-    ;(post as jest.Mock).mockResolvedValueOnce({
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({
       message,
     })
 
@@ -82,20 +98,17 @@ describe("SignIn", () => {
     fireEvent.click(signInButton)
 
     await waitFor(() => {
-      expect(post).toHaveBeenCalledTimes(1)
-      expect(post).toHaveBeenCalledWith("/users/sign-in", {
-        userId,
-        password,
-      })
+      expect(requestMock).toHaveBeenCalledTimes(1)
 
-      expect(windowAlertMock).toBeCalledTimes(1)
-      expect(windowAlertMock).toHaveBeenCalledWith(message)
+      expect(window.alert).toBeCalledTimes(1)
+      expect(window.alert).toHaveBeenCalledWith(message)
     })
   })
 
-  it("로그인 인증에 성공하면 Storage에 닉네임이 저장된다.", async () => {
+  it("로그인 인증에 성공하면 Storage에 닉네임과 프로필이 저장되고 redirect된다.", async () => {
     // given
     render(<SignIn />)
+
     const userIdInput = screen.getByPlaceholderText(
       "나의 ID 입력하기"
     ) as HTMLInputElement
@@ -105,19 +118,18 @@ describe("SignIn", () => {
     const signInButton = screen.getByText("로그인")
 
     const nickName = "nickName"
+    const profile = "https://profile.com"
     const userId = "userId"
     const password = "password"
 
-    ;(post as jest.Mock).mockResolvedValueOnce({
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({
       code: SIGN_IN.SUCCESS,
       message: "로그인 성공",
       data: {
         nickName,
+        profile,
       },
     })
-    const storageSetMock = jest
-      .spyOn(new Storage(), "set")
-      .mockImplementation(() => {})
 
     // when
     fireEvent.change(userIdInput, {target: {value: userId}})
@@ -126,8 +138,17 @@ describe("SignIn", () => {
 
     // then
     await waitFor(() => {
-      expect(storageSetMock).toHaveBeenCalledTimes(1)
-      expect(storageSetMock).toHaveBeenCalledWith("accessToken", nickName)
+      expect(window.localStorage.setItem).toHaveBeenCalledTimes(2)
+      expect(window.localStorage.setItem).toHaveBeenCalledWith(
+        "nickName",
+        nickName
+      )
+      expect(window.localStorage.setItem).toHaveBeenCalledWith(
+        "profile",
+        profile
+      )
+      expect(redirect).toHaveBeenCalledTimes(1)
+      expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
   })
 

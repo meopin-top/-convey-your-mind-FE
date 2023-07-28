@@ -1,0 +1,54 @@
+@import "../common/colors.scss";
+@import "../common/variables.scss";
+
+.account-inquiry {
+  .header {
+    text-align: center;
+  }
+
+  .main {
+    flex-direction: column;
+
+    margin-top: 24px;
+
+    h2 {
+      font-weight: bold;
+    }
+
+    p {
+      font-family: "hanna-air", "hanna-air fallback";
+      font-size: 10px;
+    }
+
+    span {
+      color: #ff0000;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .email,
+    .inquiry-button {
+      width: 80%;
+    }
+
+    .inquiry-button {
+      @include fill-dark-4;
+    }
+
+    .guide {
+      margin-top: 40px;
+
+      height: 24px;
+
+      font-size: 12px;
+
+      background-color: #d9d9d9;
+    }
+
+    .customer-service {
+      @include dark-4;
+    }
+  }
+}

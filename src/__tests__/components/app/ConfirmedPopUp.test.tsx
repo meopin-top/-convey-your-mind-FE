@@ -9,6 +9,7 @@ import {
   invalidEmails,
   validEmails,
 } from "@/__mocks__/fixtures/input"
+import {createAlertMock} from "@/__mocks__/window"
 
 jest.mock("../../../components/SecretInput", () => ({
   __esModule: true,
@@ -36,14 +37,8 @@ function renderConfirmedPopUp({
 }
 
 describe("ConfirmedPopUp", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
-  })
-
-  afterAll(() => {
-    windowAlertMock.mockRestore()
+    createAlertMock()
   })
 
   it("유저 아이디는 변경이 불가능하다.", () => {
@@ -115,7 +110,7 @@ describe("ConfirmedPopUp", () => {
 
     // then
     expect(onSubmit).not.toBeCalled()
-    expect(windowAlertMock).toBeCalled()
+    expect(window.alert).toBeCalled()
   })
 
   it("이메일 형식이 다르면 onSubmit를 호출하지 않고, alert를 호출한다.", () => {
@@ -145,7 +140,7 @@ describe("ConfirmedPopUp", () => {
 
       // then
       expect(onSubmit).not.toBeCalled()
-      expect(windowAlertMock).toBeCalled()
+      expect(window.alert).toBeCalled()
     })
   })
 
@@ -176,7 +171,7 @@ describe("ConfirmedPopUp", () => {
 
       // then
       expect(onSubmit).toBeCalled()
-      expect(windowAlertMock).toBeCalled()
+      expect(window.alert).toBeCalled()
     })
   })
 

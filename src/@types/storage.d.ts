@@ -1,1 +1,1 @@
-export type TLocalStorageKey = "accessToken"
+export type TLocalStorageKey = "nickName" | "profile"

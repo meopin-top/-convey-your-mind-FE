@@ -28,9 +28,9 @@ const SecretInput = ({className, inputRef, size = "md", ...props}: TProps) => {
       />
       <div className="icon-placer f-center mr-1" onClick={handleIsShowing}>
         {isShowing ? (
-          <EyeOpen className={size} />
-        ) : (
           <EyeClose className={size} />
+        ) : (
+          <EyeOpen className={size} />
         )}
       </div>
     </div>

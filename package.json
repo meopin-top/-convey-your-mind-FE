@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "depcheck": "npx depcheck"
   },
   "dependencies": {
     "next": "^13.4.4",

@@ -1,4 +1,5 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
+import {redirect} from "next/navigation"
 import SignUp from "@/components/app/SignUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import type {TProps as TPortalProps} from "@/components/Portal"
@@ -10,6 +11,15 @@ import {
   validPasswords,
   invalidPasswords,
 } from "@/__mocks__/fixtures/input"
+import ROUTE from "@/constants/route"
+import {createAlertMock} from "@/__mocks__/window"
+
+const testid = "confirmed-pop-up"
+
+jest.mock("next/navigation", () => ({
+  __esModule: true,
+  redirect: jest.fn(),
+}))
 
 jest.mock("../../../components", () => ({
   __esModule: true,
@@ -21,18 +31,12 @@ jest.mock("../../../components", () => ({
 
 jest.mock("../../../components/app", () => ({
   __esModule: true,
-  ConfirmedPopUp: () => <div data-testid="confirmed-pop-up" />,
+  ConfirmedPopUp: () => <div data-testid={testid} />,
 }))
 
 describe("SignUp", () => {
-  let windowAlertMock: jest.SpyInstance
-
   beforeAll(() => {
-    windowAlertMock = jest.spyOn(window, "alert").mockImplementation()
-  })
-
-  afterAll(() => {
-    windowAlertMock.mockRestore()
+    createAlertMock()
   })
 
   it("유저 아이디가 올바르게 변경된다.", async () => {
@@ -100,7 +104,7 @@ describe("SignUp", () => {
         const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
 
         // then
-        expect(windowAlertMock).toBeCalled()
+        expect(window.alert).toBeCalled()
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     })
@@ -131,13 +135,13 @@ describe("SignUp", () => {
         const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
 
         // then
-        expect(windowAlertMock).toBeCalled()
+        expect(window.alert).toBeCalled()
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     })
   })
 
-  it("유저 아이디와 유저 비밀번호 형식이 올바르면 alert를 호출하지 않고, ConfirmedPopUp을 렌더링한다.", () => {
+  it("유저 아이디와 유저 비밀번호 형식이 올바르면 alert를 호출하지 않고 MY_PAGE로 리다이렉트된다.", () => {
     // given
     render(<SignUp />)
 
@@ -159,11 +163,9 @@ describe("SignUp", () => {
         })
 
         await waitFor(() => {
-          const confirmedPopUp = screen.getByTestId("confirmed-pop-up")
-
           // then
-          expect(windowAlertMock).toBeCalled()
-          expect(confirmedPopUp).toBeInTheDocument()
+          expect(window.alert).not.toBeCalled()
+          expect(redirect).toBeCalledWith(ROUTE.MY_PAGE)
         })
       })
     })

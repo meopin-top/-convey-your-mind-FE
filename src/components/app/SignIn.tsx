@@ -1,15 +1,28 @@
 "use client"
 
 import type {KeyboardEvent, MutableRefObject} from "react"
+import {redirect} from "next/navigation"
+import dynamic from "next/dynamic"
 import Link from "next/link"
 import {SecretInput} from "../"
-import {post} from "@/api"
-import Storage from "@/store/local-storage"
-import {SIGN_IN} from "@/constants/response-code"
+import useRequest from "@/hooks/use-request"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
+import Storage from "@/store/local-storage"
+import {SIGN_IN} from "@/constants/response-code"
+import ROUTE from "@/constants/route"
+import type {TSignInResponse} from "@/@types/auth"
+
+const Portal = dynamic(() => import("../Portal"), {
+  loading: () => <></>,
+})
+const Loading = dynamic(() => import("../Loading"), {
+  loading: () => <></>,
+})
 
 const SignIn = () => {
+  const {isLoading, request} = useRequest()
+
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
 
   const [userId, handleUserId] = useInput()
@@ -23,13 +36,20 @@ const SignIn = () => {
   }
 
   async function signIn() {
-    const {message, code, data} = await post("/users/sign-in", {
-      userId,
-      password,
+    const {message, code, data}: TSignInResponse = await request({
+      path: "/users/sign-in",
+      method: "post",
+      body: {
+        userId,
+        password,
+      },
     })
 
     if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("accessToken", data.nickName) // TODO(remove): nickName이 있으면 로그인한 것
+      new Storage().set("nickName", data.nickName)
+      new Storage().set("profile", data.profile)
+
+      redirect(ROUTE.MY_PAGE)
     }
 
     alert(message)
@@ -41,8 +61,8 @@ const SignIn = () => {
         type="text"
         className="user-id radius-sm mb-2"
         placeholder="나의 ID 입력하기"
-        minLength={6}
-        maxLength={20}
+        minLength={1}
+        maxLength={100}
         required
         value={userId}
         onKeyDown={handleUserIdInput}
@@ -51,8 +71,8 @@ const SignIn = () => {
       <SecretInput
         className="password radius-sm mb-2"
         placeholder="나의 PW 입력하기"
-        minLength={8}
-        maxLength={20}
+        minLength={1}
+        maxLength={100}
         required
         inputRef={passwordInput as MutableRefObject<HTMLInputElement | null>}
         value={password}
@@ -65,6 +85,7 @@ const SignIn = () => {
       <Link className="my-account" href="#">
         내 계정 정보 찾기
       </Link>
+      <Portal render={() => <Loading isLoading={isLoading} />} />
     </>
   )
 }

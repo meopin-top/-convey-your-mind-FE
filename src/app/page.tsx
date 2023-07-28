@@ -1,20 +1,13 @@
 import Image from "next/image"
+import {NeedNotLoggedIn} from "@/components"
 import {WithoutSignUp, WithSignUp, WithOauth} from "@/components/app"
 import {home} from "@/assets/images" // TODO: 슬로건 사진으로 교체
 
 const Home = () => {
   return (
     <>
-      <script
-        defer
-        src="https://t1.kakaocdn.net/kakao_js_sdk/2.2.0/kakao.min.js"
-        integrity="sha384-x+WG2i7pOR+oWb6O5GV5f1KN2Ko6N7PTGPS7UlasYWNxZMKQA63Cj/B2lbUmUfuC"
-        crossOrigin="anonymous"
-      />
-      <script
-        defer
-        src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"
-      />
+      <NeedNotLoggedIn />
+
       <div className="home root-wrapper">
         <header className="header">
           <Image src={home} alt="슬로건" loading="eager" height={60} />
