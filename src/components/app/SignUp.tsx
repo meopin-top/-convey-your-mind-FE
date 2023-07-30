@@ -77,9 +77,9 @@ const SignUp = () => {
       path: "/users/sign-up",
       method: "post",
       body: {
-        userId: userId.trim(),
-        password: password.trim(),
-        passwordCheck: confirmedPassword.trim(),
+        userId,
+        password,
+        passwordCheck: confirmedPassword,
       },
     })
 
