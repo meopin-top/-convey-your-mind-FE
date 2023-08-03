@@ -82,7 +82,7 @@ const SignIn = () => {
         onChange={handlePassword}
       />
       <button className="login md shadow-sm radius-md mb-4" onClick={signIn}>
-        로그인
+        로그인하기
       </button>
       <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>
         내 계정 정보 찾기
