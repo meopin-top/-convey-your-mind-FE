@@ -1,7 +1,7 @@
 "use client"
 
 import type {KeyboardEvent, MutableRefObject} from "react"
-import {redirect} from "next/navigation"
+import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import {SecretInput} from "../"
@@ -21,6 +21,8 @@ const Loading = dynamic(() => import("../Loading"), {
 })
 
 const SignIn = () => {
+  const router = useRouter()
+
   const {isLoading, request} = useRequest()
 
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
@@ -45,11 +47,13 @@ const SignIn = () => {
       },
     })
 
-    if (code !== SIGN_IN.SUCCESS) {
+    console.log(message, code, data)
+
+    if (code === SIGN_IN.SUCCESS) {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
 
-      redirect(ROUTE.MY_PAGE)
+      router.push(ROUTE.MY_PAGE)
     }
 
     alert(message)
