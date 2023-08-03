@@ -84,7 +84,7 @@ const SignIn = () => {
       <button className="login md shadow-sm radius-md mb-4" onClick={signIn}>
         로그인
       </button>
-      <Link className="my-account" href="#">
+      <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>
         내 계정 정보 찾기
       </Link>
       <Portal render={() => <Loading isLoading={isLoading} />} />
