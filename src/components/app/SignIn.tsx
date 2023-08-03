@@ -47,8 +47,6 @@ const SignIn = () => {
       },
     })
 
-    console.log(message, code, data)
-
     if (code === SIGN_IN.SUCCESS) {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
