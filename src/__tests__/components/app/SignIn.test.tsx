@@ -165,6 +165,6 @@ describe("SignIn", () => {
     ) as HTMLAnchorElement
 
     // then
-    expect(myAccountLink.href).toEqual("http://localhost/#")
+    expect(myAccountLink.href).toContain(ROUTE.ACCOUNT_INQUIRY)
   })
 })
