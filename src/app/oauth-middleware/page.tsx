@@ -33,8 +33,8 @@ const OauthMiddleware = () => {
       })
 
       if (code === SIGN_IN.SUCCESS) {
-        new Storage().set("nickName", data.nickName)
-        new Storage().set("profile", data.profile)
+        Storage.set("nickName", data.nickName)
+        Storage.set("profile", data.profile)
 
         router.replace(ROUTE.MY_PAGE)
       }

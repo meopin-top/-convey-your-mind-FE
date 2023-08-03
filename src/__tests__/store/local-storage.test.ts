@@ -10,24 +10,14 @@ describe("Storage", () => {
     window.localStorage.clear()
   })
 
-  it("Storage는 같은 인스턴스를 반환한다(싱글톤).", () => {
-    // given, when
-    const storage1 = new Storage()
-    const storage2 = new Storage()
-
-    // then
-    expect(storage1).toBe(storage2)
-  })
-
   it("Storage로부터 key값을 통해 데이터를 저장하고 가져올 수 있다.", () => {
     // given
     const key = "key"
     const value = "value"
-    const storage = new Storage()
 
     // when
-    storage.set(key, value)
-    const storedValue = storage.get(key)
+    Storage.set(key, value)
+    const storedValue = Storage.get(key)
 
     // then
     expect(window.localStorage.setItem).toHaveBeenCalledWith(key, value)
@@ -38,10 +28,9 @@ describe("Storage", () => {
   it("존재하지 않는 key값으로 조회 요청 시 null 값을 반환한다.", () => {
     // given
     const key = "nonexistentKey"
-    const storage = new Storage()
 
     // when
-    const nonExistingValue = storage.get(key)
+    const nonExistingValue = Storage.get(key)
 
     // then
     expect(localStorage.getItem).toHaveBeenCalledWith(key)
@@ -51,10 +40,9 @@ describe("Storage", () => {
   it("존재하지 않는 key값 삭제를 요청할 경우 false를 반환한다.", () => {
     // given
     const key = "nonexistentKey"
-    const storage = new Storage()
 
     // when
-    const result = storage.remove(key)
+    const result = Storage.remove(key)
 
     // then
     expect(window.localStorage.removeItem).not.toHaveBeenCalled()
@@ -65,11 +53,10 @@ describe("Storage", () => {
     // given
     const key = "key"
     const value = "value"
-    const storage = new Storage()
 
     // when
-    storage.set(key, value)
-    const result = storage.remove(key)
+    Storage.set(key, value)
+    const result = Storage.remove(key)
 
     // then
     expect(window.localStorage.removeItem).toHaveBeenCalledWith(key)

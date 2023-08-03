@@ -45,9 +45,9 @@ const SignIn = () => {
       },
     })
 
-    if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("nickName", data.nickName)
-      new Storage().set("profile", data.profile)
+    if (code !== SIGN_IN.SUCCESS) {
+      Storage.set("nickName", data.nickName)
+      Storage.set("profile", data.profile)
 
       redirect(ROUTE.MY_PAGE)
     }

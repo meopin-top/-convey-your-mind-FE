@@ -8,7 +8,7 @@ function useCheckLoginStatus(shouldBeLoggedIn: boolean): boolean {
   const router = useRouter()
 
   useLayoutEffect(() => {
-    const isLoggedIn = new Storage().get("nickName")
+    const isLoggedIn = Storage.get("nickName")
 
     if (shouldBeLoggedIn && !isLoggedIn) {
       alert("로그인 후에 서비스를 이용해주세요.")
