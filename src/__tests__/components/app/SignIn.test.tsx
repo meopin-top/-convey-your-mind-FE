@@ -36,6 +36,24 @@ describe("SignIn", () => {
     window.localStorage.clear()
   })
 
+  it("유저 아이디 인풋, 유저 비밀번호 인풋, 로그인 버튼을 올바르게 렌더링한다", async () => {
+    // given, when
+    render(<SignIn />)
+
+    const userIdInput = screen.getByPlaceholderText("나의 ID 입력하기")
+    const passwordInput = screen.getByPlaceholderText("나의 PW 입력하기")
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
+
+    // then
+    await waitFor(() => {
+      expect(userIdInput).toBeInTheDocument()
+      expect(passwordInput).toBeInTheDocument()
+      expect(signInButton).toBeInTheDocument()
+    })
+  })
+
   it("유저 아이디가 올바르게 변경된다.", async () => {
     // given
     render(<SignIn />)
@@ -82,7 +100,9 @@ describe("SignIn", () => {
     const passwordInput = screen.getByPlaceholderText(
       "나의 PW 입력하기"
     ) as HTMLInputElement
-    const signInButton = screen.getByText("로그인")
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
 
     const message = "로그인 시도"
     const userId = "userId"
@@ -133,7 +153,9 @@ describe("SignIn", () => {
     const passwordInput = screen.getByPlaceholderText(
       "나의 PW 입력하기"
     ) as HTMLInputElement
-    const signInButton = screen.getByText("로그인")
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
 
     // when
     fireEvent.change(userIdInput, {target: {value: userId}})
