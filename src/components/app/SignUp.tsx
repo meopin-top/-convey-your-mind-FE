@@ -92,6 +92,10 @@ const SignUp = () => {
 
   return (
     <>
+      <section className="validity mb-1">
+        <div className={`${userId.length >= 6 ? "valid" : "invalid"}-light`} />
+        <span>6글자 이상</span>
+      </section>
       <input
         type="text"
         className="user-id radius-sm mb-2"
@@ -103,7 +107,33 @@ const SignUp = () => {
         onKeyDown={handleUserIdInput}
         onChange={handleUserId}
       />
-      <SecretInput // TODO: 유효성 평가 UI 변경
+      <section className="validity mb-1">
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.ENGLISH.test(password) ? "valid" : "invalid"
+          }-light`}
+        />
+        <span>영문</span>
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.NUMBER.test(password) ? "valid" : "invalid"
+          }-light`}
+        />
+        <span>숫자</span>
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)
+              ? "valid"
+              : "invalid"
+          }-light`}
+        />
+        <span>특수 문자</span>
+        <div
+          className={`${password.length >= 8 ? "valid" : "invalid"}-light`}
+        />
+        <span>8글자 이상</span>
+      </section>
+      <SecretInput
         className="password radius-sm mb-2"
         placeholder="나만의 PW로 시작하기"
         minLength={8}
