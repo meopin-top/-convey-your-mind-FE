@@ -1,7 +1,7 @@
 "use client"
 
 import {useState, type KeyboardEvent, type MutableRefObject} from "react"
-import {redirect} from "next/navigation" // TODO: fix - useRouter 이용
+import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
@@ -22,6 +22,8 @@ const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
 })
 
 const SignUp = () => {
+  const router = useRouter()
+
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
 
   const {isLoading, request} = useRequest()
@@ -82,7 +84,7 @@ const SignUp = () => {
     })
 
     if (code === SIGN_UP.SUCCESS) {
-      redirect(ROUTE.MY_PAGE)
+      router.push(ROUTE.MY_PAGE)
     } else {
       alert(message)
     }
