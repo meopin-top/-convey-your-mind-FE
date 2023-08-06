@@ -3,10 +3,10 @@ import SignUp from "@/components/app/SignUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {
-  validUserId,
-  invalidUserIds,
-  validPassword,
-  invalidPasswords,
+  VALID_USER_ID,
+  INVALID_USER_IDS,
+  VALID_PASSWORD,
+  INVALID_PASSWORDS,
 } from "@/__mocks__/fixtures/input"
 
 const confirmedPopUpTitle = /정보를 확인해주세요/
@@ -148,7 +148,7 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
     fireEvent.click(signUpButton)
 
@@ -173,7 +173,7 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
     fireEvent.click(signUpButton)
 
@@ -201,10 +201,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(passwordInput, {
-      target: {value: validPassword},
+      target: {value: VALID_PASSWORD},
     })
 
-    for (const userId of invalidUserIds) {
+    for (const userId of INVALID_USER_IDS) {
       fireEvent.change(userIdInput, {
         target: {value: userId},
       })
@@ -213,7 +213,7 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      expect(alertMock).toBeCalledTimes(invalidUserIds.length)
+      expect(alertMock).toBeCalledTimes(INVALID_USER_IDS.length)
       expect(alertMock).toBeCalledWith(
         "영문, 숫자, 특수문자만 사용 가능합니다."
       )
@@ -236,10 +236,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(passwordInput, {
-      target: {value: validPassword},
+      target: {value: VALID_PASSWORD},
     })
 
-    for (const userId of invalidUserIds) {
+    for (const userId of INVALID_USER_IDS) {
       fireEvent.change(userIdInput, {
         target: {value: userId},
       })
@@ -270,10 +270,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
 
-    for (const password of invalidPasswords) {
+    for (const password of INVALID_PASSWORDS) {
       fireEvent.change(passwordInput, {
         target: {value: password},
       })
@@ -282,7 +282,7 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      expect(alertMock).toBeCalledTimes(invalidPasswords.length)
+      expect(alertMock).toBeCalledTimes(INVALID_PASSWORDS.length)
       expect(alertMock).toBeCalledWith(
         "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
       )
@@ -305,10 +305,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
 
-    for (const password of invalidPasswords) {
+    for (const password of INVALID_PASSWORDS) {
       fireEvent.change(passwordInput, {
         target: {value: password},
       })
@@ -339,10 +339,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIddInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
     fireEvent.change(passwordInput, {
-      target: {value: validPassword},
+      target: {value: VALID_PASSWORD},
     })
     fireEvent.click(signUpButton)
 
@@ -368,10 +368,10 @@ describe("SignUp", () => {
 
     // when
     fireEvent.change(userIddInput, {
-      target: {value: validUserId},
+      target: {value: VALID_USER_ID},
     })
     fireEvent.change(passwordInput, {
-      target: {value: validPassword},
+      target: {value: VALID_PASSWORD},
     })
     fireEvent.click(signUpButton)
 
