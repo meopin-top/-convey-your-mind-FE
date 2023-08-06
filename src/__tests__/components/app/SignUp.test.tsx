@@ -13,7 +13,7 @@ const confirmedPopUpTitle = /정보를 확인해주세요/
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
-  redirect: jest.fn(),
+  useRouter: jest.fn(),
 }))
 
 jest.mock("../../../components/SecretInput.tsx", () => ({
