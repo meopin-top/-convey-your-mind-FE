@@ -1,7 +1,15 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/react"
 import {renderHook} from "@testing-library/react-hooks" // react 17 warning 발생
 import useRequest from "@/hooks/use-request"
-import {createFetchMock} from "@/__mocks__/window"
+import useLogOut from "@/hooks/use-log-out"
+import {
+  createFetchMock,
+  createAlertMock,
+  deleteFetchMock,
+} from "@/__mocks__/window"
+import {UNAUTHORIZED} from "@/constants/response-code"
+
+jest.mock("../../hooks/use-log-out.ts")
 
 const testid = "error-box"
 
@@ -9,7 +17,7 @@ function TestComponent() {
   const {isLoading, error, request} = useRequest()
 
   async function getDataMock() {
-    request({
+    await request({
       path: "/test",
     })
   }
@@ -25,6 +33,14 @@ function TestComponent() {
 }
 
 describe("useRequest", () => {
+  beforeAll(() => {
+    createAlertMock()
+  })
+
+  afterEach(() => {
+    deleteFetchMock()
+  })
+
   it("처음에는 초깃값을 반환한다.", () => {
     // given, when
     createFetchMock(jest.fn().mockResolvedValueOnce(undefined))
@@ -85,10 +101,37 @@ describe("useRequest", () => {
     // then
     await waitFor(() => {
       expect(errorTestBox).toBeInTheDocument()
-    })
-
-    await waitFor(() => {
       expect(button.disabled).toBeFalsy()
+    })
+  })
+
+  it("request 호출 시 응답 코드가 UNAUTHORIZED라면 alert 호출 후 로그아웃 처리한다.", async () => {
+    // given, when
+    const logOutMock = jest.fn()
+    ;(useLogOut as jest.Mock).mockReturnValue(logOutMock)
+    createFetchMock(
+      jest.fn().mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            code: UNAUTHORIZED,
+          }),
+      })
+    )
+
+    render(<TestComponent />)
+
+    const button = screen.getByRole("button") as HTMLButtonElement
+
+    // when
+    fireEvent.click(button)
+
+    // then
+    await waitFor(() => {
+      expect(window.alert).toBeCalledWith(
+        "인증이 만료되었습니다. 재로그인해주세요."
+      )
+      expect(logOutMock).toBeCalled()
     })
   })
 })
