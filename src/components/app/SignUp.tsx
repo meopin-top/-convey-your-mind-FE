@@ -59,7 +59,7 @@ const SignUp = () => {
       return
     }
 
-    if (!VALIDATOR.PASSWORD.test(password)) {
+    if (!VALIDATOR.PASSWORD._.test(password)) {
       alert("안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요.")
 
       return
