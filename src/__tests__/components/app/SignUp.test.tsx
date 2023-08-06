@@ -9,7 +9,7 @@ import {
   INVALID_PASSWORDS,
 } from "@/__mocks__/fixtures/input"
 
-const confirmedPopUpTitle = /정보를 확인해주세요/
+const CONFIRMED_POP_UP_TITLE = /정보를 확인해주세요/
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
@@ -61,39 +61,179 @@ describe("SignUp", () => {
     // given
     render(<SignUp />)
 
-    const userId = "test1234"
+    const USER_ID = "test1234"
     const userIdInput = screen.getByPlaceholderText(
       "나만의 ID로 시작하기"
     ) as HTMLInputElement
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: userId},
+      target: {value: USER_ID},
     })
 
     // then
     await waitFor(() => {
-      expect(userIdInput.value).toEqual(userId)
+      expect(userIdInput.value).toEqual(USER_ID)
     })
+  })
+
+  it("입력된 유저 아이디 길이에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const SHORT_USER_ID = "id"
+    const LONG_USER_ID = "userId"
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[0]
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: SHORT_USER_ID},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: LONG_USER_ID},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 영문 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_ENGLISH = "1234"
+    const PASSWORD_WITH_ENGLISH = "1234password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[1]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_ENGLISH},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_ENGLISH},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 숫자 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_NUMBER = "password"
+    const PASSWORD_WITH_NUMBER = "1234password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[2]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_NUMBER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_NUMBER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 특수 문자 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_SPECIAL_CHARACTER = "password"
+    const PASSWORD_WITH_SPECIAL_CHARACTER = "1234password!@"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[3]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_SPECIAL_CHARACTER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_SPECIAL_CHARACTER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 길이에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const SHORT_PASSWORD = "pw"
+    const LONG_PASSWORD = "password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[4]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: SHORT_PASSWORD},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: LONG_PASSWORD},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
   })
 
   it("유저 비밀번호가 올바르게 변경된다.", async () => {
     // given
     render(<SignUp />)
 
-    const password = "test1234"
+    const PASSWORD = "test1234"
     const passwordInput = screen.getByPlaceholderText(
       "나만의 PW로 시작하기"
     ) as HTMLInputElement
 
     // when
     fireEvent.change(passwordInput, {
-      target: {value: password},
+      target: {value: PASSWORD},
     })
 
     // then
     await waitFor(() => {
-      expect(passwordInput.value).toEqual(password)
+      expect(passwordInput.value).toEqual(PASSWORD)
     })
   })
 
@@ -129,7 +269,7 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      const confirmedPopUp = screen.queryByText(confirmedPopUpTitle)
+      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
 
       expect(confirmedPopUp).not.toBeInTheDocument()
     })
@@ -179,7 +319,7 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      const confirmedPopUp = screen.queryByText(confirmedPopUpTitle)
+      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
 
       expect(confirmedPopUp).not.toBeInTheDocument()
     })
@@ -247,7 +387,7 @@ describe("SignUp", () => {
 
       // then
       await waitFor(() => {
-        const confirmedPopUp = screen.queryByText(confirmedPopUpTitle)
+        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
 
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
@@ -316,7 +456,7 @@ describe("SignUp", () => {
 
       // then
       await waitFor(() => {
-        const confirmedPopUp = screen.queryByText(confirmedPopUpTitle)
+        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
 
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
@@ -377,7 +517,7 @@ describe("SignUp", () => {
 
     await waitFor(() => {
       // then
-      const confirmedPopUp = screen.getByText(confirmedPopUpTitle)
+      const confirmedPopUp = screen.getByText(CONFIRMED_POP_UP_TITLE)
 
       expect(confirmedPopUp).toBeInTheDocument()
     })
