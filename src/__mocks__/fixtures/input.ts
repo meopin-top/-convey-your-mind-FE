@@ -1,5 +1,6 @@
 export const validUserId = "test123"
 export const validUserIds = [
+  "test123",
   "asdf123",
   "nm,zxv",
   "asdfasdf",
@@ -15,14 +16,19 @@ export const invalidUserIds = [
 
 export const validPassword = "test1234!@#$"
 export const validPasswords = [
-  "asdf1234",
-  "zxcvjkl123",
-  "!@#safd^%",
+  "test1234!@#$",
+  "asdf1234!@#$",
+  "!@#safd^%0",
   "asdf123<>?",
-  "__!@#asdf@",
+  "__!@#asdf0@",
+  "Abcd1234!",
+  "P@ssw0rd",
+  "12@#$ABcd!9",
 ]
 export const invalidPasswords = [
-  "",
+  "!@#safd^%",
+  "asdf1234",
+  "zxcvjkl123",
   "qwer1234qwer1234qwer1234",
   "한글123asdf",
   "韓字123asdf",
@@ -33,6 +39,7 @@ export const invalidPasswords = [
 
 export const validEmail = "qwer@naver.com"
 export const validEmails = [
+  "qwer@naver.com",
   "example@example.com",
   "john.doe123@gmail.com",
   "alice_1234@yahoo.co.kr",
