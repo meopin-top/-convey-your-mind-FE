@@ -1,0 +1,41 @@
+#bottom-sheet.background {
+  $TRANSLATE_TIME: 0.5s;
+  $TRANSFORM: transform $TRANSLATE_TIME ease-in-out;
+
+  &.open {
+    background-color: rgba(#000, 0.3);
+
+    transform: translateY(0);
+    transition: $TRANSFORM, background-color 0s linear $TRANSLATE_TIME;
+  }
+
+  &.close {
+    background-color: transparent;
+
+    transform: translateY(100vh);
+    transition: $TRANSFORM, background-color 0s linear 0s;
+  }
+
+  .wrapper {
+    $HEIGHT: 90%;
+
+    padding: 10px;
+
+    position: relative;
+    top: calc(100% - $HEIGHT);
+
+    height: $HEIGHT;
+
+    background-color: #fff;
+
+    border-radius: 20px 20px 0 0;
+
+    overflow-y: scroll;
+
+    scrollbar-width: none; /* 파이어폭스 */
+
+    &::-webkit-scrollbar {
+      display: none; /* 크롬, 사파리, 오페라, 엣지 */
+    }
+  }
+}

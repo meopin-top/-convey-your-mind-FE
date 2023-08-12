@@ -1,4 +1,5 @@
 import Alert from "./Alert"
+import BottomSheet from "./BottomSheet"
 import Loading from "./Loading"
 import {NeedLoggedIn, NeedNotLoggedIn} from "./LoginChecker"
 import Portal from "./Portal"
@@ -7,6 +8,7 @@ import SecretInput from "./SecretInput"
 
 export {
   Alert,
+  BottomSheet,
   Loading,
   NeedLoggedIn,
   NeedNotLoggedIn,
