@@ -21,7 +21,7 @@
     }
 
     span {
-      color: #ff0000;
+      color: map-get($COLOR, DANGER);
     }
 
     button {

@@ -150,11 +150,11 @@
       }
 
       .valid-light {
-        background-color: #00ff00;
+        background-color: map-get($COLOR, NORMAL);
       }
 
       .invalid-light {
-        background-color: #ff0000;
+        background-color: map-get($COLOR, DANGER);
       }
     }
 
