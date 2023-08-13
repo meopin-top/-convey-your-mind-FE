@@ -1,12 +1,14 @@
 "use client"
 
 import {useEffect, type ReactNode, type HTMLAttributes} from "react"
+import {Close} from "@/assets/icons"
 
 type TProps = {
   children: ReactNode
   isOpen: boolean
   onClose: () => void
   isHandlingHistory?: boolean
+  isShowingClose?: boolean
 } & HTMLAttributes<HTMLDivElement>
 
 const BottomSheet = ({
@@ -14,6 +16,7 @@ const BottomSheet = ({
   isOpen,
   onClose,
   isHandlingHistory = true,
+  isShowingClose = true,
   ...props
 }: TProps) => {
   useEffect(() => {
@@ -33,6 +36,11 @@ const BottomSheet = ({
       onClick={onClose}
     >
       <div className="wrapper" {...props}>
+        {isShowingClose && (
+          <button className="close" onClick={onClose}>
+            <Close className="md" />
+          </button>
+        )}
         {children}
       </div>
     </article>
