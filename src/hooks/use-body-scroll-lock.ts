@@ -1,20 +1,20 @@
 type TScrollLock = {
   lockScroll: () => void
-  openScroll: () => void
+  unlockScroll: () => void
 }
 
 export default function useBodyScrollLock(): TScrollLock {
   let scrollPosition = 0
 
   const lockScroll = () => {
-    scrollPosition = window.pageYOffset
+    scrollPosition = window.scrollY
     document.body.style.overflow = "hidden"
     document.body.style.position = "fixed"
     document.body.style.top = `-${scrollPosition}px`
     document.body.style.width = "100%"
   }
 
-  const openScroll = () => {
+  const unlockScroll = () => {
     document.body.style.removeProperty("overflow")
     document.body.style.removeProperty("position")
     document.body.style.removeProperty("top")
@@ -22,5 +22,5 @@ export default function useBodyScrollLock(): TScrollLock {
     window.scrollTo(0, scrollPosition)
   }
 
-  return {lockScroll, openScroll}
+  return {lockScroll, unlockScroll}
 }

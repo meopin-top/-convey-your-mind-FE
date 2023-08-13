@@ -4,12 +4,12 @@ import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
 const scrollY = 100
 
 const TestComponent = () => {
-  const {lockScroll, openScroll} = useBodyScrollLock()
+  const {lockScroll, unlockScroll} = useBodyScrollLock()
 
   return (
     <>
       <button onClick={lockScroll}>lock</button>
-      <button onClick={openScroll}>open</button>
+      <button onClick={unlockScroll}>unlock</button>
     </>
   )
 }
@@ -41,11 +41,11 @@ describe("useBodyScrollLock", () => {
     expect(document.body.style.width).toEqual("100%")
   })
 
-  it("openScroll을 호출하면 body 스크롤 이동이 가능하도록 스타일이 설정된다.", () => {
+  it("unlockScroll을 호출하면 body 스크롤 이동이 가능하도록 스타일이 설정된다.", () => {
     // given
     render(<TestComponent />)
 
-    const openButton = screen.getByRole("button", {name: "open"})
+    const openButton = screen.getByRole("button", {name: "unlock"})
 
     // when
     fireEvent.click(openButton)

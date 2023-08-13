@@ -27,7 +27,7 @@ const BottomSheet = ({
   isControllingScroll = true,
   ...props
 }: TProps) => {
-  const {lockScroll, openScroll} = useBodyScrollLock()
+  const {lockScroll, unlockScroll} = useBodyScrollLock()
 
   useEffect(() => {
     if (!isHandlingHistory) {
@@ -49,9 +49,9 @@ const BottomSheet = ({
     if (isOpen) {
       lockScroll()
     } else {
-      openScroll()
+      unlockScroll()
     }
-  }, [isControllingScroll, isOpen, lockScroll, openScroll])
+  }, [isControllingScroll, isOpen, lockScroll, unlockScroll])
 
   function handlePropagation(event: MouseEvent<HTMLDivElement>) {
     event.stopPropagation()
