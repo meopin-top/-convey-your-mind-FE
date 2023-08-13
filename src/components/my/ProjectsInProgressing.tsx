@@ -65,33 +65,31 @@ const ProjectsInProgressing = () => {
         <AllProjects />
       </div>
 
-      <ul>
-        {projects.length > 0 ? (
-          <>
-            {projects.map((project) => (
-              <li key={project.id} className="project mb-2">
-                {project.isCreator && <span className="crown">👑</span>}
-                <span className="name txt-ellipsis">{project.name}</span>
-                {project.status !== "finished" && (
-                  <span className="until">
-                    D-{Math.max(calculateRemainingDay(project.until), 0)}
-                  </span>
-                )}
-                <span
-                  className={`status ${project.status} f-center radius-xl mr-1 ml-1`}
-                >
-                  {statusMapper[project.status]}
+      {projects.length > 0 ? (
+        <ul>
+          {projects.map((project) => (
+            <li key={project.id} className="project mb-2">
+              {project.isCreator && <span className="crown">👑</span>}
+              <span className="name txt-ellipsis">{project.name}</span>
+              {project.status !== "finished" && (
+                <span className="until">
+                  D-{Math.max(calculateRemainingDay(project.until), 0)}
                 </span>
-                <span className="to">
-                  <Link href={project.sharingCode}>{`> 바로 가기`}</Link>
-                </span>
-              </li>
-            ))}
-          </>
-        ) : (
-          <li className="no-project">참여 중인 프로젝트가 없습니다.</li>
-        )}
-      </ul>
+              )}
+              <span
+                className={`status ${project.status} f-center radius-xl mr-1 ml-1`}
+              >
+                {statusMapper[project.status]}
+              </span>
+              <span className="to">
+                <Link href={project.sharingCode}>{`> 바로 가기`}</Link>
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="no-project">참여 중인 프로젝트가 없습니다.</div>
+      )}
     </div>
   )
 }

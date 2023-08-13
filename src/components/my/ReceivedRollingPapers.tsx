@@ -54,21 +54,19 @@ const ReceivedRollingPapers = () => {
         <AllReceivedRollingPapers />
       </div>
 
-      <ul className="rolling-paper">
-        {rollingPapers.length > 0 ? (
-          <>
-            {rollingPapers.map((rollingPaper) => (
-              <li key={rollingPaper.id} className="shadow-sm">
-                <Link href={rollingPaper.link} className="f-center pl-2 pr-2">
-                  <div className="name">{rollingPaper.name}</div>
-                </Link>
-              </li>
-            ))}
-          </>
-        ) : (
-          <li className="no-rolling-paper">받은 롤링페이퍼가 없습니다.</li>
-        )}
-      </ul>
+      {rollingPapers.length > 0 ? (
+        <ul className="rolling-paper">
+          {rollingPapers.map((rollingPaper) => (
+            <li key={rollingPaper.id} className="shadow-sm">
+              <Link href={rollingPaper.link} className="f-center pl-2 pr-2">
+                <div className="name">{rollingPaper.name}</div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="no-rolling-paper">받은 롤링페이퍼가 없습니다.</div>
+      )}
     </div>
   )
 }

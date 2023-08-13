@@ -194,7 +194,7 @@
 
       .rolling-paper {
         display: grid;
-        grid-template-columns: repeat(2, minmax(120px, auto));
+        grid-template-columns: repeat(2, 1fr);
         gap: 10px 20px;
 
         li {
