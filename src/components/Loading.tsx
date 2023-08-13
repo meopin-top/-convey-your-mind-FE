@@ -19,11 +19,11 @@ const Loading = ({
   size = "md",
   ...props
 }: TProps) => {
-  const [showClose, setShowClose] = useState(false)
+  const [isShowingClose, setIsShowingClose] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowClose(true)
+      setIsShowingClose(true)
     }, duration)
 
     return () => {
@@ -38,10 +38,10 @@ const Loading = ({
           <Spinner className={size} role="status" />
           {onClose && (
             <button
-              className={`close ${showClose ? "show" : "hide"}`}
+              className={`close ${isShowingClose ? "show" : "hide"}`}
               onClick={onClose}
             >
-              {showClose && <Close className="md" />}
+              {isShowingClose && <Close className="md" />}
             </button>
           )}
         </div>
