@@ -25,27 +25,16 @@ const BottomSheet = ({
   ...props
 }: TProps) => {
   useEffect(() => {
-    if (isHandlingHistory) {
-      window.addEventListener("popstate", onClose)
+    if (!isHandlingHistory) {
+      return
+    }
 
-      return () => {
-        window.removeEventListener("popstate", onClose)
-      }
+    window.addEventListener("popstate", onClose)
+
+    return () => {
+      window.removeEventListener("popstate", onClose)
     }
   }, [isHandlingHistory, onClose])
-
-  // useEffect(() => {
-  //   function removeScroll(event) {
-  //     event.preventDefault()
-  //     event.stopPropagation()
-  //   }
-
-  //   document.addEventListener("scroll", removeScroll)
-
-  //   return () => {
-  //     document.removeEventListener("scroll", removeScroll)
-  //   }
-  // }, [])
 
   function handlePropagation(event: MouseEvent<HTMLDivElement>) {
     event.stopPropagation()
