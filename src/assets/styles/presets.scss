@@ -59,7 +59,8 @@ input {
 }
 
 #portal > *,
-#redirecting {
+#redirecting,
+#bottom-sheet {
   position: fixed;
   inset: 0;
 }
