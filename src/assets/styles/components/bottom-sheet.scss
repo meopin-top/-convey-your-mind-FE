@@ -19,8 +19,6 @@
   .wrapper {
     $HEIGHT: 90%;
 
-    padding: 30px 10px 10px;
-
     position: relative;
     top: calc(100% - $HEIGHT);
 
@@ -39,11 +37,25 @@
     }
 
     .close {
-      position: absolute;
-      top: 8px;
-      right: 8px;
+      $PADDING: 8px;
 
-      cursor: pointer;
+      padding: $PADDING;
+
+      position: sticky;
+      top: 0;
+      right: 0;
+
+      height: calc(18px + $PADDING * 2);
+
+      background-color: inherit;
+
+      button {
+        cursor: pointer;
+      }
+    }
+
+    .content {
+      padding: 0 10px 10px;
     }
   }
 }

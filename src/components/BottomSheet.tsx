@@ -34,6 +34,19 @@ const BottomSheet = ({
     }
   }, [isHandlingHistory, onClose])
 
+  // useEffect(() => {
+  //   function removeScroll(event) {
+  //     event.preventDefault()
+  //     event.stopPropagation()
+  //   }
+
+  //   document.addEventListener("scroll", removeScroll)
+
+  //   return () => {
+  //     document.removeEventListener("scroll", removeScroll)
+  //   }
+  // }, [])
+
   function handlePropagation(event: MouseEvent<HTMLDivElement>) {
     event.stopPropagation()
   }
@@ -44,13 +57,15 @@ const BottomSheet = ({
       className={`${isOpen ? "open" : "close"} background`}
       onClick={onClose}
     >
-      <div className="wrapper" {...props} onClick={handlePropagation}>
+      <div className="wrapper" onClick={handlePropagation} {...props}>
         {isShowingClose && (
-          <button className="close" onClick={onClose}>
-            <Close className="md" />
-          </button>
+          <div className="close">
+            <button onClick={onClose} className="fl-r">
+              <Close className="sm" />
+            </button>
+          </div>
         )}
-        {children}
+        <div className="content">{children}</div>
       </div>
     </article>
   )
