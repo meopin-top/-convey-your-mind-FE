@@ -1,6 +1,11 @@
 "use client"
 
-import {useEffect, type ReactNode, type HTMLAttributes} from "react"
+import {
+  useEffect,
+  type ReactNode,
+  type HTMLAttributes,
+  type MouseEvent,
+} from "react"
 import {Close} from "@/assets/icons"
 
 type TProps = {
@@ -29,13 +34,17 @@ const BottomSheet = ({
     }
   }, [isHandlingHistory, onClose])
 
+  function handlePropagation(event: MouseEvent<HTMLDivElement>) {
+    event.stopPropagation()
+  }
+
   return (
     <article
       id="bottom-sheet"
       className={`${isOpen ? "open" : "close"} background`}
       onClick={onClose}
     >
-      <div className="wrapper" {...props}>
+      <div className="wrapper" {...props} onClick={handlePropagation}>
         {isShowingClose && (
           <button className="close" onClick={onClose}>
             <Close className="md" />
