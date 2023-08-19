@@ -43,7 +43,7 @@
     }
 
     .tooltip {
-      width: calc(90% - $PAGE_ROOT_MARGIN);
+      width: calc(90% - $PAGE_ROOT_PADDING);
 
       .description {
         @include fill-default;
