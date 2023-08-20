@@ -1,5 +1,6 @@
 @import "../common/colors.scss";
 @import "../common/variables.scss";
+@import "../utility-first.scss";
 
 .my-page {
   .main {
@@ -109,7 +110,7 @@
     .projects {
       margin-bottom: $SEPARATOR_MARGIN;
 
-      .title {
+      & > .title {
         padding: 8px;
 
         font-weight: normal;
@@ -207,15 +208,70 @@
             height: 100%;
 
             .name {
-              display: -webkit-box;
-
-              overflow: hidden;
-              text-overflow: ellipsis;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
+              @include txt-ellipsis-n(2);
             }
           }
         }
+      }
+    }
+
+    .all-projects {
+      flex-direction: column;
+
+      & > .title {
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .description {
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .project {
+        display: list-item;
+
+        a {
+          display: flex;
+          align-items: center;
+          column-gap: 4px;
+
+          padding: 4px 8px;
+
+          border: 1px solid #dedede;
+
+          .crown {
+            &.shown {
+              opacity: 1;
+            }
+
+            &.hidden {
+              opacity: 0;
+            }
+          }
+
+          .name {
+            @include txt-ellipsis-n(2);
+          }
+        }
+      }
+    }
+
+    .pagination {
+      column-gap: 8px;
+
+      font-size: 12px;
+
+      input {
+        width: 40px;
+
+        padding: 2px 4px;
+
+        font-size: 12px;
+      }
+
+      button {
+        font-weight: 700;
       }
     }
   }

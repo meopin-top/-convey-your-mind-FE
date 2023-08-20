@@ -69,6 +69,15 @@
   white-space: nowrap;
 }
 
+@mixin txt-ellipsis-n($line) {
+  display: -webkit-box;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
 .highlight {
   color: map-get($COLOR, DANGER);
   text-decoration: underline;
