@@ -92,7 +92,7 @@ const AllProjects = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
 
-  const countPerPage = 5
+  const COUNT_PER_PAGE = 5
 
   function openBottomSheet() {
     setIsBottomSheetOpen(true)
@@ -144,7 +144,7 @@ const AllProjects = () => {
 
   function getLastPage() {
     return projectInformation
-      ? Math.ceil(projectInformation.totalCount / countPerPage)
+      ? Math.ceil(projectInformation.totalCount / COUNT_PER_PAGE)
       : getFirstPage()
   }
 
