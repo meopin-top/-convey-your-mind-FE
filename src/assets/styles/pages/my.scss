@@ -110,6 +110,16 @@
     .projects {
       margin-bottom: $SEPARATOR_MARGIN;
 
+      #bottom-sheet {
+        .wrapper {
+          $HEIGHT: 350px;
+
+          top: calc(100vh - $HEIGHT);
+
+          height: $HEIGHT;
+        }
+      }
+
       & > .title {
         padding: 8px;
 

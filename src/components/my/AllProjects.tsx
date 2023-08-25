@@ -13,7 +13,7 @@ const BottomSheet = dynamic(() => import("../BottomSheet"), {
 
 // ProjectsInProgressing.tsx랑 겹침
 // TODO: API 명세 나오면 공통으로 선언
-type TStatus = "ready" | "created" | "finished"
+export type TStatus = "ready" | "created" | "finished"
 
 type TProject = {
   id: number
@@ -29,7 +29,7 @@ type TResponse = {
   projects: TProject[]
 }
 
-const statusMapper = {
+export const statusMapper = {
   ready: "참여 완료",
   created: "작성 전",
   finished: "전달 완료",
@@ -152,6 +152,7 @@ const AllProjects = () => {
     // TODO: API 연동
 
     setProjectInformation(data)
+    alert("API 연동") // TODO: request로 변경하기
   }
 
   return (
