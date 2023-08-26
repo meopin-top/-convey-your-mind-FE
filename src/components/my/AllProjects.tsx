@@ -6,6 +6,7 @@ import {calculateRemainingDay} from "@/utils/formatter"
 import Link from "next/link"
 import useRequest from "@/hooks/use-request"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
+import usePagination from "@/hooks/use-pagination"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {
   loading: () => <></>,
@@ -81,18 +82,29 @@ const data: TResponse = {
   ],
 }
 
+const COUNT_PER_PAGE = 5
+const INITIAL_PROJECT_INFORMATION: TResponse = {
+  totalCount: 0,
+  projects: [],
+}
+
 const AllProjects = () => {
+  const {
+    getFirstPage,
+    getLastPage: calculateLastPage,
+    isValidPage,
+  } = usePagination() // useState 초깃값으로 사용하기 위함
+
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
-  const [projectInformation, setProjectInformation] =
-    useState<TResponse | null>(null)
+  const [projectInformation, setProjectInformation] = useState<TResponse>(
+    INITIAL_PROJECT_INFORMATION
+  )
   const [page, setPage] = useState(getFirstPage())
 
   const [inputPage, handleInputPage] = useInput(getFirstPage().toString())
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
-
-  const COUNT_PER_PAGE = 5
 
   function openBottomSheet() {
     setIsBottomSheetOpen(true)
@@ -103,7 +115,7 @@ const AllProjects = () => {
   function closeBottomSheet() {
     setIsBottomSheetOpen(false)
     setPage(1)
-    setProjectInformation(null)
+    setProjectInformation(INITIAL_PROJECT_INFORMATION)
   }
 
   function clickPaginationArrow(page: number) {
@@ -121,7 +133,13 @@ const AllProjects = () => {
     }
 
     const page = parseInt(inputPage)
-    if (!isValidPage(page)) {
+    if (
+      !isValidPage({
+        page,
+        totalCount: projectInformation.totalCount,
+        countPerPage: COUNT_PER_PAGE,
+      })
+    ) {
       alert("유효한 페이지 범위가 아닙니다.")
 
       return
@@ -131,21 +149,11 @@ const AllProjects = () => {
     fetchProjectInformation()
   }
 
-  function isValidPage(page: number) {
-    const firstPage = getFirstPage()
-    const lastPage = getLastPage()
-
-    return firstPage <= page && page <= lastPage
-  }
-
-  function getFirstPage() {
-    return 1
-  }
-
   function getLastPage() {
-    return projectInformation
-      ? Math.ceil(projectInformation.totalCount / COUNT_PER_PAGE)
-      : getFirstPage()
+    return calculateLastPage({
+      totalCount: projectInformation.totalCount,
+      countPerPage: COUNT_PER_PAGE,
+    })
   }
 
   async function fetchProjectInformation() {
