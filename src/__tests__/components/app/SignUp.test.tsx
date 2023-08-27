@@ -1,147 +1,469 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
-import {redirect} from "next/navigation"
 import SignUp from "@/components/app/SignUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {
-  validUserId,
-  validUserIds,
-  invalidUserIds,
-  validPassword,
-  validPasswords,
-  invalidPasswords,
+  VALID_USER_ID,
+  INVALID_USER_IDS,
+  VALID_PASSWORD,
+  INVALID_PASSWORDS,
 } from "@/__mocks__/fixtures/input"
-import ROUTE from "@/constants/route"
-import {createAlertMock} from "@/__mocks__/window"
 
-const testid = "confirmed-pop-up"
+const CONFIRMED_POP_UP_TITLE = /정보를 확인해주세요/
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
-  redirect: jest.fn(),
+  useRouter: jest.fn(),
 }))
 
-jest.mock("../../../components", () => ({
+jest.mock("../../../components/SecretInput.tsx", () => ({
   __esModule: true,
-  SecretInput: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
+  default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
     <input className="password" ref={inputRef} {...props} />
   ),
-  Portal: ({render}: TPortalProps) => <>{render()}</>,
 }))
 
-jest.mock("../../../components/app", () => ({
+jest.mock("../../../components/Portal.tsx", () => ({
   __esModule: true,
-  ConfirmedPopUp: () => <div data-testid={testid} />,
+  default: ({render}: TPortalProps) => <>{render()}</>,
 }))
 
 describe("SignUp", () => {
-  beforeAll(() => {
-    createAlertMock()
+  let alertMock: jest.SpyInstance
+
+  beforeEach(() => {
+    alertMock = jest.spyOn(window, "alert").mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    alertMock.mockRestore()
+  })
+
+  it("유저 아이디 인풋, 유저 비밀번호 인풋, 회원가입 버튼을 올바르게 렌더링한다.", async () => {
+    // given, when
+    render(<SignUp />)
+
+    const userIdInput = screen.getByPlaceholderText("나만의 ID로 시작하기")
+    const passwordInput = screen.getByPlaceholderText("나만의 PW로 시작하기")
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // then
+    await waitFor(() => {
+      expect(userIdInput).toBeInTheDocument()
+      expect(passwordInput).toBeInTheDocument()
+      expect(signUpButton).toBeInTheDocument()
+    })
   })
 
   it("유저 아이디가 올바르게 변경된다.", async () => {
     // given
     render(<SignUp />)
 
-    const userId = "test1234"
+    const USER_ID = "test1234"
     const userIdInput = screen.getByPlaceholderText(
       "나만의 ID로 시작하기"
     ) as HTMLInputElement
 
     // when
     fireEvent.change(userIdInput, {
-      target: {value: userId},
+      target: {value: USER_ID},
     })
 
     // then
     await waitFor(() => {
-      expect(userIdInput.value).toEqual(userId)
+      expect(userIdInput.value).toEqual(USER_ID)
     })
+  })
+
+  it("입력된 유저 아이디 길이에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const SHORT_USER_ID = "id"
+    const LONG_USER_ID = "userId"
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[0]
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: SHORT_USER_ID},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: LONG_USER_ID},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 영문 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_ENGLISH = "1234"
+    const PASSWORD_WITH_ENGLISH = "1234password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[1]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_ENGLISH},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_ENGLISH},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 숫자 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_NUMBER = "password"
+    const PASSWORD_WITH_NUMBER = "1234password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[2]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_NUMBER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_NUMBER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 특수 문자 포함 여부에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const PASSWORD_WITHOUT_SPECIAL_CHARACTER = "password"
+    const PASSWORD_WITH_SPECIAL_CHARACTER = "1234password!@"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[3]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITHOUT_SPECIAL_CHARACTER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: PASSWORD_WITH_SPECIAL_CHARACTER},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
+  })
+
+  it("입력된 유저 비밀번호 길이에 따라 유효성 light 상태가 변한다.", () => {
+    // given
+    render(<SignUp />)
+
+    const SHORT_PASSWORD = "pw"
+    const LONG_PASSWORD = "password"
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const validityLight = screen.getAllByRole("status")[4]
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: SHORT_PASSWORD},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("invalid-light")
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: LONG_PASSWORD},
+    })
+
+    // then
+    expect(validityLight.classList).toContain("valid-light")
   })
 
   it("유저 비밀번호가 올바르게 변경된다.", async () => {
     // given
     render(<SignUp />)
 
-    const password = "test1234"
+    const PASSWORD = "test1234"
     const passwordInput = screen.getByPlaceholderText(
       "나만의 PW로 시작하기"
     ) as HTMLInputElement
 
     // when
     fireEvent.change(passwordInput, {
-      target: {value: password},
+      target: {value: PASSWORD},
     })
 
     // then
     await waitFor(() => {
-      expect(passwordInput.value).toEqual(password)
+      expect(passwordInput.value).toEqual(PASSWORD)
     })
   })
 
-  it("유저 아이디 형식이 다르면 alert를 호출하고, ConfirmedPopUp을 렌더링하지 않는다.", () => {
+  it("유저 아이디를 입력하지 않으면 alert를 호출한다.", async () => {
     // given
     render(<SignUp />)
 
-    const passwordInput = screen.getByPlaceholderText(
-      "나만의 PW로 시작하기"
-    ) as HTMLInputElement
-    fireEvent.change(passwordInput, {
-      target: {value: validPassword},
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
     })
+
+    // when
+    fireEvent.click(signUpButton)
+
+    // then
+    await waitFor(() => {
+      expect(alertMock).toBeCalledWith(
+        "ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요."
+      )
+    })
+  })
+
+  it("유저 아이디를 입력하지 않으면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.click(signUpButton)
+
+    // then
+    await waitFor(() => {
+      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+
+      expect(confirmedPopUp).not.toBeInTheDocument()
+    })
+  })
+
+  it("유저 아이디를 입력해도 유저 비밀번호를 입력하지 않으면 alert를 호출한다.", async () => {
+    // given
+    render(<SignUp />)
 
     const userIdInput = screen.getByPlaceholderText(
       "나만의 ID로 시작하기"
     ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
 
-    invalidUserIds.forEach(async (userId) => {
-      // when
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: VALID_USER_ID},
+    })
+    fireEvent.click(signUpButton)
+
+    // then
+    await waitFor(() => {
+      expect(alertMock).toBeCalledWith(
+        "PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요."
+      )
+    })
+  })
+
+  it("유저 아이디를 입력해도 유저 비밀번호를 입력하지 않으면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: VALID_USER_ID},
+    })
+    fireEvent.click(signUpButton)
+
+    // then
+    await waitFor(() => {
+      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+
+      expect(confirmedPopUp).not.toBeInTheDocument()
+    })
+  })
+
+  it("유저 아이디 형식이 다르면 alert를 호출한다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: VALID_PASSWORD},
+    })
+
+    for (const userId of INVALID_USER_IDS) {
       fireEvent.change(userIdInput, {
         target: {value: userId},
       })
+      fireEvent.click(signUpButton)
+    }
 
-      await waitFor(() => {
-        const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
-
-        // then
-        expect(window.alert).toBeCalled()
-        expect(confirmedPopUp).not.toBeInTheDocument()
-      })
+    // then
+    await waitFor(() => {
+      expect(alertMock).toBeCalledTimes(INVALID_USER_IDS.length)
+      expect(alertMock).toBeCalledWith(
+        "영문, 숫자, 특수문자만 사용 가능합니다."
+      )
     })
   })
 
-  it("유저 비밀번호 형식이 다르면 alert를 호출하고, ConfirmedPopUp을 렌더링하지 않는다.", () => {
+  it("유저 아이디 형식이 다르면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
     // given
     render(<SignUp />)
 
-    const userIddInput = screen.getByPlaceholderText(
+    const userIdInput = screen.getByPlaceholderText(
       "나만의 ID로 시작하기"
     ) as HTMLInputElement
-    fireEvent.change(userIddInput, {
-      target: {value: validUserId},
-    })
-
     const passwordInput = screen.getByPlaceholderText(
       "나만의 PW로 시작하기"
     ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
 
-    invalidPasswords.forEach(async (password) => {
-      // when
+    // when
+    fireEvent.change(passwordInput, {
+      target: {value: VALID_PASSWORD},
+    })
+
+    for (const userId of INVALID_USER_IDS) {
+      fireEvent.change(userIdInput, {
+        target: {value: userId},
+      })
+      fireEvent.click(signUpButton)
+
+      // then
+      await waitFor(() => {
+        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+
+        expect(confirmedPopUp).not.toBeInTheDocument()
+      })
+    }
+  })
+
+  it("유저 비밀번호 형식이 다르면 alert를 호출한다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: VALID_USER_ID},
+    })
+
+    for (const password of INVALID_PASSWORDS) {
       fireEvent.change(passwordInput, {
         target: {value: password},
       })
+      fireEvent.click(signUpButton)
+    }
 
-      await waitFor(() => {
-        const confirmedPopUp = screen.queryByTestId("confirmed-pop-up")
-
-        // then
-        expect(window.alert).toBeCalled()
-        expect(confirmedPopUp).not.toBeInTheDocument()
-      })
+    // then
+    await waitFor(() => {
+      expect(alertMock).toBeCalledTimes(INVALID_PASSWORDS.length)
+      expect(alertMock).toBeCalledWith(
+        "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
+      )
     })
   })
 
-  it("유저 아이디와 유저 비밀번호 형식이 올바르면 alert를 호출하지 않고 MY_PAGE로 리다이렉트된다.", () => {
+  it("유저 비밀번호 형식이 다르면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const userIdInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(userIdInput, {
+      target: {value: VALID_USER_ID},
+    })
+
+    for (const password of INVALID_PASSWORDS) {
+      fireEvent.change(passwordInput, {
+        target: {value: password},
+      })
+      fireEvent.click(signUpButton)
+
+      // then
+      await waitFor(() => {
+        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+
+        expect(confirmedPopUp).not.toBeInTheDocument()
+      })
+    }
+  })
+
+  it("유저 아이디와 유저 비밀번호 형식이 올바르면 alert를 호출하지 않는다.", async () => {
     // given
     render(<SignUp />)
 
@@ -151,23 +473,53 @@ describe("SignUp", () => {
     const passwordInput = screen.getByPlaceholderText(
       "나만의 PW로 시작하기"
     ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
 
-    validUserIds.forEach((userId) => {
-      validPasswords.forEach(async (password) => {
-        // when
-        fireEvent.change(userIddInput, {
-          target: {value: userId},
-        })
-        fireEvent.change(passwordInput, {
-          target: {value: password},
-        })
+    // when
+    fireEvent.change(userIddInput, {
+      target: {value: VALID_USER_ID},
+    })
+    fireEvent.change(passwordInput, {
+      target: {value: VALID_PASSWORD},
+    })
+    fireEvent.click(signUpButton)
 
-        await waitFor(() => {
-          // then
-          expect(window.alert).not.toBeCalled()
-          expect(redirect).toBeCalledWith(ROUTE.MY_PAGE)
-        })
-      })
+    await waitFor(() => {
+      // then
+      expect(alertMock).not.toBeCalled()
+    })
+  })
+
+  it("유저 아이디와 유저 비밀번호 형식이 올바르면 ConfirmedPopUp을 렌더링한다.", async () => {
+    // given
+    render(<SignUp />)
+
+    const userIddInput = screen.getByPlaceholderText(
+      "나만의 ID로 시작하기"
+    ) as HTMLInputElement
+    const passwordInput = screen.getByPlaceholderText(
+      "나만의 PW로 시작하기"
+    ) as HTMLInputElement
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // when
+    fireEvent.change(userIddInput, {
+      target: {value: VALID_USER_ID},
+    })
+    fireEvent.change(passwordInput, {
+      target: {value: VALID_PASSWORD},
+    })
+    fireEvent.click(signUpButton)
+
+    await waitFor(() => {
+      // then
+      const confirmedPopUp = screen.getByText(CONFIRMED_POP_UP_TITLE)
+
+      expect(confirmedPopUp).toBeInTheDocument()
     })
   })
 })

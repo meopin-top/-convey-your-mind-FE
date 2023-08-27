@@ -1,0 +1,283 @@
+@import "../common/colors.scss";
+@import "../common/variables.scss";
+@import "../utility-first.scss";
+
+.my-page {
+  .main {
+    $SEPARATOR_MARGIN: 24px;
+
+    flex-direction: column;
+
+    font-family: "hanna-air", "hanna-air fallback";
+
+    .user-information {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      margin-bottom: $SEPARATOR_MARGIN;
+
+      width: 100%;
+
+      .profile {
+        flex: 0 0 108px;
+
+        position: relative;
+
+        height: 108px;
+      }
+
+      .nick-name {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+
+        flex-grow: 1;
+
+        .profile-edit {
+          width: 120px;
+
+          color: #fff;
+          font-size: 10px;
+
+          background-color: #000;
+        }
+      }
+    }
+
+    .rolling-paper-creation {
+      @include light-2;
+
+      width: 100%;
+    }
+
+    .shared-code-description {
+      display: inline-block;
+
+      width: 100%;
+
+      font-size: 12px;
+    }
+
+    .shared-code {
+      gap: 4px;
+
+      margin: 4px 0 $SEPARATOR_MARGIN;
+
+      width: 100%;
+      height: 45px;
+
+      font-size: 16px;
+
+      input {
+        width: 100%;
+        height: 100%;
+      }
+
+      button {
+        @include fill-light-1;
+
+        width: 85px;
+        height: 100%;
+      }
+    }
+
+    .projects,
+    .rolling-papers {
+      width: 100%;
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+
+      .view-all {
+        font-size: 12px;
+        font-weight: bold;
+        text-decoration: underline;
+
+        cursor: pointer;
+      }
+    }
+
+    .projects .no-project,
+    .rolling-papers .no-rolling-paper {
+      font-size: 10px;
+      font-family: "hanna-11-years", "hanna-11-years fallback";
+    }
+
+    .projects {
+      margin-bottom: $SEPARATOR_MARGIN;
+
+      #bottom-sheet {
+        .wrapper {
+          $HEIGHT: 350px;
+
+          top: calc(100vh - $HEIGHT);
+
+          height: $HEIGHT;
+        }
+      }
+
+      & > .title {
+        padding: 8px;
+
+        font-weight: normal;
+
+        border: 1px solid black;
+      }
+
+      .project {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+
+        .crown,
+        .name,
+        .until,
+        .to {
+          display: inline-block;
+        }
+
+        .crown,
+        .until,
+        .status,
+        .to {
+          font-size: 8px;
+        }
+
+        .name {
+          flex: 1;
+
+          font-size: 12px;
+        }
+
+        .until {
+          flex: 0 0 30px;
+
+          color: map-get($COLOR, DANGER);
+        }
+
+        .status {
+          flex: 0 0 60px;
+
+          height: 16px;
+
+          &.ready {
+            color: #fff;
+
+            background-color: #000;
+          }
+
+          &.created {
+            @include fill-info;
+          }
+
+          &.finished {
+            @include fill-light-4;
+          }
+        }
+
+        .to {
+          flex: 0 0 48px;
+
+          color: map-get($COLOR, DEFAULT);
+          text-decoration: underline;
+
+          cursor: pointer;
+        }
+      }
+    }
+
+    .rolling-papers {
+      margin-bottom: $SEPARATOR_MARGIN;
+
+      #bottom-sheet {
+        .wrapper {
+          $HEIGHT: 450px;
+
+          top: calc(100vh - $HEIGHT);
+
+          height: $HEIGHT;
+        }
+      }
+
+      & > .title {
+        padding: 8px;
+
+        font-weight: normal;
+
+        background-color: #f2cac9;
+
+        border: 1px solid black;
+      }
+
+      .rolling-paper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 20px;
+
+        li {
+          height: 86px;
+
+          background-color: #fbfbfb;
+
+          a {
+            width: 100%;
+            height: 100%;
+
+            .name {
+              @include txt-ellipsis-n(2);
+            }
+          }
+        }
+      }
+    }
+
+    .all-projects,
+    .all-rolling-papers {
+      flex-direction: column;
+
+      & > .title {
+        font-size: 15px;
+        font-weight: 900;
+      }
+
+      .description {
+        font-size: 12px;
+        font-weight: 500;
+      }
+    }
+
+    .all-projects {
+      .project {
+        display: list-item;
+
+        a {
+          display: flex;
+          align-items: center;
+          column-gap: 4px;
+
+          padding: 4px 8px;
+
+          border: 1px solid #dedede;
+
+          .crown {
+            &.shown {
+              opacity: 1;
+            }
+
+            &.hidden {
+              opacity: 0;
+            }
+          }
+
+          .name {
+            @include txt-ellipsis-n(2);
+          }
+        }
+      }
+    }
+  }
+}

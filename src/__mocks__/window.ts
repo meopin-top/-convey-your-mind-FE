@@ -35,6 +35,10 @@ export function createFetchMock(fetchMock: jest.SpyInstance) {
   })
 }
 
+export function deleteFetchMock() {
+  delete (window as any).fetch
+}
+
 export function createAlertMock() {
   Object.defineProperty(window, "alert", {
     value: jest.fn(),

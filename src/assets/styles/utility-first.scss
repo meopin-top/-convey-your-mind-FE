@@ -69,8 +69,17 @@
   white-space: nowrap;
 }
 
+@mixin txt-ellipsis-n($line) {
+  display: -webkit-box;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: $line;
+  -webkit-box-orient: vertical;
+}
+
 .highlight {
-  color: #ff0000;
+  color: map-get($COLOR, DANGER);
   text-decoration: underline;
 }
 
@@ -111,15 +120,15 @@
 // box-shadow
 .shadow {
   &-sm {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(#000, 0.1);
   }
 
   &-md {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 8px rgba(#000, 0.12);
   }
 
   &-lg {
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.11);
+    box-shadow: 0 15px 30px rgba(#000, 0.11);
   }
 }
 

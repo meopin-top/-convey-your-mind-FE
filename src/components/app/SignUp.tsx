@@ -1,7 +1,7 @@
 "use client"
 
 import {useState, type KeyboardEvent, type MutableRefObject} from "react"
-import {redirect} from "next/navigation"
+import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
@@ -22,6 +22,8 @@ const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
 })
 
 const SignUp = () => {
+  const router = useRouter()
+
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
 
   const {isLoading, request} = useRequest()
@@ -39,14 +41,26 @@ const SignUp = () => {
   }
 
   function checkValidation() {
-    if (!VALIDATOR.USER_ID.test(userId)) {
-      alert("아이디 형식을 확인해주세요.")
+    if (userId.length === 0) {
+      alert("ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
 
       return
     }
 
-    if (!VALIDATOR.PASSWORD.test(password)) {
-      alert("비밀번호 형식을 확인해주세요.")
+    if (password.length === 0) {
+      alert("PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
+
+      return
+    }
+
+    if (!VALIDATOR.USER_ID.test(userId)) {
+      alert("영문, 숫자, 특수문자만 사용 가능합니다.")
+
+      return
+    }
+
+    if (!VALIDATOR.PASSWORD._.test(password)) {
+      alert("안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요.")
 
       return
     }
@@ -63,14 +77,14 @@ const SignUp = () => {
       path: "/users/sign-up",
       method: "post",
       body: {
-        userId: userId.trim(),
-        password: password.trim(),
-        passwordCheck: confirmedPassword.trim(),
+        userId,
+        password,
+        passwordCheck: confirmedPassword,
       },
     })
 
     if (code === SIGN_UP.SUCCESS) {
-      redirect(ROUTE.MY_PAGE)
+      router.push(ROUTE.MY_PAGE)
     } else {
       alert(message)
     }
@@ -78,11 +92,17 @@ const SignUp = () => {
 
   return (
     <>
+      <section className="validity mb-1">
+        <div
+          className={`${userId.length >= 6 ? "valid" : "invalid"}-light`}
+          role="status"
+        />
+        <span>6글자 이상</span>
+      </section>
       <input
         type="text"
         className="user-id radius-sm mb-2"
         placeholder="나만의 ID로 시작하기"
-        // placeholder="영문, 숫자, 특수문자 사용 가능(6 ~ 20자)"
         minLength={6}
         maxLength={20}
         required
@@ -90,10 +110,39 @@ const SignUp = () => {
         onKeyDown={handleUserIdInput}
         onChange={handleUserId}
       />
+      <section className="validity mb-1">
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.ENGLISH.test(password) ? "valid" : "invalid"
+          }-light`}
+          role="status"
+        />
+        <span>영문</span>
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.NUMBER.test(password) ? "valid" : "invalid"
+          }-light`}
+          role="status"
+        />
+        <span>숫자</span>
+        <div
+          className={`${
+            VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)
+              ? "valid"
+              : "invalid"
+          }-light`}
+          role="status"
+        />
+        <span>특수 문자</span>
+        <div
+          className={`${password.length >= 8 ? "valid" : "invalid"}-light`}
+          role="status"
+        />
+        <span>8글자 이상</span>
+      </section>
       <SecretInput
         className="password radius-sm mb-2"
         placeholder="나만의 PW로 시작하기"
-        // placeholder="영문, 숫자, 특수문자중 두 가지 이상 혼합(8 ~ 20자)"
         minLength={8}
         maxLength={20}
         required
@@ -106,7 +155,7 @@ const SignUp = () => {
         className="login md shadow-sm radius-md"
         onClick={checkValidation}
       >
-        로그인
+        가입하기
       </button>
       <Portal
         render={() => (

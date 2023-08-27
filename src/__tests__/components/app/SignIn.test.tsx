@@ -1,5 +1,5 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
-import {redirect} from "next/navigation"
+import {useRouter} from "next/navigation"
 import SignIn from "@/components/app/SignIn"
 import type {TProps} from "@/components/SecretInput"
 import {SIGN_IN} from "@/constants/response-code"
@@ -9,7 +9,7 @@ import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 const requestMock = jest.fn()
 
 jest.mock("next/navigation", () => ({
-  redirect: jest.fn(),
+  useRouter: jest.fn(),
 }))
 
 jest.mock("../../../components", () => ({
@@ -34,6 +34,24 @@ describe("SignIn", () => {
 
   afterAll(() => {
     window.localStorage.clear()
+  })
+
+  it("유저 아이디 인풋, 유저 비밀번호 인풋, 로그인 버튼을 올바르게 렌더링한다", async () => {
+    // given, when
+    render(<SignIn />)
+
+    const userIdInput = screen.getByPlaceholderText("나의 ID 입력하기")
+    const passwordInput = screen.getByPlaceholderText("나의 PW 입력하기")
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
+
+    // then
+    await waitFor(() => {
+      expect(userIdInput).toBeInTheDocument()
+      expect(passwordInput).toBeInTheDocument()
+      expect(signInButton).toBeInTheDocument()
+    })
   })
 
   it("유저 아이디가 올바르게 변경된다.", async () => {
@@ -82,7 +100,9 @@ describe("SignIn", () => {
     const passwordInput = screen.getByPlaceholderText(
       "나의 PW 입력하기"
     ) as HTMLInputElement
-    const signInButton = screen.getByText("로그인")
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
 
     const message = "로그인 시도"
     const userId = "userId"
@@ -107,16 +127,6 @@ describe("SignIn", () => {
 
   it("로그인 인증에 성공하면 Storage에 닉네임과 프로필이 저장되고 redirect된다.", async () => {
     // given
-    render(<SignIn />)
-
-    const userIdInput = screen.getByPlaceholderText(
-      "나의 ID 입력하기"
-    ) as HTMLInputElement
-    const passwordInput = screen.getByPlaceholderText(
-      "나의 PW 입력하기"
-    ) as HTMLInputElement
-    const signInButton = screen.getByText("로그인")
-
     const nickName = "nickName"
     const profile = "https://profile.com"
     const userId = "userId"
@@ -129,6 +139,22 @@ describe("SignIn", () => {
         nickName,
         profile,
       },
+    })
+    const routerPushMock = jest.fn()
+    ;(useRouter as jest.Mock).mockReturnValue({
+      push: routerPushMock,
+    })
+
+    render(<SignIn />)
+
+    const userIdInput = screen.getByPlaceholderText(
+      "나의 ID 입력하기"
+    ) as HTMLInputElement
+    const passwordInput = screen.getByPlaceholderText(
+      "나의 PW 입력하기"
+    ) as HTMLInputElement
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
     })
 
     // when
@@ -147,8 +173,8 @@ describe("SignIn", () => {
         "profile",
         profile
       )
-      expect(redirect).toHaveBeenCalledTimes(1)
-      expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
+      expect(routerPushMock).toHaveBeenCalledTimes(1)
+      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     })
   })
 
@@ -161,6 +187,6 @@ describe("SignIn", () => {
     ) as HTMLAnchorElement
 
     // then
-    expect(myAccountLink.href).toEqual("http://localhost/#")
+    expect(myAccountLink.href).toContain(ROUTE.ACCOUNT_INQUIRY)
   })
 })

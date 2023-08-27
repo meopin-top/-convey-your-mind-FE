@@ -43,7 +43,7 @@
     }
 
     .tooltip {
-      width: calc(90% - $PAGE_ROOT_MARGIN);
+      width: calc(90% - $PAGE_ROOT_PADDING);
 
       .description {
         @include fill-default;
@@ -127,6 +127,34 @@
           position: relative;
           left: -$BORDER_WIDTH;
         }
+      }
+    }
+
+    .validity {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      column-gap: 4px;
+
+      width: 90%;
+
+      font-size: 10px;
+      font-family: unset;
+
+      .valid-light,
+      .invalid-light {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+      }
+
+      .valid-light {
+        background-color: map-get($COLOR, NORMAL);
+      }
+
+      .invalid-light {
+        background-color: map-get($COLOR, DANGER);
       }
     }
 

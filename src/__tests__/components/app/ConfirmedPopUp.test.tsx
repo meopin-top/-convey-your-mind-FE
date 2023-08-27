@@ -4,10 +4,10 @@ import ConfirmedPopUp, {
 } from "@/components/app/ConfirmedPopUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import {
-  validUserId as testUserId,
-  validPassword as testPassword,
-  invalidEmails,
-  validEmails,
+  VALID_USER_ID as TEST_USER_ID,
+  VALID_PASSWORD as TEST_PASSWORD,
+  INVALID_EMAILS,
+  VALID_EMAILS,
 } from "@/__mocks__/fixtures/input"
 import {createAlertMock} from "@/__mocks__/window"
 
@@ -20,8 +20,8 @@ jest.mock("../../../components/SecretInput", () => ({
 
 function renderConfirmedPopUp({
   isAlerting = true,
-  userId = testUserId,
-  password = testPassword,
+  userId = TEST_USER_ID,
+  password = TEST_PASSWORD,
   onClose = jest.fn(),
   onSubmit = jest.fn(),
 }: Partial<TConfirmedPopUpProps>) {
@@ -45,7 +45,9 @@ describe("ConfirmedPopUp", () => {
     // given, when
     renderConfirmedPopUp({})
 
-    const userIdInput = screen.getByDisplayValue(testUserId) as HTMLInputElement
+    const userIdInput = screen.getByDisplayValue(
+      TEST_USER_ID
+    ) as HTMLInputElement
 
     // then
     expect(userIdInput.disabled).toBeTruthy()
@@ -129,10 +131,10 @@ describe("ConfirmedPopUp", () => {
 
     // when
     fireEvent.change(confirmedPasswordInput, {
-      target: {value: testPassword},
+      target: {value: TEST_PASSWORD},
     })
 
-    invalidEmails.forEach((email) => {
+    INVALID_EMAILS.forEach((email) => {
       fireEvent.change(emailInput, {
         target: {value: email},
       })
@@ -160,10 +162,10 @@ describe("ConfirmedPopUp", () => {
 
     // when
     fireEvent.change(confirmedPasswordInput, {
-      target: {value: testPassword},
+      target: {value: TEST_PASSWORD},
     })
 
-    validEmails.forEach((email) => {
+    VALID_EMAILS.forEach((email) => {
       fireEvent.change(emailInput, {
         target: {value: email},
       })

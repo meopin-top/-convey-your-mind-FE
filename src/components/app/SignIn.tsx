@@ -1,7 +1,7 @@
 "use client"
 
 import type {KeyboardEvent, MutableRefObject} from "react"
-import {redirect} from "next/navigation"
+import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 import {SecretInput} from "../"
@@ -21,6 +21,8 @@ const Loading = dynamic(() => import("../Loading"), {
 })
 
 const SignIn = () => {
+  const router = useRouter()
+
   const {isLoading, request} = useRequest()
 
   const {ref: passwordInput, onKeyDown: handleUserIdInput} = useFocus(["Enter"])
@@ -46,10 +48,10 @@ const SignIn = () => {
     })
 
     if (code === SIGN_IN.SUCCESS) {
-      new Storage().set("nickName", data.nickName)
-      new Storage().set("profile", data.profile)
+      Storage.set("nickName", data.nickName)
+      Storage.set("profile", data.profile)
 
-      redirect(ROUTE.MY_PAGE)
+      router.push(ROUTE.MY_PAGE)
     }
 
     alert(message)
@@ -80,9 +82,9 @@ const SignIn = () => {
         onChange={handlePassword}
       />
       <button className="login md shadow-sm radius-md mb-4" onClick={signIn}>
-        로그인
+        로그인하기
       </button>
-      <Link className="my-account" href="#">
+      <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>
         내 계정 정보 찾기
       </Link>
       <Portal render={() => <Loading isLoading={isLoading} />} />

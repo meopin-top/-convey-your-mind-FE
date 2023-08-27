@@ -1,26 +1,22 @@
 import type {TLocalStorageKey} from "@/@types/storage"
 
 export default class Storage {
-  static #instance: Storage
-
-  constructor() {
-    if (Storage.#instance) {
-      return Storage.#instance
+  static get(key: TLocalStorageKey) {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key)
     }
 
-    Storage.#instance = this
+    return null
   }
 
-  get(key: TLocalStorageKey) {
-    return localStorage.getItem(key)
+  static set(key: TLocalStorageKey, value: string) {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(key, value)
+    }
   }
 
-  set(key: TLocalStorageKey, value: string) {
-    localStorage.setItem(key, value)
-  }
-
-  remove(key: TLocalStorageKey): boolean {
-    if (localStorage.getItem(key)) {
+  static remove(key: TLocalStorageKey): boolean {
+    if (typeof window !== "undefined" && localStorage.getItem(key)) {
       localStorage.removeItem(key)
 
       return true

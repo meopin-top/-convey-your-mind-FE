@@ -1,28 +1,34 @@
-export const validUserId = "test123"
-export const validUserIds = [
+export const VALID_USER_ID = "test123"
+export const VALID_USER_IDS = [
+  "test123",
   "asdf123",
   "nm,zxv",
   "asdfasdf",
   "123123123123",
   "!@#!@#!@!@#!@#",
 ]
-export const invalidUserIds = [
+export const INVALID_USER_IDS = [
   "한글asdf12",
   "123",
   "asdfasdfsdaasfdafsasfdafsaf",
   ")NCVADSF母",
 ]
 
-export const validPassword = "test1234!@#$"
-export const validPasswords = [
+export const VALID_PASSWORD = "test1234!@#$"
+export const VALID_PASSWORDS = [
+  "test1234!@#$",
+  "asdf1234!@#$",
+  "!@#safd^%0",
+  "asdf123<>?",
+  "__!@#asdf0@",
+  "Abcd1234!",
+  "P@ssw0rd",
+  "12@#$ABcd!9",
+]
+export const INVALID_PASSWORDS = [
+  "!@#safd^%",
   "asdf1234",
   "zxcvjkl123",
-  "!@#safd^%",
-  "asdf123<>?",
-  "__!@#asdf@",
-]
-export const invalidPasswords = [
-  "",
   "qwer1234qwer1234qwer1234",
   "한글123asdf",
   "韓字123asdf",
@@ -31,8 +37,9 @@ export const invalidPasswords = [
   "1231231212",
 ]
 
-export const validEmail = "qwer@naver.com"
-export const validEmails = [
+export const VALID_EMAIL = "qwer@naver.com"
+export const VALID_EMAILS = [
+  "qwer@naver.com",
   "example@example.com",
   "john.doe123@gmail.com",
   "alice_1234@yahoo.co.kr",
@@ -44,7 +51,7 @@ export const validEmails = [
   "email@example12345.com",
   "myemail@sub.domain.com",
 ]
-export const invalidEmails = [
+export const INVALID_EMAILS = [
   "justtext",
   "@example.com",
   "john.doe@example",
@@ -55,4 +62,43 @@ export const invalidEmails = [
   "john$doe@example.com",
   "john.doe@example_domain.com",
   "email@12345",
+]
+
+export const WITH_ENGLISHES = [
+  "abcdfasdf",
+  "asfdkj123",
+  "zxcvn21!#f",
+  ".vcm,z.12i9",
+  "ㅁㄴㅇㄹasdf",
+]
+export const WITHOUT_ENGLISHES = [
+  "12313123123",
+  '""""""""././.',
+  "ㅁㄴㅇㅁ★☆////",
+  "漢子ㄹㄹㄹㄹ123",
+]
+
+export const WITH_NUMBERS = [
+  "미럼ㅇㄴ123",
+  "asdf123123",
+  "123123213213239908",
+  "/,.zxmcv.123",
+]
+export const WITHOUT_NUMBERS = [
+  "ㅁㄴㅇㄻㄴㄹㅇㅋㅊㅌ푸ㅡ./.,/",
+  "ASDFasdfzxvc,.",
+  "//..,,mmnvcbjooqㅁㄴㅇㄹ",
+  "!#$&^%!%zcxv",
+]
+
+export const WITH_SPECIAL_CHARACTERS = [
+  '"ffcnm1"',
+  "'ffcmn./",
+  "()12njkcv",
+  "5%%5nvmㅇㅇㄻ",
+]
+export const WITHOUT_SPECIAL_CHARACTERS = [
+  "ffnmcv123",
+  "fmc123123ㅁㄴㅇㄹ",
+  "cnm아아ㅏㅇ아",
 ]

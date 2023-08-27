@@ -2,6 +2,22 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import WithoutSignUp from "@/components/app/WithoutSignUp"
 
 describe("WithoutSignUp", () => {
+  it("인풋과 버튼을 올바르게 렌더링한다.", () => {
+    // given, when
+    render(<WithoutSignUp />)
+
+    const sharedCodeInput = screen.getByPlaceholderText(
+      "공유코드로 바로 편지쓰기"
+    ) as HTMLInputElement
+    const participationButton = screen.getByRole("button", {
+      name: "입력",
+    })
+
+    // then
+    expect(sharedCodeInput).toBeInTheDocument()
+    expect(participationButton).toBeInTheDocument()
+  })
+
   it("공유코드 state를 올바르게 변경한다.", () => {
     // given
     render(<WithoutSignUp />)

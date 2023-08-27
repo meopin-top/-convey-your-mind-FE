@@ -1,3 +1,5 @@
+export const UNAUTHORIZED = 0
+
 export const SIGN_UP = {
   SUCCESS: 1001,
   DUPLICATED_ID: 1011,
