@@ -83,7 +83,7 @@ const data: TResponse = {
 }
 
 const COUNT_PER_PAGE = 5
-const INITIAL_PROJECT_INFORMATION: TResponse = {
+const INITIAL_PROJECT_DATA: TResponse = {
   totalCount: 0,
   projects: [],
 }
@@ -96,9 +96,8 @@ const AllProjects = () => {
   } = usePagination() // useState 초깃값으로 사용하기 위함
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
-  const [projectInformation, setProjectInformation] = useState<TResponse>(
-    INITIAL_PROJECT_INFORMATION
-  )
+  const [projectData, setProjectData] =
+    useState<TResponse>(INITIAL_PROJECT_DATA)
   const [page, setPage] = useState(getFirstPage())
 
   const [inputPage, handleInputPage] = useInput(getFirstPage().toString())
@@ -109,13 +108,13 @@ const AllProjects = () => {
   function openBottomSheet() {
     setIsBottomSheetOpen(true)
     window.history.pushState({bottomSheetOpen: true}, "")
-    fetchProjectInformation()
+    fetchProjectData()
   }
 
   function closeBottomSheet() {
     setIsBottomSheetOpen(false)
-    setPage(1)
-    setProjectInformation(INITIAL_PROJECT_INFORMATION)
+    setPage(getFirstPage())
+    setProjectData(INITIAL_PROJECT_DATA)
   }
 
   function clickPaginationArrow(page: number) {
@@ -123,7 +122,7 @@ const AllProjects = () => {
     handleInputPage({
       target: {value: page.toString()},
     } as TInputChangeEvent)
-    fetchProjectInformation()
+    fetchProjectData()
   }
 
   function searchPage(event: KeyboardEvent<HTMLInputElement>) {
@@ -136,7 +135,7 @@ const AllProjects = () => {
     if (
       !isValidPage({
         page,
-        totalCount: projectInformation.totalCount,
+        totalCount: projectData.totalCount,
         countPerPage: COUNT_PER_PAGE,
       })
     ) {
@@ -146,20 +145,20 @@ const AllProjects = () => {
     }
 
     setPage(page)
-    fetchProjectInformation()
+    fetchProjectData()
   }
 
   function getLastPage() {
     return calculateLastPage({
-      totalCount: projectInformation.totalCount,
+      totalCount: projectData.totalCount,
       countPerPage: COUNT_PER_PAGE,
     })
   }
 
-  async function fetchProjectInformation() {
+  async function fetchProjectData() {
     // TODO: API 연동
 
-    setProjectInformation(data)
+    setProjectData(data)
     alert("API 연동") // TODO: request로 변경하기
   }
 
@@ -174,9 +173,9 @@ const AllProjects = () => {
           <span className="description mb-4">
             프로젝트 클릭 시, 해당 페이지로 이동합니다.
           </span>
-          {projectInformation && projectInformation.projects.length > 0 ? (
+          {projectData && projectData.projects.length > 0 ? (
             <ul>
-              {projectInformation.projects.map((project) => (
+              {projectData.projects.map((project) => (
                 <li key={project.id} className="project mb-2">
                   <Link href={project.sharingCode}>
                     <span
