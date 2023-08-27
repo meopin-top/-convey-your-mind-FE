@@ -193,7 +193,17 @@
     .rolling-papers {
       margin-bottom: $SEPARATOR_MARGIN;
 
-      .title {
+      #bottom-sheet {
+        .wrapper {
+          $HEIGHT: 450px;
+
+          top: calc(100vh - $HEIGHT);
+
+          height: $HEIGHT;
+        }
+      }
+
+      & > .title {
         padding: 8px;
 
         font-weight: normal;
@@ -225,7 +235,8 @@
       }
     }
 
-    .all-projects {
+    .all-projects,
+    .all-rolling-papers {
       flex-direction: column;
 
       & > .title {
@@ -237,7 +248,9 @@
         font-size: 12px;
         font-weight: 500;
       }
+    }
 
+    .all-projects {
       .project {
         display: list-item;
 
