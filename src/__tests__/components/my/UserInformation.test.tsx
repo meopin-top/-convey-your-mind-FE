@@ -28,7 +28,7 @@ describe("UserInformation", () => {
     const PROFILE = "https://profile/"
     Storage.set("profile", PROFILE)
 
-    render(<UserInformation />)
+    render(<UserInformation right={<></>} />)
 
     const image = screen.getByAltText("프로필 이미지") as HTMLImageElement
 
@@ -41,7 +41,7 @@ describe("UserInformation", () => {
     // given, when
     Storage.set("nickName", "nickName")
 
-    render(<UserInformation />)
+    render(<UserInformation right={<></>} />)
 
     const image = screen.getByText(/nickName/)
 
@@ -49,9 +49,9 @@ describe("UserInformation", () => {
     expect(image).toBeInTheDocument()
   })
 
-  it("프로필 편집 버튼을 올바르게 렌더링한다.", () => {
+  it("right props을 올바르게 렌더링한다.", () => {
     // given, when
-    render(<UserInformation />)
+    render(<UserInformation right={<button>프로필 편집</button>} />)
 
     const profileEditButton = screen.getByRole("button", {
       name: "프로필 편집",
