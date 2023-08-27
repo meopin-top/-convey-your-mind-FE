@@ -7,7 +7,6 @@ import Link from "next/link"
 type TResponse = {
   id: number
   name: string
-  receivedAt: string
   link: string
 }
 
@@ -15,25 +14,21 @@ const data: TResponse[] = [
   {
     id: 1,
     name: "프로젝트 이름 텍스트 노출 완전 길게 테스트해보기 완전 길겡ㅇㅇㅇㅇㅇㅇ",
-    receivedAt: "Sat Aug 12 2023 21:30:16 GMT+0900",
     link: "https://www.naver.com",
   },
   {
     id: 2,
     name: "프로젝트 이름 텍스트 노출",
-    receivedAt: "Sat Aug 12 2023 21:30:16 GMT+0900",
     link: "https://www.naver.com",
   },
   {
     id: 3,
     name: "프로젝트 이름 텍스트 노출",
-    receivedAt: "Sat Aug 12 2023 21:30:16 GMT+0900",
     link: "https://www.naver.com",
   },
   {
     id: 4,
     name: "프로젝트 이름 텍스트 노출",
-    receivedAt: "Sat Aug 12 2023 21:30:16 GMT+0900",
     link: "https://www.naver.com",
   },
 ]
