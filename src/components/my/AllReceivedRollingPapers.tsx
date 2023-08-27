@@ -3,6 +3,7 @@
 import {useState, type KeyboardEvent} from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import Pagination from "../Pagination"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
 import useRequest from "@/hooks/use-request"
@@ -65,11 +66,7 @@ const INITIAL_RECEIVED_ROLLING_PAPER_DATA: TResponse = {
 }
 
 const AllReceivedRollingPapers = () => {
-  const {
-    getFirstPage,
-    getLastPage: calculateLastPage,
-    isValidPage,
-  } = usePagination() // useState 초깃값으로 사용하기 위함
+  const {getFirstPage, isValidPage} = usePagination() // useState 초깃값으로 사용하기 위함
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
   const [receivedRollingPaperData, setReceivedRollingPapersData] =
@@ -124,13 +121,6 @@ const AllReceivedRollingPapers = () => {
     fetchReceivedRollingPaperData()
   }
 
-  function getLastPage() {
-    return calculateLastPage({
-      totalCount: receivedRollingPaperData.totalCount,
-      countPerPage: COUNT_PER_PAGE,
-    })
-  }
-
   async function fetchReceivedRollingPaperData() {
     // TODO: API 연동
 
@@ -167,29 +157,15 @@ const AllReceivedRollingPapers = () => {
             </div>
           )}
         </div>
-        <div className="pagination f-center">
-          <button
-            className="previous"
-            disabled={page === getFirstPage()}
-            onClick={() => clickPaginationArrow(page - 1)}
-          >
-            {"<"}
-          </button>
-          <input
-            type="number"
-            onKeyDown={searchPage}
-            value={inputPage}
-            onChange={handleInputPage}
-          />{" "}
-          / {getLastPage()}
-          <button
-            className="next"
-            disabled={page === getLastPage()}
-            onClick={() => clickPaginationArrow(page + 1)}
-          >
-            {">"}
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          inputPage={inputPage}
+          totalCount={receivedRollingPaperData.totalCount}
+          countPerPage={COUNT_PER_PAGE}
+          handleInputPage={handleInputPage}
+          clickPaginationArrow={clickPaginationArrow}
+          searchPage={searchPage}
+        />
       </BottomSheet>
     </>
   )

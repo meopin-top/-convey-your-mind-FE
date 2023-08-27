@@ -2,8 +2,9 @@
 
 import {useState, type KeyboardEvent} from "react"
 import dynamic from "next/dynamic"
-import {calculateRemainingDay} from "@/utils/formatter"
 import Link from "next/link"
+import Pagination from "../Pagination"
+import {calculateRemainingDay} from "@/utils/formatter"
 import useRequest from "@/hooks/use-request"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
@@ -89,11 +90,7 @@ const INITIAL_PROJECT_DATA: TResponse = {
 }
 
 const AllProjects = () => {
-  const {
-    getFirstPage,
-    getLastPage: calculateLastPage,
-    isValidPage,
-  } = usePagination() // useState 초깃값으로 사용하기 위함
+  const {getFirstPage, isValidPage} = usePagination() // useState 초깃값으로 사용하기 위함
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
   const [projectData, setProjectData] =
@@ -148,13 +145,6 @@ const AllProjects = () => {
     fetchProjectData()
   }
 
-  function getLastPage() {
-    return calculateLastPage({
-      totalCount: projectData.totalCount,
-      countPerPage: COUNT_PER_PAGE,
-    })
-  }
-
   async function fetchProjectData() {
     // TODO: API 연동
 
@@ -204,29 +194,15 @@ const AllProjects = () => {
             <div className="no-project">참여 중인 프로젝트가 없습니다.</div>
           )}
         </div>
-        <div className="pagination f-center">
-          <button
-            className="previous"
-            disabled={page === getFirstPage()}
-            onClick={() => clickPaginationArrow(page - 1)}
-          >
-            {"<"}
-          </button>
-          <input
-            type="number"
-            onKeyDown={searchPage}
-            value={inputPage}
-            onChange={handleInputPage}
-          />{" "}
-          / {getLastPage()}
-          <button
-            className="next"
-            disabled={page === getLastPage()}
-            onClick={() => clickPaginationArrow(page + 1)}
-          >
-            {">"}
-          </button>
-        </div>
+        <Pagination
+          page={page}
+          inputPage={inputPage}
+          totalCount={projectData.totalCount}
+          countPerPage={COUNT_PER_PAGE}
+          handleInputPage={handleInputPage}
+          clickPaginationArrow={clickPaginationArrow}
+          searchPage={searchPage}
+        />
       </BottomSheet>
     </>
   )
