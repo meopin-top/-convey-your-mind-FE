@@ -1,5 +1,6 @@
 @import "../common/colors.scss";
 @import "../common/variables.scss";
+@import "../common/user.scss";
 @import "../utility-first.scss";
 
 .my-page {
@@ -11,37 +12,17 @@
     font-family: "hanna-air", "hanna-air fallback";
 
     .user-information {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+      @include user-information;
 
       margin-bottom: $SEPARATOR_MARGIN;
 
-      width: 100%;
+      .profile-edit {
+        width: 120px;
 
-      .profile {
-        flex: 0 0 108px;
+        color: #fff;
+        font-size: 10px;
 
-        position: relative;
-
-        height: 108px;
-      }
-
-      .nick-name {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-
-        flex-grow: 1;
-
-        .profile-edit {
-          width: 120px;
-
-          color: #fff;
-          font-size: 10px;
-
-          background-color: #000;
-        }
+        background-color: #000;
       }
     }
 
