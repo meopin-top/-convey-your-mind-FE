@@ -1,0 +1,146 @@
+@import "../common/colors";
+@import "../common/user";
+
+// 헤더 사용하는 페이지 최상단 wrapper 추가
+.my-page {
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  #navigation-bar.background {
+    $TRANSLATE_TIME: 0.5s;
+    $TRANSFORM: left $TRANSLATE_TIME ease-in-out;
+
+    left: 100vw;
+
+    &.open {
+      background-color: rgba(#000, 0.3);
+
+      left: 0;
+      transition: $TRANSFORM, background-color 0s linear $TRANSLATE_TIME;
+    }
+
+    &.close {
+      background-color: transparent;
+
+      left: 100vh;
+      transition: $TRANSFORM, background-color 0s linear 0s;
+    }
+
+    .wrapper {
+      @include fill-light-4;
+
+      $WIDTH: 85%;
+      $WRAPPER_PADDING: 10px;
+
+      padding: $WRAPPER_PADDING;
+
+      position: relative;
+      left: calc(100% - $WIDTH);
+
+      width: $WIDTH;
+      height: 100%;
+
+      color: #000;
+
+      overflow-y: scroll;
+
+      .close {
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .content {
+        $SEPARATOR_MARGIN: 24px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+
+        height: calc(100% - $WRAPPER_PADDING);
+
+        font-family: "hanna-air", "hanna-air fallback";
+
+        .user-information {
+          @include user-information;
+
+          margin-bottom: $SEPARATOR_MARGIN;
+
+          font-family: "hanna-11-years", "hanna-11-years fallback";
+
+          .log-out {
+            width: 120px;
+
+            color: #fff;
+            font-size: 10px;
+
+            background-color: #000;
+          }
+        }
+
+        .shortcut-link {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          padding: 0 24px;
+
+          width: 100%;
+          height: 48px;
+
+          font-size: 15px;
+
+          &.active {
+            font-size: 18px;
+            font-weight: bold;
+
+            background-color: rgba(#fff, 0.5);
+          }
+
+          .sub-link::before {
+            content: "ㄴ ";
+          }
+        }
+
+        .helper {
+          width: calc(100% + 2 * $WRAPPER_PADDING);
+
+          &-text {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+
+            height: 52px;
+
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffd43c;
+
+            background-color: rgba(#000, 0.75);
+          }
+
+          &-link {
+            padding: $WRAPPER_PADDING * 2;
+
+            flex-direction: column;
+            row-gap: 24px;
+
+            background-color: #fff;
+
+            button {
+              width: 100%;
+              height: 46px;
+
+              background-color: #fafafa;
+
+              box-shadow: 0px 4px 4px 0px rgba(#000, 0.4);
+            }
+          }
+        }
+      }
+    }
+  }
+}
