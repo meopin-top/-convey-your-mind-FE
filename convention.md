@@ -14,7 +14,7 @@
 10. 함수와 메서드의 이름은 동사로 시작한다. 다른 변수의 이름은 동사로 시작하지 않는다.
 11. hook은 접두사로 `use`를 사용하고 HoC는 접두사로 `with`를 사용한다.
 12. `this` 바인딩이 필요한 경우나 메모이제이션 훅 등 arrow 함수가 특별히 필요한 경우가 아니라면 함수 선언은 `function` 키워드로 통일한다.
-13. 컴포넌트 내부 선언 과정은 다음과 같다. `useState`, `useReducer`, `useDispatch` -> `useContext` -> `useRef` -> custom hook -> 일반 변수 -> `useEffect` -> 일반 함수 -> 바인딩 함수. 다만, 함수 간의 거리가 너무 멀어서 가독성이 해친다고 판단되면 일반 함수와 바인딩 함수의 선언 순서는 변경할 수 있다.
+13. 컴포넌트 내부 선언 과정은 다음과 같다. `useState`, `useReducer`, `useDispatch` -> `useContext` -> `useRef` -> custom hook -> 일반 변수 -> `useLayoutEffect` -> `useEffect` -> 일반 함수 -> 바인딩 함수. 다만, 함수 간의 거리가 너무 멀어서 가독성이 해친다고 판단되면 일반 함수와 바인딩 함수의 선언 순서는 변경할 수 있다.
 14. 웬만하면 default export 모듈 보다는 named export 모듈을 사용한다. 최근 번들러는 트리 쉐이킹이 둘 다 잘 지원되기 때문에 더 간결한 코드를 위해서이다.
 
 아래는 컴포넌트 예시이다.
