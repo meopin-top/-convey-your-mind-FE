@@ -4,7 +4,15 @@ import {useState, useEffect, useLayoutEffect} from "react"
 import Link from "next/link"
 import {UserInformation} from "./my"
 import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
-import {Hamburger, Close, Paper, Bulb} from "@/assets/icons"
+import {
+  Hamburger,
+  Close,
+  UserCircle,
+  WritePaper,
+  LoveLetter,
+  Paper,
+  Bulb,
+} from "@/assets/icons"
 import ROUTE from "@/constants/route"
 
 const NavigationBar = () => {
@@ -59,19 +67,19 @@ const NavigationBar = () => {
               }`}
             >
               <Link href={ROUTE.MY_PAGE}>마이페이지</Link>
-              <Paper className="md ml-2" />
+              <UserCircle className="md ml-2" />
             </span>
             <span className="shortcut-link f-center">
               <Link className="sub-link" href="#">
                 참여 중인 프로젝트
               </Link>
-              <Paper className="md ml-2" />
+              <WritePaper className="md ml-2" />
             </span>
             <span className="shortcut-link f-center">
               <Link className="sub-link" href="#">
                 내가 받은 롤링페이퍼
               </Link>
-              <Paper className="md ml-2" />
+              <LoveLetter className="md ml-2" />
             </span>
             <span className="shortcut-link f-center">
               <Link href="#">롤링페이퍼 만들기</Link>
