@@ -26,11 +26,7 @@ const NavigationBar = () => {
   }, [])
 
   useEffect(() => {
-    if (isOpen) {
-      lockScroll()
-    } else {
-      unlockScroll()
-    }
+    isOpen ? lockScroll() : unlockScroll()
   }, [isOpen, lockScroll, unlockScroll])
 
   const handleNavigationBar = () => {
