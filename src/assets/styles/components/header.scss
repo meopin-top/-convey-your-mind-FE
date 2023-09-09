@@ -99,10 +99,6 @@
 
             background-color: rgba(#fff, 0.5);
           }
-
-          .sub-link::before {
-            content: "ㄴ ";
-          }
         }
 
         .helper {
@@ -130,7 +126,7 @@
 
             background-color: #fff;
 
-            button {
+            a {
               width: 100%;
               height: 46px;
 

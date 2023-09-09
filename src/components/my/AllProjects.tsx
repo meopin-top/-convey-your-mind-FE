@@ -1,13 +1,16 @@
 "use client"
 
-import {useState, type KeyboardEvent} from "react"
+import {useState, type KeyboardEvent, useEffect} from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import {useRouter, useSearchParams} from "next/navigation"
 import Pagination from "../Pagination"
-import {calculateRemainingDay} from "@/utils/formatter"
 import useRequest from "@/hooks/use-request"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
+import {calculateRemainingDay} from "@/utils/formatter"
+import ROUTE from "@/constants/route"
+import {OPEN, ALL_PROJECTS} from "@/constants/query-string"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {
   loading: () => <></>,
@@ -83,7 +86,6 @@ const data: TResponse = {
   ],
 }
 
-const COUNT_PER_PAGE = 5
 const INITIAL_PROJECT_DATA: TResponse = {
   totalCount: 0,
   projects: [],
@@ -97,21 +99,41 @@ const AllProjects = () => {
     useState<TResponse>(INITIAL_PROJECT_DATA)
   const [page, setPage] = useState(getFirstPage())
 
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const [inputPage, handleInputPage] = useInput(getFirstPage().toString())
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
 
+  const COUNT_PER_PAGE = 5
+  const isOpenSearchParams = searchParams.get(OPEN) === ALL_PROJECTS
+
+  useEffect(() => {
+    if (isOpenSearchParams) {
+      openBottomSheet()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    // 히스토리 조작 시에 바텀 시트도 같이 움직이도록 만들기 위함
+    setIsBottomSheetOpen(isOpenSearchParams)
+    if (isOpenSearchParams) {
+      fetchProjectData()
+    } else {
+      setProjectData(INITIAL_PROJECT_DATA)
+    }
+  }, [isOpenSearchParams])
+
   function openBottomSheet() {
-    setIsBottomSheetOpen(true)
-    window.history.pushState({bottomSheetOpen: true}, "")
-    fetchProjectData()
+    router.push(ROUTE.MY_PROJECTS)
   }
 
   function closeBottomSheet() {
-    setIsBottomSheetOpen(false)
+    router.push(ROUTE.MY_PAGE)
     setPage(getFirstPage())
-    setProjectData(INITIAL_PROJECT_DATA)
   }
 
   function clickPaginationArrow(page: number) {
