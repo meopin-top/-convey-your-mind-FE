@@ -31,7 +31,6 @@ const Pagination = ({
       >
         {"<"}
       </button>
-
       {handleInputPage && (
         <>
           <input
@@ -43,7 +42,6 @@ const Pagination = ({
           / {getLastPage({totalCount, countPerPage})}
         </>
       )}
-
       <button
         className="next"
         disabled={page === getLastPage({totalCount, countPerPage})}
