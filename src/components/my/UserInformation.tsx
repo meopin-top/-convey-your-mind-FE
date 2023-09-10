@@ -4,7 +4,7 @@ import {useState, useLayoutEffect, type ReactNode} from "react"
 import Image from "next/image"
 import Storage from "@/store/local-storage"
 
-type TProps = {
+export type TProps = {
   right: ReactNode
 }
 
@@ -23,8 +23,8 @@ const UserInformation = ({right}: TProps) => {
         <Image src={profile} alt="프로필 이미지" fill loading="eager" />
       </div>
       <div className="nick-name">
-        <h1>반가워요!</h1>
-        <h1 suppressHydrationWarning>{nickName}님!</h1>
+        <h2>반가워요!</h2>
+        <h2 suppressHydrationWarning>{nickName}님!</h2>
         {right}
       </div>
     </div>
