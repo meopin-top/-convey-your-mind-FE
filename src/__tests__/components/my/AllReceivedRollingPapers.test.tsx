@@ -2,7 +2,23 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import type {ReactNode} from "react"
 import AllReceivedRollingPapers from "@/components/my/AllReceivedRollingPapers"
 import {createAlertMock} from "@/__mocks__/window"
+import {ALL_RECEIVED_ROLLING_PAPERS} from "@/constants/query-string"
+import ROUTE from "@/constants/route"
 
+const getSearchParamsMock = jest
+  .fn()
+  .mockReturnValue(ALL_RECEIVED_ROLLING_PAPERS)
+const routerPushMock = jest.fn()
+
+jest.mock("next/navigation", () => ({
+  __esModule: true,
+  useSearchParams: () => ({
+    get: getSearchParamsMock,
+  }),
+  useRouter: () => ({
+    push: routerPushMock,
+  }),
+}))
 jest.mock("../../../components/BottomSheet.tsx", () => ({
   __esModule: true,
   default: ({isOpen, children}: {isOpen: boolean; children: ReactNode}) => (
@@ -12,7 +28,6 @@ jest.mock("../../../components/BottomSheet.tsx", () => ({
     </>
   ),
 }))
-
 jest.mock("../../../hooks/use-log-out.ts")
 
 describe("AllReceivedRollingPapers", () => {
@@ -46,13 +61,35 @@ describe("AllReceivedRollingPapers", () => {
     expect(viewAllButton).toBeInTheDocument()
   })
 
-  it("전체 보기 버튼을 클릭하면 바텀 시트에 isOpen props로 true를 전달한다.", () => {
+  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이면 바텀 시트에 isOpen props로 true를 전달한다.", () => {
+    render(<AllReceivedRollingPapers />)
+
+    const bottomSheet = screen.getByText("isOpen: 열림")
+
+    // then
+    expect(bottomSheet).toBeInTheDocument()
+  })
+
+  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이 아니면 바텀 시트에 isOpen props로 false를 전달한다.", () => {
+    // given, when
+    getSearchParamsMock.mockImplementationOnce(() => "close")
+
+    render(<AllReceivedRollingPapers />)
+
+    const bottomSheet = screen.getByText("isOpen: 닫힘")
+
+    // then
+    expect(bottomSheet).toBeInTheDocument()
+  })
+
+  it("전체 보기 버튼을 클릭하면 URL을 변경하며 바텀 시트에 isOpen props로 true를 전달한다.", () => {
     // given, when
     renderBottomSheet()
 
     const bottomSheet = screen.getByText("isOpen: 열림")
 
     // then
+    expect(routerPushMock).toBeCalledWith(ROUTE.MY_ROLLING_PAPERS)
     expect(bottomSheet).toBeInTheDocument()
   })
 
