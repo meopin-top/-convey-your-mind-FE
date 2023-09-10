@@ -41,6 +41,7 @@
       left: calc(100% - $WIDTH);
 
       width: $WIDTH;
+      min-width: 292px;
       height: 100%;
 
       color: #000;
@@ -78,6 +79,43 @@
             font-size: 10px;
 
             background-color: #000;
+          }
+        }
+
+        .being-user {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: space-around;
+
+          width: 100%;
+          height: 108px;
+
+          margin-bottom: $SEPARATOR_MARGIN;
+
+          font-family: "hanna-11-years", "hanna-11-years fallback";
+          font-size: 18px;
+
+          .link {
+            column-gap: 8px;
+
+            width: 100%;
+
+            .sign-up,
+            .sign-in {
+              flex: 1 0 120px;
+
+              color: #fff;
+              font-size: 10px;
+
+              background-color: #000;
+
+              a {
+                display: inline-block;
+
+                width: 100%;
+              }
+            }
           }
         }
 
