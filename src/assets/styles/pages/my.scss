@@ -95,7 +95,7 @@
         .wrapper {
           $HEIGHT: 350px;
 
-          top: calc(100vh - $HEIGHT);
+          top: calc(100dvh - $HEIGHT);
 
           height: $HEIGHT;
         }
@@ -178,7 +178,7 @@
         .wrapper {
           $HEIGHT: 450px;
 
-          top: calc(100vh - $HEIGHT);
+          top: calc(100dvh - $HEIGHT);
 
           height: $HEIGHT;
         }
