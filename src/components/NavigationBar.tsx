@@ -56,6 +56,10 @@ const NavigationBar = () => {
     setIsNavigationOpen(!isNavigationOpen)
   }
 
+  function preventEvent(event: MouseEvent<HTMLDivElement>) {
+    event.stopPropagation()
+  }
+
   function openAlert(event: MouseEvent<HTMLButtonElement>) {
     if (!isLoggedIn) {
       event.stopPropagation()
@@ -105,7 +109,7 @@ const NavigationBar = () => {
         className={`${isNavigationOpen ? "open" : "close"} background`}
         onClick={handleNavigationBar}
       >
-        <div className="wrapper" onClick={(event) => event.stopPropagation()}>
+        <div className="wrapper" onClick={preventEvent}>
           <div className="close">
             <button onClick={handleNavigationBar}>
               <Close className="sm" />
