@@ -11,7 +11,6 @@ jest.mock("../../assets/icons/close.svg", () => ({
     <svg {...rest}>close</svg>
   ),
 }))
-
 jest.mock("../../hooks/use-body-scroll-lock.ts", () => ({
   __esModule: true,
   default: () => ({

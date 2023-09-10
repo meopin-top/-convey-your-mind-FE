@@ -15,14 +15,12 @@ jest.mock("next/navigation", () => ({
   __esModule: true,
   useRouter: jest.fn(),
 }))
-
 jest.mock("../../../components/SecretInput.tsx", () => ({
   __esModule: true,
   default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
     <input className="password" ref={inputRef} {...props} />
   ),
 }))
-
 jest.mock("../../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TPortalProps) => <>{render()}</>,

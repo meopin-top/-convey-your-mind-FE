@@ -7,7 +7,6 @@ jest.mock("next/image", () => ({
   __esModule: true,
   default: () => <div onClick={onClickMock} role="status" />,
 }))
-
 jest.mock("../../assets/gifs/fading-squares.svg", () => ({
   __esModule: true,
   default: () => <></>,

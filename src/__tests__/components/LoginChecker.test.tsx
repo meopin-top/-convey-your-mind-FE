@@ -6,7 +6,6 @@ jest.mock("../../hooks/use-logged-in.ts", () => ({
   useNeedLoggedIn: () => true,
   useNeedNotLoggedIn: () => false,
 }))
-
 jest.mock("../../components/Redirecting.tsx", () => ({
   __esModule: true,
   default: ({isRedirecting}: {isRedirecting: boolean}) => (

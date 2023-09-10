@@ -9,7 +9,6 @@ jest.mock("../../components/app", () => ({
   WithSignUp: () => <div data-testid="with-signup">WithSignUp Component</div>,
   WithOauth: () => <div data-testid="with-oauth">WithOauth Component</div>,
 }))
-
 jest.mock("../../components/LoginChecker.tsx", () => ({
   __esModule: true,
   NeedNotLoggedIn: () => <></>,

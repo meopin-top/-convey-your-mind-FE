@@ -12,27 +12,22 @@ jest.mock("../../components/LoginChecker", () => ({
   __esModule: true,
   NeedLoggedIn: () => <div>{NEED_LOGGED_IN}</div>,
 }))
-
 jest.mock("../../components/Header", () => ({
   __esModule: true,
   default: () => <div>{HEADER}</div>,
 }))
-
 jest.mock("../../components/my/UserInformation", () => ({
   __esModule: true,
   default: () => <div>{USER_INFORMATION}</div>,
 }))
-
 jest.mock("../../components/my/RollingPaperParticipation", () => ({
   __esModule: true,
   default: () => <div>{ROLLING_PAPER_PARTICIPATION}</div>,
 }))
-
 jest.mock("../../components/my/ProjectsInProgressing", () => ({
   __esModule: true,
   default: () => <div>{PROJECTS_IN_PROGRESSING}</div>,
 }))
-
 jest.mock("../../components/my/ReceivedRollingPapers", () => ({
   __esModule: true,
   default: () => <div>{RECEIVED_ROLLING_PAPERS}</div>,

@@ -11,14 +11,12 @@ const requestMock = jest.fn()
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }))
-
 jest.mock("../../../components", () => ({
   __esModule: true,
   SecretInput: ({inputRef, ...props}: Omit<TProps, "size">) => (
     <input className="password" ref={inputRef} {...props} />
   ),
 }))
-
 jest.mock("../../../hooks/use-request.ts", () => ({
   __esModule: true,
   default: () => ({
