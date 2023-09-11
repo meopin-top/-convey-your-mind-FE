@@ -16,7 +16,7 @@ const RollingPaperParticipation = () => {
         롤링 페이퍼 새로 시작하기
       </button>
       <span className="shared-code-description">
-        이미 만들어진 롤링페이퍼에 참여하고 싶다면?
+        롤링페이퍼의 공유 코드를 알고 계신가요?
       </span>
       <div className="shared-code f-center">
         <input
