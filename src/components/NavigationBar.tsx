@@ -44,12 +44,16 @@ const NavigationBar = () => {
   const logOut = useLogOut()
 
   useEffect(() => {
-    setFullPath(location.pathname + location.search)
     setIsLoggedIn(Boolean(Storage.get("nickName")))
   }, [])
 
   useEffect(() => {
-    isNavigationOpen ? lockScroll() : unlockScroll()
+    if(isNavigationOpen) {
+      lockScroll()
+      setFullPath(location.pathname + location.search)
+    } else {
+      unlockScroll()
+    }
   }, [isNavigationOpen, lockScroll, unlockScroll])
 
   function handleNavigationBar() {
