@@ -232,33 +232,37 @@
     }
 
     .all-projects {
-      .project {
-        display: list-item;
+      ul {
+        width: 100%;
 
-        a {
-          display: flex;
-          align-items: center;
-          column-gap: 4px;
-
-          padding: 4px 8px;
-
-          border: 1px solid #dedede;
-
-          .crown {
-            &.shown {
-              opacity: 1;
+        .project {
+          display: list-item;
+  
+          a {
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+  
+            padding: 4px 8px;
+  
+            border: 1px solid #dedede;
+  
+            .crown {
+              &.shown {
+                opacity: 1;
+              }
+  
+              &.hidden {
+                opacity: 0;
+              }
             }
-
-            &.hidden {
-              opacity: 0;
+  
+            .name {
+              @include txt-ellipsis-n(2);
             }
-          }
-
-          .name {
-            @include txt-ellipsis-n(2);
           }
         }
-      }
+      }      
     }
   }
 }
