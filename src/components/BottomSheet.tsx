@@ -13,7 +13,6 @@ type TProps = {
   children: ReactNode
   isOpen: boolean
   onClose: () => void
-  isHandlingHistory?: boolean
   isShowingClose?: boolean
   isControllingScroll?: boolean
 } & HTMLAttributes<HTMLDivElement>
@@ -22,24 +21,11 @@ const BottomSheet = ({
   children,
   isOpen,
   onClose,
-  isHandlingHistory = true,
   isShowingClose = true,
   isControllingScroll = true,
   ...props
 }: TProps) => {
   const {lockScroll, unlockScroll} = useBodyScrollLock()
-
-  useEffect(() => {
-    if (!isHandlingHistory) {
-      return
-    }
-
-    window.addEventListener("popstate", onClose)
-
-    return () => {
-      window.removeEventListener("popstate", onClose)
-    }
-  }, [isHandlingHistory, onClose])
 
   useEffect(() => {
     if (!isControllingScroll) {
