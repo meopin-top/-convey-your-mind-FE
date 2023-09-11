@@ -68,7 +68,7 @@ const INITIAL_RECEIVED_ROLLING_PAPER_DATA: TResponse = {
 }
 
 const AllReceivedRollingPapers = () => {
-  const {getFirstPage, isValidPage} = usePagination() // useState 초깃값으로 사용하기 위함
+  const {getFirstPage, getLastPage} = usePagination() // useState 초깃값으로 사용하기 위함
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
   const [receivedRollingPaperData, setReceivedRollingPapersData] =
@@ -78,7 +78,9 @@ const AllReceivedRollingPapers = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const [inputPage, handleInputPage] = useInput(getFirstPage().toString())
+  const [inputPage, handleInputPage, setInputPage] = useInput(
+    getFirstPage().toString()
+  )
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
@@ -120,19 +122,21 @@ const AllReceivedRollingPapers = () => {
     }
 
     const page = parseInt(inputPage)
-    if (
-      !isValidPage({
-        page,
-        totalCount: receivedRollingPaperData.totalCount,
-        countPerPage: COUNT_PER_PAGE,
-      })
-    ) {
-      alert("유효한 페이지 범위가 아닙니다.")
-
-      return
+    const firstPage = getFirstPage()
+    const lastPage = getLastPage({
+      totalCount: receivedRollingPaperData.totalCount,
+      countPerPage: COUNT_PER_PAGE,
+    })
+    if (page < firstPage) {
+      setInputPage(firstPage.toString())
+      setPage(firstPage)
+    } else if (page > lastPage) {
+      setInputPage(lastPage.toString())
+      setPage(lastPage)
+    } else {
+      setPage(page)
     }
 
-    setPage(page)
     fetchReceivedRollingPaperData()
   }
 
