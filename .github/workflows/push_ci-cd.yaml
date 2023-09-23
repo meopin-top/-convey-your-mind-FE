@@ -28,7 +28,7 @@ jobs:
           touch .env
           echo NEXT_PUBLIC_HOST=${{ secrets.NEXT_PUBLIC_HOST }} >> .env
           echo NEXT_PUBLIC_API_HOST=${{ secrets.NEXT_PUBLIC_API_HOST }} >> .env
-          echo NEXT_PUBLIC_KAKAO_JS_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }} >> .env
+          echo NEXT_PUBLIC_KAKAO_REST_API_KEY=${{ secrets.NEXT_PUBLIC_KAKAO_REST_API_KEY }} >> .env
           echo NEXT_PUBLIC_NAVER_CLIENT_ID=${{ secrets.NEXT_PUBLIC_NAVER_CLIENT_ID }} >> .env
           echo NEXT_PUBLIC_NAVER_CLIENT_SECRET=${{ secrets.NEXT_PUBLIC_NAVER_CLIENT_SECRET }} >> .env
           echo NEXT_PUBLIC_NAVER_STATE=${{ secrets.NEXT_PUBLIC_NAVER_STATE }} >> .env
