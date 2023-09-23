@@ -67,6 +67,7 @@ const NavigationBar = () => {
 
   function handleLogOut() {
     setIsLogOutCalled(true)
+    setTab("signIn")
     logOut()
   }
 
