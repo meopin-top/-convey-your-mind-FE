@@ -28,9 +28,14 @@ const OauthMiddleware = () => {
 
   useEffect(() => {
     async function requestOauth(path: string) {
-      const {message, code, data}: TSignInResponse = await request({
+      const result = await request({
         path: `${path}?code=${searchParams.get("code")}`,
       })
+
+      console.warn("here")
+      console.log(result)
+      const {message, code, data}: TSignInResponse = result
+      console.log(message, code, data)
 
       if (code === SIGN_IN.SUCCESS) {
         Storage.set("nickName", data.nickName)
@@ -54,7 +59,7 @@ const OauthMiddleware = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router])
 
-  return <Redirecting isRedirecting={true} blur />
+  return <Redirecting isRedirecting blur />
 }
 
 export default OauthMiddleware
