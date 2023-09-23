@@ -54,7 +54,7 @@ const OauthMiddleware = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router])
 
-  return <Redirecting isRedirecting={true} blur />
+  return <Redirecting isRedirecting blur />
 }
 
 export default OauthMiddleware
