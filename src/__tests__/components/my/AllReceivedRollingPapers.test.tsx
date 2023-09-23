@@ -93,7 +93,36 @@ describe("AllReceivedRollingPapers", () => {
     expect(bottomSheet).toBeInTheDocument()
   })
 
-  it("페이지네이션 input 유효한 페이지 범위를 벗어난 숫자를 입력할 경우 alert이 호출된다.", () => {
+  it("페이지네이션 input 0이하일 경우 1페이지로 이동한다.", () => {
+    // given
+    renderBottomSheet()
+
+    const paginationInput = screen.getByDisplayValue("1") as HTMLInputElement
+
+    // when
+    fireEvent.change(paginationInput, {
+      target: {value: "0"},
+    })
+    fireEvent.keyDown(paginationInput, {
+      key: "Enter",
+    })
+
+    // then
+    expect(paginationInput.value).toEqual("1")
+
+    // when
+    fireEvent.change(paginationInput, {
+      target: {value: "-100"},
+    })
+    fireEvent.keyDown(paginationInput, {
+      key: "Enter",
+    })
+
+    // then
+    expect(paginationInput.value).toEqual("1")
+  })
+
+  it("페이지네이션 input 마지막 페이지보다 클 경우 마지막 페이지로 이동한다.", () => {
     // given
     renderBottomSheet()
 
@@ -108,7 +137,7 @@ describe("AllReceivedRollingPapers", () => {
     })
 
     // then
-    expect(window.alert).toBeCalledWith("유효한 페이지 범위가 아닙니다.")
+    expect(paginationInput.value).toEqual("8") // TODO: 모킹한 후 수정
   })
 
   it("페이지네이션 input에 유효한 페이지 범위의 숫자를 입력할 경우 alert이 호출된다.", () => {
