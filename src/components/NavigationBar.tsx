@@ -34,6 +34,7 @@ const LoginAlert = dynamic(() => import("./LoginAlert"), {
 
 const NavigationBar = () => {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false)
+  const [isLogOutCalled, setIsLogOutCalled] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [fullPath, setFullPath] = useState("")
@@ -48,7 +49,7 @@ const NavigationBar = () => {
   }, [])
 
   useEffect(() => {
-    if(isNavigationOpen) {
+    if (isNavigationOpen) {
       lockScroll()
       setFullPath(location.pathname + location.search)
     } else {
@@ -60,8 +61,13 @@ const NavigationBar = () => {
     setIsNavigationOpen(!isNavigationOpen)
   }
 
-  function preventEvent(event: MouseEvent<HTMLDivElement>) {
+  function preventPropagation(event: MouseEvent<HTMLDivElement>) {
     event.stopPropagation()
+  }
+
+  function handleLogOut() {
+    setIsLogOutCalled(true)
+    logOut()
   }
 
   function openAlert(event: MouseEvent<HTMLButtonElement>) {
@@ -113,7 +119,7 @@ const NavigationBar = () => {
         className={`${isNavigationOpen ? "open" : "close"} background`}
         onClick={handleNavigationBar}
       >
-        <div className="wrapper" onClick={preventEvent}>
+        <div className="wrapper" onClick={preventPropagation}>
           <div className="close">
             <button onClick={handleNavigationBar}>
               <Close className="sm" />
@@ -124,7 +130,8 @@ const NavigationBar = () => {
               <UserInformation
                 right={
                   <button
-                    onClick={logOut}
+                    onClick={handleLogOut}
+                    disabled={isLogOutCalled}
                     className="log-out xxs radius-sm mt-2"
                   >
                     로그아웃
