@@ -37,6 +37,8 @@ const OauthMiddleware = () => {
         Storage.set("profile", data.profile)
 
         router.replace(ROUTE.MY_PAGE)
+
+        return
       }
 
       alert(message)
