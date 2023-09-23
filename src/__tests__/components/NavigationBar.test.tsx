@@ -239,6 +239,24 @@ describe("NavigationBar", () => {
     expect(logOutButton).toBeInTheDocument()
   })
 
+  it("로그아웃 버튼을 한 번 누르면 로그아웃 버튼이 disabled 처리된다.", () => {
+    // given
+    window.localStorage.setItem("nickName", "nickName")
+    window.localStorage.setItem("profile", "profile")
+
+    render(<NavigationBar />)
+
+    const logOutButton = screen.getByRole("button", {
+      name: "로그아웃",
+    })
+
+    // when
+    fireEvent.click(logOutButton)
+
+    // then
+    expect(logOutButton).toBeDisabled()
+  })
+
   it("로그아웃 버튼을 누르면 로그아웃 API가 호출된다.", () => {
     // given
     window.localStorage.setItem("nickName", "nickName")
