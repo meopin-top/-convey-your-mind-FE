@@ -10,6 +10,13 @@ export default function useLogOut() {
     Storage.remove("profile")
 
     router.push(ROUTE.MAIN)
+
+    fetch(`${process.env.NEXT_PUBLIC_API_HOST}/api/users/logout`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "delete",
+    })
   }
 
   return logOut
