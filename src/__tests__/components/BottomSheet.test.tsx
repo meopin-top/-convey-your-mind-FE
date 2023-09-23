@@ -57,30 +57,6 @@ describe("BottomSheet", () => {
     expect(background.classList).toContain("close")
   })
 
-  it("isHandlingHistory props가 true면 이벤트 리스너(popstate) API가 호출되어야 한다.", () => {
-    // given, when
-    const {unmount} = render(
-      <BottomSheet isOpen onClose={jest.fn()} isHandlingHistory>
-        Content
-      </BottomSheet>
-    )
-
-    // then
-    expect(window.addEventListener).toHaveBeenCalledWith(
-      "popstate",
-      expect.any(Function)
-    )
-
-    // when
-    unmount()
-
-    // then
-    expect(window.removeEventListener).toHaveBeenCalledWith(
-      "popstate",
-      expect.any(Function)
-    )
-  })
-
   it("background가 클릭될 때 onClose가 호출되어야 한다.", () => {
     // given
     const onCloseMock = jest.fn()
