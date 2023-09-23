@@ -1,5 +1,14 @@
 import {render, screen, fireEvent} from "@testing-library/react"
-import WithSignUp from "@/components/app/WithSignUp"
+import Component from "@/components/app/WithSignUp"
+import {Provider} from "@/store/sign-up-tab"
+
+const WithSignUp = () => {
+  return (
+    <Provider>
+      <Component />
+    </Provider>
+  )
+}
 
 jest.mock("../../../components/app", () => ({
   __esModule: true,

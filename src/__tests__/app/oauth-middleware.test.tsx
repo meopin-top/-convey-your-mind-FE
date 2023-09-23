@@ -17,14 +17,12 @@ jest.mock("next/navigation", () => ({
     replace: routerReplacementMock,
   }),
 }))
-
 jest.mock("../../hooks/use-request.ts", () => ({
   __esModule: true,
   default: () => ({
     request: requestMock,
   }),
 }))
-
 jest.mock("../../components/Redirecting.tsx", () => ({
   __esModule: true,
   default: () => <div>리다이렉션 중...</div>,

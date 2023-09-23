@@ -22,8 +22,15 @@ const Pagination = ({
 }: TProps) => {
   const {getFirstPage, getLastPage} = usePagination()
 
+  function preventTab(event: KeyboardEvent) {
+    const isTabKeyDowned = event.key === "Tab"
+    if (isTabKeyDowned) {
+      event.preventDefault()
+    }
+  }
+
   return (
-    <div className="pagination f-center">
+    <div className="pagination f-center" onKeyDown={preventTab}>
       <button
         className="previous"
         disabled={page === getFirstPage()}
@@ -31,7 +38,6 @@ const Pagination = ({
       >
         {"<"}
       </button>
-
       {handleInputPage && (
         <>
           <input
@@ -43,7 +49,6 @@ const Pagination = ({
           / {getLastPage({totalCount, countPerPage})}
         </>
       )}
-
       <button
         className="next"
         disabled={page === getLastPage({totalCount, countPerPage})}

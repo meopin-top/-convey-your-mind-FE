@@ -5,7 +5,7 @@ export type TInputChangeEvent = ChangeEvent<HTMLInputElement>
 export default function useInput(
   defaultValue: string = "",
   callback?: (event: TInputChangeEvent) => any
-): [string, (event: TInputChangeEvent) => void] {
+): [string, (event: TInputChangeEvent) => void, (value: string) => void] {
   const [value, setValue] = useState(defaultValue)
 
   function handleValue(event: TInputChangeEvent) {
@@ -15,5 +15,5 @@ export default function useInput(
     }
   }
 
-  return [value, handleValue]
+  return [value, handleValue, setValue]
 }

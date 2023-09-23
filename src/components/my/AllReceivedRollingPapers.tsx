@@ -1,12 +1,15 @@
 "use client"
 
-import {useState, type KeyboardEvent} from "react"
+import {useState, useEffect, type KeyboardEvent} from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import {useRouter, useSearchParams} from "next/navigation"
 import Pagination from "../Pagination"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
 import useRequest from "@/hooks/use-request"
+import ROUTE from "@/constants/route"
+import {OPEN, ALL_RECEIVED_ROLLING_PAPERS} from "@/constants/query-string"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {
   loading: () => <></>,
@@ -59,35 +62,57 @@ const data: TResponse = {
   ],
 }
 
-const COUNT_PER_PAGE = 6
 const INITIAL_RECEIVED_ROLLING_PAPER_DATA: TResponse = {
   totalCount: 0,
   rollingPapers: [],
 }
 
 const AllReceivedRollingPapers = () => {
-  const {getFirstPage, isValidPage} = usePagination() // useState 초깃값으로 사용하기 위함
+  const {getFirstPage, getLastPage} = usePagination() // useState 초깃값으로 사용하기 위함
 
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
   const [receivedRollingPaperData, setReceivedRollingPapersData] =
     useState<TResponse>(INITIAL_RECEIVED_ROLLING_PAPER_DATA)
   const [page, setPage] = useState(getFirstPage())
 
-  const [inputPage, handleInputPage] = useInput(getFirstPage().toString())
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [inputPage, handleInputPage, setInputPage] = useInput(
+    getFirstPage().toString()
+  )
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
 
+  const COUNT_PER_PAGE = 6
+  const isOpenSearchParams =
+    searchParams.get(OPEN) === ALL_RECEIVED_ROLLING_PAPERS
+
+  useEffect(() => {
+    if (isOpenSearchParams) {
+      openBottomSheet()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    // 히스토리 조작 시에 바텀 시트도 같이 움직이도록 만들기 위함
+    setIsBottomSheetOpen(isOpenSearchParams)
+    if (isOpenSearchParams) {
+      fetchReceivedRollingPaperData()
+    } else {
+      setReceivedRollingPapersData(INITIAL_RECEIVED_ROLLING_PAPER_DATA)
+    }
+  }, [isOpenSearchParams])
+
   function openBottomSheet() {
-    setIsBottomSheetOpen(true)
-    window.history.pushState({bottomSheetOpen: true}, "")
-    fetchReceivedRollingPaperData()
+    router.push(ROUTE.MY_ROLLING_PAPERS)
   }
 
   function closeBottomSheet() {
-    setIsBottomSheetOpen(false)
+    router.push(ROUTE.MY_PAGE)
     setPage(getFirstPage())
-    setReceivedRollingPapersData(INITIAL_RECEIVED_ROLLING_PAPER_DATA)
   }
 
   function searchPage(event: KeyboardEvent<HTMLInputElement>) {
@@ -97,19 +122,21 @@ const AllReceivedRollingPapers = () => {
     }
 
     const page = parseInt(inputPage)
-    if (
-      !isValidPage({
-        page,
-        totalCount: receivedRollingPaperData.totalCount,
-        countPerPage: COUNT_PER_PAGE,
-      })
-    ) {
-      alert("유효한 페이지 범위가 아닙니다.")
-
-      return
+    const firstPage = getFirstPage()
+    const lastPage = getLastPage({
+      totalCount: receivedRollingPaperData.totalCount,
+      countPerPage: COUNT_PER_PAGE,
+    })
+    if (page < firstPage) {
+      setInputPage(firstPage.toString())
+      setPage(firstPage)
+    } else if (page > lastPage) {
+      setInputPage(lastPage.toString())
+      setPage(lastPage)
+    } else {
+      setPage(page)
     }
 
-    setPage(page)
     fetchReceivedRollingPaperData()
   }
 

@@ -1,6 +1,7 @@
-@import "../common/colors.scss";
-@import "../common/variables.scss";
-@import "../utility-first.scss";
+@import "../common/colors";
+@import "../common/variables";
+@import "../common/user";
+@import "../utility-first";
 
 .my-page {
   .main {
@@ -11,37 +12,17 @@
     font-family: "hanna-air", "hanna-air fallback";
 
     .user-information {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+      @include user-information;
 
       margin-bottom: $SEPARATOR_MARGIN;
 
-      width: 100%;
+      .profile-edit {
+        width: 120px;
 
-      .profile {
-        flex: 0 0 108px;
+        color: #fff;
+        font-size: 10px;
 
-        position: relative;
-
-        height: 108px;
-      }
-
-      .nick-name {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-
-        flex-grow: 1;
-
-        .profile-edit {
-          width: 120px;
-
-          color: #fff;
-          font-size: 10px;
-
-          background-color: #000;
-        }
+        background-color: #000;
       }
     }
 
@@ -114,7 +95,7 @@
         .wrapper {
           $HEIGHT: 350px;
 
-          top: calc(100vh - $HEIGHT);
+          top: calc(100dvh - $HEIGHT);
 
           height: $HEIGHT;
         }
@@ -197,7 +178,7 @@
         .wrapper {
           $HEIGHT: 450px;
 
-          top: calc(100vh - $HEIGHT);
+          top: calc(100dvh - $HEIGHT);
 
           height: $HEIGHT;
         }
@@ -251,33 +232,37 @@
     }
 
     .all-projects {
-      .project {
-        display: list-item;
+      ul {
+        width: 100%;
 
-        a {
-          display: flex;
-          align-items: center;
-          column-gap: 4px;
-
-          padding: 4px 8px;
-
-          border: 1px solid #dedede;
-
-          .crown {
-            &.shown {
-              opacity: 1;
+        .project {
+          display: list-item;
+  
+          a {
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+  
+            padding: 4px 8px;
+  
+            border: 1px solid #dedede;
+  
+            .crown {
+              &.shown {
+                opacity: 1;
+              }
+  
+              &.hidden {
+                opacity: 0;
+              }
             }
-
-            &.hidden {
-              opacity: 0;
+  
+            .name {
+              @include txt-ellipsis-n(2);
             }
-          }
-
-          .name {
-            @include txt-ellipsis-n(2);
           }
         }
-      }
+      }      
     }
   }
 }

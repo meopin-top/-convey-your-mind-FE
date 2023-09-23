@@ -11,7 +11,6 @@ jest.mock("../../assets/icons/close.svg", () => ({
     <svg {...rest}>close</svg>
   ),
 }))
-
 jest.mock("../../hooks/use-body-scroll-lock.ts", () => ({
   __esModule: true,
   default: () => ({
@@ -56,30 +55,6 @@ describe("BottomSheet", () => {
 
     // then
     expect(background.classList).toContain("close")
-  })
-
-  it("isHandlingHistory props가 true면 이벤트 리스너(popstate) API가 호출되어야 한다.", () => {
-    // given, when
-    const {unmount} = render(
-      <BottomSheet isOpen onClose={jest.fn()} isHandlingHistory>
-        Content
-      </BottomSheet>
-    )
-
-    // then
-    expect(window.addEventListener).toHaveBeenCalledWith(
-      "popstate",
-      expect.any(Function)
-    )
-
-    // when
-    unmount()
-
-    // then
-    expect(window.removeEventListener).toHaveBeenCalledWith(
-      "popstate",
-      expect.any(Function)
-    )
   })
 
   it("background가 클릭될 때 onClose가 호출되어야 한다.", () => {

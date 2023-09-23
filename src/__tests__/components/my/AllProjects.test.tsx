@@ -2,7 +2,21 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import type {ReactNode} from "react"
 import AllProjects from "@/components/my/AllProjects"
 import {createAlertMock} from "@/__mocks__/window"
+import {ALL_PROJECTS} from "@/constants/query-string"
+import ROUTE from "@/constants/route"
 
+const getSearchParamsMock = jest.fn().mockReturnValue(ALL_PROJECTS)
+const routerPushMock = jest.fn()
+
+jest.mock("next/navigation", () => ({
+  __esModule: true,
+  useSearchParams: () => ({
+    get: getSearchParamsMock,
+  }),
+  useRouter: () => ({
+    push: routerPushMock,
+  }),
+}))
 jest.mock("../../../components/BottomSheet.tsx", () => ({
   __esModule: true,
   default: ({isOpen, children}: {isOpen: boolean; children: ReactNode}) => (
@@ -12,7 +26,6 @@ jest.mock("../../../components/BottomSheet.tsx", () => ({
     </>
   ),
 }))
-
 jest.mock("../../../hooks/use-log-out.ts")
 
 describe("AllProjects", () => {
@@ -46,9 +59,8 @@ describe("AllProjects", () => {
     expect(viewAllButton).toBeInTheDocument()
   })
 
-  it("전체 보기 버튼을 클릭하면 바텀 시트에 isOpen props로 true를 전달한다.", () => {
-    // given, when
-    renderBottomSheet()
+  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이면 바텀 시트에 isOpen props로 true를 전달한다.", () => {
+    render(<AllProjects />)
 
     const bottomSheet = screen.getByText("isOpen: 열림")
 
@@ -56,7 +68,59 @@ describe("AllProjects", () => {
     expect(bottomSheet).toBeInTheDocument()
   })
 
-  it("페이지네이션 input 유효한 페이지 범위를 벗어난 숫자를 입력할 경우 alert이 호출된다.", () => {
+  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이 아니면 바텀 시트에 isOpen props로 false를 전달한다.", () => {
+    // given, when
+    getSearchParamsMock.mockImplementationOnce(() => "close")
+
+    render(<AllProjects />)
+
+    const bottomSheet = screen.getByText("isOpen: 닫힘")
+
+    // then
+    expect(bottomSheet).toBeInTheDocument()
+  })
+
+  it("전체 보기 버튼을 클릭하면 URL을 변경하며 바텀 시트에 isOpen props로 true를 전달한다.", () => {
+    // given, when
+    renderBottomSheet()
+
+    const bottomSheet = screen.getByText("isOpen: 열림")
+
+    // then
+    expect(routerPushMock).toBeCalledWith(ROUTE.MY_PROJECTS)
+    expect(bottomSheet).toBeInTheDocument()
+  })
+
+  it("페이지네이션 input 0이하일 경우 1페이지로 이동한다.", () => {
+    // given
+    renderBottomSheet()
+
+    const paginationInput = screen.getByDisplayValue("1") as HTMLInputElement
+
+    // when
+    fireEvent.change(paginationInput, {
+      target: {value: "0"},
+    })
+    fireEvent.keyDown(paginationInput, {
+      key: "Enter",
+    })
+
+    // then
+    expect(paginationInput.value).toEqual("1")
+
+    // when
+    fireEvent.change(paginationInput, {
+      target: {value: "-100"},
+    })
+    fireEvent.keyDown(paginationInput, {
+      key: "Enter",
+    })
+
+    // then
+    expect(paginationInput.value).toEqual("1")
+  })
+
+  it("페이지네이션 input 마지막 페이지보다 클 경우 마지막 페이지로 이동한다.", () => {
     // given
     renderBottomSheet()
 
@@ -71,7 +135,7 @@ describe("AllProjects", () => {
     })
 
     // then
-    expect(window.alert).toBeCalledWith("유효한 페이지 범위가 아닙니다.")
+    expect(paginationInput.value).toEqual("10") // TODO: 모킹한 후 수정
   })
 
   it("페이지네이션 input에 유효한 페이지 범위의 숫자를 입력할 경우 alert이 호출된다.", () => {
