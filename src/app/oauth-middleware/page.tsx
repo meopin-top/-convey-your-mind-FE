@@ -28,14 +28,9 @@ const OauthMiddleware = () => {
 
   useEffect(() => {
     async function requestOauth(path: string) {
-      const result = await request({
+      const {message, code, data}: TSignInResponse = await request({
         path: `${path}?code=${searchParams.get("code")}`,
       })
-
-      console.warn("here")
-      console.log(result)
-      const {message, code, data}: TSignInResponse = result
-      console.log(message, code, data)
 
       if (code === SIGN_IN.SUCCESS) {
         Storage.set("nickName", data.nickName)
