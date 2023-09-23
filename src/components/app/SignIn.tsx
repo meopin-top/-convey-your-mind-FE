@@ -52,6 +52,8 @@ const SignIn = () => {
       Storage.set("profile", data.profile)
 
       router.push(ROUTE.MY_PAGE)
+
+      return
     }
 
     alert(message)

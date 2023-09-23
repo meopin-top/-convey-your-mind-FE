@@ -19,9 +19,13 @@ const UserInformation = ({right}: TProps) => {
 
   return (
     <div className="user-information">
-      <div className="profile">
-        <Image src={profile} alt="프로필 이미지" fill loading="eager" />
-      </div>
+      <Image
+        src={profile}
+        alt="프로필 이미지"
+        loading="eager"
+        width={108}
+        height={108}
+      />
       <div className="nick-name">
         <h2>반가워요!</h2>
         <h2 suppressHydrationWarning>{nickName}님!</h2>

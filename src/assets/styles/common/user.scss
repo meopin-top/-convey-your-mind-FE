@@ -2,13 +2,8 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  column-gap: 8px;
   width: 100%;
-
-  .profile {
-    flex: 0 0 108px;
-    position: relative;
-    height: 108px;
-  }
 
   .nick-name {
     display: flex;
