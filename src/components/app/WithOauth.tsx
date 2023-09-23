@@ -10,6 +10,8 @@ const WithOauth = () => {
 
   const LOGO_SIZE = 72
 
+  console.warn(process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY)
+
   function loginWithKakao() {
     router.push(
       `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}${ROUTE.OAUTH_MIDDLEWARE}&response_type=code`
