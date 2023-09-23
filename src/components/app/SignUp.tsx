@@ -10,6 +10,7 @@ import useRequest from "@/hooks/use-request"
 import {SIGN_UP} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
 import ROUTE from "@/constants/route"
+import Storage from "@/store/local-storage"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -22,8 +23,6 @@ const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
 })
 
 const SignUp = () => {
-  const router = useRouter()
-
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
 
   const {isLoading, request} = useRequest()
@@ -32,6 +31,8 @@ const SignUp = () => {
 
   const [userId, handleUserId] = useInput()
   const [password, handlePassword] = useInput()
+
+  const router = useRouter()
 
   function handlePasswordInput(event: KeyboardEvent<HTMLInputElement>) {
     const isEnterKeyDowned = event.key === "Enter"
@@ -73,7 +74,7 @@ const SignUp = () => {
   }
 
   async function signUp(confirmedPassword: string) {
-    const {message, code} = await request({
+    const {message, code, data} = await request({
       path: "/users/sign-up",
       method: "post",
       body: {
@@ -84,6 +85,8 @@ const SignUp = () => {
     })
 
     if (code === SIGN_UP.SUCCESS) {
+      Storage.set("nickName", data.nickName)
+      Storage.set("profile", data.profile)
       router.push(ROUTE.MY_PAGE)
     } else {
       alert(message)
