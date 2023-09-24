@@ -61,18 +61,18 @@ describe("useRequest", () => {
     const button = screen.getByRole("button") as HTMLButtonElement
 
     // then
-    expect(button.disabled).toBeFalsy()
+    expect(button).not.toBeDisabled()
 
     // when
     fireEvent.click(button)
 
     // then
     await waitFor(() => {
-      expect(button.disabled).toBeTruthy()
+      expect(button).toBeDisabled()
     })
 
     await waitFor(() => {
-      expect(button.disabled).toBeFalsy()
+      expect(button).not.toBeDisabled()
     })
   })
 
@@ -85,14 +85,14 @@ describe("useRequest", () => {
     const button = screen.getByRole("button") as HTMLButtonElement
 
     // then
-    expect(button.disabled).toBeFalsy()
+    expect(button).not.toBeDisabled()
 
     // when
     fireEvent.click(button)
 
     // then
     await waitFor(() => {
-      expect(button.disabled).toBeTruthy()
+      expect(button).toBeDisabled()
     })
 
     // when
@@ -101,7 +101,7 @@ describe("useRequest", () => {
     // then
     await waitFor(() => {
       expect(errorTestBox).toBeInTheDocument()
-      expect(button.disabled).toBeFalsy()
+      expect(button).not.toBeDisabled()
     })
   })
 
