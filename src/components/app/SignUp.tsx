@@ -167,6 +167,7 @@ const SignUp = () => {
           <>
             <ConfirmedPopUp
               isAlerting={isPopUpOpened}
+              isLoading={isLoading}
               userId={userId}
               password={password}
               onClose={handlePopUp}

@@ -7,6 +7,7 @@ import {VALIDATOR} from "@/constants/input"
 
 export type TProps = {
   isAlerting: boolean
+  isLoading: boolean
   userId: string
   password: string
   onClose: () => void
@@ -15,6 +16,7 @@ export type TProps = {
 
 const ConfirmedPopUp = ({
   isAlerting,
+  isLoading,
   userId,
   password,
   onClose,
@@ -116,6 +118,7 @@ const ConfirmedPopUp = ({
           onClick={checkValidation}
           style={{width: "120px"}}
           type="fill-dark-4"
+          disabled={isLoading}
         >
           가입하기
         </Alert.Button>
