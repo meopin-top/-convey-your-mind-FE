@@ -88,9 +88,11 @@ const SignUp = () => {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
       router.push(ROUTE.MY_PAGE)
-    } else {
-      alert(message)
+
+      return
     }
+
+    alert(message)
   }
 
   return (
