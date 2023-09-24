@@ -20,6 +20,7 @@ jest.mock("../../../components/SecretInput", () => ({
 
 function renderConfirmedPopUp({
   isAlerting = true,
+  isLoading = false,
   userId = TEST_USER_ID,
   password = TEST_PASSWORD,
   onClose = jest.fn(),
@@ -28,6 +29,7 @@ function renderConfirmedPopUp({
   render(
     <ConfirmedPopUp
       isAlerting={isAlerting}
+      isLoading={isLoading}
       userId={userId}
       password={password}
       onClose={onClose}
@@ -89,6 +91,30 @@ describe("ConfirmedPopUp", () => {
     // then
     expect(cancelButton).toBeInTheDocument()
     expect(signUpButton).toBeInTheDocument()
+  })
+
+  it("isLoading props가 false면 가입하기 버튼은 disabled 상태가 아니다.", () => {
+    // given, when
+    renderConfirmedPopUp({onSubmit: jest.fn(), isLoading: false})
+
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // then
+    expect(signUpButton).not.toBeDisabled()
+  })
+
+  it("isLoading props가 true면 가입하기 버튼은 disabled 상태이다.", () => {
+    // given, when
+    renderConfirmedPopUp({onSubmit: jest.fn(), isLoading: true})
+
+    const signUpButton = screen.getByRole("button", {
+      name: "가입하기",
+    })
+
+    // then
+    expect(signUpButton).toBeDisabled()
   })
 
   it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 onSubmit를 호출하지 않고, alert를 호출한다", () => {
