@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useMemo} from "react"
 import {UNAUTHORIZED} from "@/constants/response-code"
 import useLogOut from "./use-log-out"
 
@@ -14,9 +14,8 @@ export default function useRequest() {
 
   const logOut = useLogOut()
 
-  const controller = new AbortController()
-  const {signal} = controller
-  const latestRequest = new Map<string, number>()
+  const controller = useMemo(() => new AbortController(), [])
+  const latestRequest = useMemo(() => new Map<string, number>(), [])
   const coolDownTime = 500 // 500ms 이내에 같은 요청 발생 시 무시
 
   async function request({path, method = "get", body}: TRequestParameter) {
@@ -41,7 +40,7 @@ export default function useRequest() {
           },
           method,
           body: body ? JSON.stringify(body) : null,
-          signal,
+          signal: controller.signal,
         }
       )
 
@@ -51,7 +50,7 @@ export default function useRequest() {
         } else if (data.status >= 400) {
           throw new Error("클라이언트 측 오류")
         } else {
-          throw new Error("데이터 fetch 에러")
+          throw new Error("데이터 fetch 오류")
         }
       }
 
