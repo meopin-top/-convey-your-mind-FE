@@ -202,9 +202,60 @@ describe("useRequest", () => {
     expect(abortMock).not.toBeCalled()
   })
 
-  // it("500번대 에러가 반환되면 '서버 측 오류'가 콘솔에 출력된다.", () => {})
+  it("500번대 에러가 반환되면 '서버 측 오류'가 콘솔에 출력된다.", async () => {
+    // given
+    createFetchMock(jest.fn().mockResolvedValue({ok: false, status: 500}))
+    createDateMock({})
+    const consoleErrorMock = jest.spyOn(console, "error").mockImplementation()
 
-  // it("400번대 에러가 반환되면 '클라이언트 측 오류'가 콘솔에 출력된다.", () => {})
+    render(<TestComponent />)
 
-  // it("400번 미만의 에러가 반환되면 '데이터 fetch 에류'가 콘솔에 출력된다.", () => {})
+    const button = screen.getByRole("button") as HTMLButtonElement
+
+    // when
+    fireEvent.click(button)
+
+    // then
+    await waitFor(() => {
+      expect(consoleErrorMock).toBeCalledWith("서버 측 오류")
+    })
+  })
+
+  it("400번대 에러가 반환되면 '클라이언트 측 오류'가 콘솔에 출력된다.", async () => {
+    // given
+    createFetchMock(jest.fn().mockResolvedValue({ok: false, status: 400}))
+    createDateMock({})
+    const consoleErrorMock = jest.spyOn(console, "error").mockImplementation()
+
+    render(<TestComponent />)
+
+    const button = screen.getByRole("button") as HTMLButtonElement
+
+    // when
+    fireEvent.click(button)
+
+    // then
+    await waitFor(() => {
+      expect(consoleErrorMock).toBeCalledWith("클라이언트 측 오류")
+    })
+  })
+
+  it("400번 미만의 에러가 반환되면 '데이터 fetch 오류'가 콘솔에 출력된다.", async () => {
+    // given
+    createFetchMock(jest.fn().mockResolvedValue({ok: false, status: 300}))
+    createDateMock({})
+    const consoleErrorMock = jest.spyOn(console, "error").mockImplementation()
+
+    render(<TestComponent />)
+
+    const button = screen.getByRole("button") as HTMLButtonElement
+
+    // when
+    fireEvent.click(button)
+
+    // then
+    await waitFor(() => {
+      expect(consoleErrorMock).toBeCalledWith("데이터 fetch 오류")
+    })
+  })
 })
