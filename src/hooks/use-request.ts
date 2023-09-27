@@ -10,13 +10,28 @@ type TRequestParameter = {
 
 export default function useRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<unknown | null>(null)
+  const [error, setError] = useState<Error | null>(null)
 
   const logOut = useLogOut()
 
+  const controller = new AbortController()
+  const {signal} = controller
+  const latestRequest = new Map<string, number>()
+  const coolDownTime = 500 // 500ms 이내에 같은 요청 발생 시 무시
+
   async function request({path, method = "get", body}: TRequestParameter) {
+    const currentTime = Date.now()
+    const lastRequestTime = latestRequest.get(path)
+    const isRequestDuplicated =
+      lastRequestTime && currentTime - lastRequestTime < coolDownTime
+    if (isRequestDuplicated) {
+      controller.abort()
+    }
+
     try {
       setIsLoading(true)
+
+      latestRequest.set(path, currentTime)
 
       const data = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/api${path}`,
@@ -26,6 +41,7 @@ export default function useRequest() {
           },
           method,
           body: body ? JSON.stringify(body) : null,
+          signal,
         }
       )
 
@@ -43,8 +59,15 @@ export default function useRequest() {
       }
 
       return response
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error
       setError(error)
+
+      if (error.name === "AbortError") {
+        // API 호출이 중단된 경우 무시. API 호출 쪽 구조 분해 에러는 console에만 나오고 인터렉션을 방해하진 않음
+      }
+
+      // TODO: axios interceptor 같은 것 서버 에러 처리
     } finally {
       setIsLoading(false)
     }
