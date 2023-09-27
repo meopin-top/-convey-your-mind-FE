@@ -46,7 +46,13 @@ export default function useRequest() {
       )
 
       if (!data.ok) {
-        throw new Error("데이터 fetch 에러 발생")
+        if (data.status >= 500) {
+          throw new Error("서버 측 오류")
+        } else if (data.status >= 400) {
+          throw new Error("클라이언트 측 오류")
+        } else {
+          throw new Error("데이터 fetch 에러")
+        }
       }
 
       const response = await data.json()
@@ -64,10 +70,10 @@ export default function useRequest() {
       setError(error)
 
       if (error.name === "AbortError") {
-        // API 호출이 중단된 경우 무시. API 호출 쪽 구조 분해 에러는 console에만 나오고 인터렉션을 방해하진 않음
+        console.error("API Abortion!")
+      } else {
+        console.error(error.message)
       }
-
-      // TODO: axios interceptor 같은 것 서버 에러 처리
     } finally {
       setIsLoading(false)
     }
