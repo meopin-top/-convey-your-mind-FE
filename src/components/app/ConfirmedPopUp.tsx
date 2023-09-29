@@ -106,6 +106,7 @@ const ConfirmedPopUp = ({
             }}
             placeholder="(선택) 이메일을 입력해주세요."
             value={email}
+            maxLength={100}
             onChange={handleEmail}
           />
         </div>
