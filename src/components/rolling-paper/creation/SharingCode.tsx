@@ -1,5 +1,6 @@
 "use client"
 
+import {DOMAIN} from "@/constants/service"
 import type {THandleValue} from "@/hooks/use-input"
 
 type TProps = {
@@ -13,7 +14,7 @@ const SharingCode = ({sharingCode, handleSharingCode}: TProps) => {
       <section className="description">
         롤링페이퍼의 공유 코드를 만들까요?
       </section>
-      <span className="service-domain">www.conveyyourmind.com/</span>
+      <span className="service-domain">{DOMAIN}/</span>
       <input
         className="radius-sm"
         type="text"
