@@ -12,7 +12,7 @@ import {
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import type {TCreationInformation} from "@/@types/rolling-paper"
 
-const RollingPaperCreation = () => {
+const Creation = () => {
   const [doneStep, setDoneStep] = useState<{
     [step in TCreationInformation]: boolean
   }>({
@@ -74,4 +74,4 @@ const RollingPaperCreation = () => {
   )
 }
 
-export default RollingPaperCreation
+export default Creation

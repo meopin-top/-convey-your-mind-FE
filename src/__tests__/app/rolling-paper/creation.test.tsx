@@ -1,10 +1,10 @@
 import {render, screen} from "@testing-library/react"
-import RollingPaperCreation from "@/app/rolling-paper/creation/page"
+import Creation from "@/app/rolling-paper/creation/page"
 
-describe("RollingPaperCreation", () => {
+describe("Creation", () => {
   it("제목을 렌더링한다", () => {
     // given, when
-    render(<RollingPaperCreation />)
+    render(<Creation />)
     const title = screen.getByText("롤링페이퍼 시작하기")
 
     // then
