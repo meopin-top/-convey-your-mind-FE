@@ -5,7 +5,7 @@ export default function useFocus(keys: string[]) {
 
   function handleKeyDown(event: KeyboardEvent<HTMLElement>) {
     const isSpecificKeyDowned = keys.includes(event.key)
-    if (isSpecificKeyDowned && ref?.current){
+    if (isSpecificKeyDowned && ref?.current) {
       ref.current.focus()
     }
   }
