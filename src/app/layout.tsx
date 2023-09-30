@@ -3,7 +3,7 @@ import "@/assets/styles/index.scss"
 
 export const metadata = {
   title: "마음을 전해요",
-  description: "by meopin top",
+  description: "by muffin top",
 }
 
 const RootLayout = ({children}: {children: React.ReactNode}) => {
