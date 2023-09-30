@@ -24,14 +24,15 @@ export function createLocalStorageMock(storage: TStorage = {}) {
 
   Object.defineProperty(window, "localStorage", {
     value: localStorageMock,
+    configurable: true,
   })
 }
 
 export function removeLocalStorageMock() {
-  ;(window.localStorage.getItem as jest.Mock).mockRestore()
-  ;(window.localStorage.setItem as jest.Mock).mockRestore()
-  ;(window.localStorage.removeItem as jest.Mock).mockRestore()
-  ;(window.localStorage.clear as jest.Mock).mockRestore()
+  delete (window.localStorage as {getItem: any}).getItem
+  delete (window.localStorage as {setItem: any}).setItem
+  delete (window.localStorage as {removeItem: any}).removeItem
+  delete (window.localStorage as {clear: any}).clear
 }
 
 export function createWriteTextMock() {
@@ -39,9 +40,21 @@ export function createWriteTextMock() {
     value: {
       writeText: jest.fn(() => Promise.resolve(undefined)),
     },
+    configurable: true,
   })
 }
 
 export function removeCreateWriteTextMock() {
-  ;(window.navigator.clipboard.writeText as jest.Mock).mockRestore()
+  delete (window.navigator.clipboard as {writeText: any}).writeText
+}
+
+export function createShareMock() {
+  Object.defineProperty(window.navigator, "share", {
+    value: jest.fn(() => Promise.resolve(undefined)),
+    configurable: true,
+  })
+}
+
+export function removeShareMock() {
+  delete (window.navigator as {share: any}).share
 }

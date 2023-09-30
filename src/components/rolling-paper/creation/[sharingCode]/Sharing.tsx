@@ -36,7 +36,7 @@ const Sharing = ({sharingCode}: TProps) => {
     let temporaryElement: HTMLSpanElement | null = null
 
     try {
-      const isClipboardSupported = Boolean(navigator.clipboard)
+      const isClipboardSupported = Boolean(navigator?.clipboard)
       isClipboardSupported
         ? await copyWithClipboard(SHARING_URL)
         : copyWithExecCommand(SHARING_URL)
@@ -75,7 +75,7 @@ const Sharing = ({sharingCode}: TProps) => {
   }
 
   async function shareOverOs() {
-    const isShareSupported = Boolean(navigator.share)
+    const isShareSupported = Boolean(navigator?.share)
 
     setIsOsShareLoading(true)
 
