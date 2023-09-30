@@ -1,0 +1,66 @@
+@import "../../../common/variables";
+@import "../../../common/colors";
+
+.creation-success {
+  .title {
+    flex-direction: column;
+
+    font-family: dohyeon;
+  }
+
+  .link {
+    flex-direction: column;
+
+    font: bold 1em "hanna-air";
+
+    a {
+      color: map-get($COLOR, INFO);
+      text-decoration: underline;
+    }
+  }
+
+  .sharing {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 96px;
+
+    > * {
+      width: 80px;
+      height: 80px;
+
+      font-size: 12px;
+
+      border-radius: 25%;
+      border-width: 4px !important;
+    }
+
+    .url-copy {
+      @include danger;
+
+      flex-direction: column;
+    }
+
+    .kakao-sharing {
+      @include warning;
+
+      flex-direction: column;
+    }
+  }
+
+  .to-rolling-paper,
+  .to-my-page {
+    @include fill-info;
+
+    width: 100%;
+    height: 56px;
+
+    a {
+      width: 100%;
+      height: 100%;
+
+      font-weight: 500;
+      font-size: 16px;
+    }
+  }
+}
