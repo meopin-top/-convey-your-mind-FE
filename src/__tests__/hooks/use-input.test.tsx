@@ -26,7 +26,7 @@ describe("useInput", () => {
 
     // then
     expect(setInputValue).toBeCalled()
-    expect(input.value).toBe(value)
+    expect(input.value).toEqual(value)
   })
 
   test("값이 올바르게 업데이트되고, 콜백 함수가 호출되지 않는다.", () => {
@@ -41,6 +41,6 @@ describe("useInput", () => {
     fireEvent.change(input, {target: {value}})
 
     // then
-    expect(input.value).toBe(value)
+    expect(input.value).toEqual(value)
   })
 })
