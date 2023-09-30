@@ -1,7 +1,10 @@
 import type {HTMLAttributes} from "react"
 import {render, screen, fireEvent} from "@testing-library/react"
 import Sharing from "@/components/rolling-paper/creation/[sharingCode]/Sharing"
-import {createWriteTextMock} from "@/__mocks__/window"
+import {
+  createWriteTextMock,
+  removeCreateWriteTextMock,
+} from "@/__mocks__/window"
 
 jest.mock("next/image", () => ({
   __esModule: true,
@@ -26,7 +29,7 @@ describe("Sharing", () => {
   })
 
   afterAll(() => {
-    // TODO: clear
+    removeCreateWriteTextMock()
   })
 
   it("'URL 복사'가 포함된 버튼을 렌더링한다.", () => {

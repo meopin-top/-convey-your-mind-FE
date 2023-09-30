@@ -36,8 +36,6 @@ const Sharing = ({sharingCode}: TProps) => {
       // 지원 안 해도 clipboard 복사가 되기 때문에 따로 확인하지 않음
       await navigator.clipboard.writeText(SHARING_URL)
 
-      // TODO: await이 물려있는 동안 다른 이벤트 리스너 동작하는지 확인하기
-
       setIsCopied(true)
 
       timer = setTimeout(() => {

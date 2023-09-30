@@ -3,7 +3,7 @@ import {createLocalStorageMock} from "@/__mocks__/window"
 import type {TLocalStorageKey} from "@/@types/storage"
 
 describe("Storage", () => {
-  beforeEach(() => {
+  beforeAll(() => {
     createLocalStorageMock()
   })
 

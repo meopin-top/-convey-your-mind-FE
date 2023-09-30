@@ -27,10 +27,21 @@ export function createLocalStorageMock(storage: TStorage = {}) {
   })
 }
 
+export function removeLocalStorageMock() {
+  ;(window.localStorage.getItem as jest.Mock).mockRestore()
+  ;(window.localStorage.setItem as jest.Mock).mockRestore()
+  ;(window.localStorage.removeItem as jest.Mock).mockRestore()
+  ;(window.localStorage.clear as jest.Mock).mockRestore()
+}
+
 export function createWriteTextMock() {
   Object.defineProperty(window.navigator, "clipboard", {
     value: {
       writeText: jest.fn(() => Promise.resolve(undefined)),
     },
   })
+}
+
+export function removeCreateWriteTextMock() {
+  ;(window.navigator.clipboard.writeText as jest.Mock).mockRestore()
 }
