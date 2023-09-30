@@ -62,7 +62,7 @@ describe("WithoutSignUp", () => {
     const value = "test"
 
     // when
-    fireEvent.change(sharedCodeInput, {target: {value}})
+    fireEvent.change(sharingCodeInput, {target: {value}})
 
     // then
     await waitFor(() => {

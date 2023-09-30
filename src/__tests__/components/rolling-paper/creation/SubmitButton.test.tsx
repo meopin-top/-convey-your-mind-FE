@@ -12,7 +12,7 @@ function renderSubmitButtonAndGetButton(disabled: boolean) {
     <SubmitButton
       toWhom={"Jacob"}
       personnel={"5"}
-      sharedCode={"J1234"}
+      sharingCode={"J1234"}
       disabled={disabled}
     />
   )
@@ -45,13 +45,13 @@ describe("SubmitButton", () => {
     // given
     const toWhom = "Jacob"
     const personnel = "5"
-    const sharedCode = "J1234"
+    const sharingCode = "J1234"
 
     render(
       <SubmitButton
         toWhom={toWhom}
         personnel={personnel}
-        sharedCode={sharedCode}
+        sharingCode={sharingCode}
         disabled={false}
       />
     )
@@ -68,7 +68,7 @@ describe("SubmitButton", () => {
       screen.getByText(/참여 인원/),
       screen.getByText(personnel),
       screen.getByText(/선택한 탬플릿/),
-      screen.getByText(sharedCode),
+      screen.getByText(sharingCode),
     ]
 
     // then
@@ -88,13 +88,13 @@ describe("SubmitButton", () => {
     // given
     const toWhom = "Jacob"
     const personnel = "5"
-    const sharedCode = "J1234"
+    const sharingCode = "J1234"
 
     render(
       <SubmitButton
         toWhom={toWhom}
         personnel={personnel}
-        sharedCode={sharedCode}
+        sharingCode={sharingCode}
         disabled={false}
       />
     )
@@ -118,7 +118,7 @@ describe("SubmitButton", () => {
       screen.queryByText(/참여 인원/),
       screen.queryByText(personnel),
       screen.queryByText(/선택한 탬플릿/),
-      screen.queryByText(sharedCode),
+      screen.queryByText(sharingCode),
     ]
 
     // then

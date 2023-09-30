@@ -6,7 +6,7 @@ import {
   Whom,
   Personnel,
   Types,
-  SharedCode,
+  SharingCode,
   SubmitButton,
 } from "@/components/rolling-paper/creation"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
@@ -19,8 +19,8 @@ const RollingPaperCreation = () => {
     WHOM: false,
     PERSONNEL: false,
     TYPE: true,
-    SHARED_CODE: false,
-  }) // TODO: 바꿔야 될 수 있음(공유 코드는 기본적으로 완성된거라고 생각한다면 SHARED_CODE: true가 맞음)
+    SHARING_CODE: false,
+  }) // TODO: 바꿔야 될 수 있음(공유 코드는 기본적으로 완성된거라고 생각한다면 SHARING_CODE: true가 맞음)
   const [toWhom, handleToWhom] = useInput("", (event: TInputChangeEvent) => {
     handleDoneStep(event.target.value.length !== 0, "WHOM")
   })
@@ -30,10 +30,10 @@ const RollingPaperCreation = () => {
       handleDoneStep(event.target.value.length !== 0, "PERSONNEL")
     }
   )
-  const [sharedCode, handleSharedCode] = useInput(
+  const [sharingCode, handleSharingCode] = useInput(
     "",
     (event: TInputChangeEvent) => {
-      handleDoneStep(event.target.value.length !== 0, "SHARED_CODE")
+      handleDoneStep(event.target.value.length !== 0, "SHARING_CODE")
     }
   )
 
@@ -60,12 +60,15 @@ const RollingPaperCreation = () => {
       <Whom toWhom={toWhom} handleToWhom={handleToWhom} />
       <Personnel personnel={personnel} handlePersonnel={handlePersonnel} />
       <Types />
-      <SharedCode sharedCode={sharedCode} handleSharedCode={handleSharedCode} />
+      <SharingCode
+        sharingCode={sharingCode}
+        handleSharingCode={handleSharingCode}
+      />
       <SubmitButton
         disabled={TOTAL_STEP !== DONE_COUNT}
         toWhom={toWhom}
         personnel={personnel}
-        sharedCode={sharedCode}
+        sharingCode={sharingCode}
       />
     </main>
   )

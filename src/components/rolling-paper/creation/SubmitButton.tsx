@@ -7,10 +7,10 @@ type TProps = {
   disabled: boolean
   toWhom: string
   personnel: string
-  sharedCode: string
+  sharingCode: string
 }
 
-const SubmitButton = ({disabled, toWhom, personnel, sharedCode}: TProps) => {
+const SubmitButton = ({disabled, toWhom, personnel, sharingCode}: TProps) => {
   const [isAlerting, setIsAlerting] = useState(false)
 
   const dataToCheck: {description: string; data: string}[] = [
@@ -24,7 +24,7 @@ const SubmitButton = ({disabled, toWhom, personnel, sharedCode}: TProps) => {
     },
     {
       description: "선택한 탬플릿",
-      data: sharedCode, // TODO: 템플릿으로 고치기
+      data: sharingCode, // TODO: 템플릿으로 고치기
     },
   ]
 
@@ -36,7 +36,7 @@ const SubmitButton = ({disabled, toWhom, personnel, sharedCode}: TProps) => {
     // TODO
     console.log("toWhom", toWhom)
     console.log("personnel", personnel)
-    console.log("sharedCode", sharedCode)
+    console.log("sharingCode", sharingCode)
   }
 
   return (

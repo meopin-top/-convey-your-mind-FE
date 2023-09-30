@@ -1,12 +1,14 @@
 import {render, screen, fireEvent} from "@testing-library/react"
-import SharedCode from "@/components/rolling-paper/creation/SharedCode"
+import SharingCode from "@/components/rolling-paper/creation/SharingCode"
 
-describe("SharedCode", () => {
+describe("SharingCode", () => {
   it("컴포넌트를 올바르게 렌더링한다.", () => {
     // given, when
-    const sharedCode = "J1234"
+    const sharingCode = "J1234"
 
-    render(<SharedCode sharedCode={sharedCode} handleSharedCode={jest.fn()} />)
+    render(
+      <SharingCode sharingCode={sharingCode} handleSharingCode={jest.fn()} />
+    )
 
     const description = screen.getByText("롤링페이퍼의 공유 코드를 만들까요?")
     const input = screen.getByPlaceholderText(
@@ -16,16 +18,19 @@ describe("SharedCode", () => {
     // then
     expect(description).toBeInTheDocument()
     expect(input).toBeInTheDocument()
-    expect(input.value).toBe(sharedCode)
+    expect(input.value).toBe(sharingCode)
   })
 
-  it("인풋 값이 바뀌면 handleToWhom을 호출한다.", () => {
+  it("인풋 값이 바뀌면 handleSharingCode을 호출한다.", () => {
     // given
-    const sharedCode = "J1234"
-    const handleSharedCode = jest.fn()
+    const sharingCode = "J1234"
+    const handleSharingCode = jest.fn()
 
     render(
-      <SharedCode sharedCode={sharedCode} handleSharedCode={handleSharedCode} />
+      <SharingCode
+        sharingCode={sharingCode}
+        handleSharingCode={handleSharingCode}
+      />
     )
 
     const inputElement = screen.getByPlaceholderText("기본 코드 디폴트")
@@ -34,6 +39,6 @@ describe("SharedCode", () => {
     fireEvent.change(inputElement, {target: {value: "JK1234"}})
 
     // then
-    expect(handleSharedCode).toHaveBeenCalledTimes(1)
+    expect(handleSharingCode).toHaveBeenCalledTimes(1)
   })
 })

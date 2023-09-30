@@ -3,13 +3,13 @@
 import type {THandleValue} from "@/hooks/use-input"
 
 type TProps = {
-  sharedCode: string
-  handleSharedCode: THandleValue
+  sharingCode: string
+  handleSharingCode: THandleValue
 }
 
-const SharedCode = ({sharedCode, handleSharedCode}: TProps) => {
+const SharingCode = ({sharingCode, handleSharingCode}: TProps) => {
   return (
-    <div className="shared-code">
+    <div className="sharing-code">
       <section className="description">
         롤링페이퍼의 공유 코드를 만들까요?
       </section>
@@ -18,11 +18,11 @@ const SharedCode = ({sharedCode, handleSharedCode}: TProps) => {
         className="radius-sm"
         type="text"
         placeholder="기본 코드 디폴트" // TODO: change
-        value={sharedCode}
-        onChange={handleSharedCode}
+        value={sharingCode}
+        onChange={handleSharingCode}
       />
     </div>
   )
 }
 
-export default SharedCode
+export default SharingCode
