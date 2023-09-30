@@ -135,7 +135,7 @@ jest.mock("../../components/app", () => ({
 1. eslint는 [eslint-config-react-app](https://www.npmjs.com/package/eslint-config-react-app), [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)를 참고한다.
 2. `src/assets` 또는 `src/components`는 import, export 해야 하는 모듈들이 많기 때문에 [barrel](https://basarat.gitbook.io/typescript/main-1/barrel) 파일을 사용한다.
 3. commit은 [udacity git commit convention](http://udacity.github.io/git-styleguide/)에 안 쓰는 코드 / 파일 삭제를 의미하는 "remove" type을 추가해서 사용한다. 다만 subject만으로 충분히 표현이 가능하거나 간단한 수정이면 body와 footer를 생략할 수 있다.
-4. commit 시 바뀐 파일 이름을 추가한다(ex. fix: \~\~버그 수정(components/Loading)). 또한 "chore"를 사용하면 설치 또는 삭제한 모듈을 커밋 내용에 추가한다(ex. chore: CSS in JS로 변경(+ styled-components, - node-sass)).
+4. commit 시 바뀐 path를 제외한 파일 이름을 추가한다(ex. fix: \~\~버그 수정(Loading.tsx)). 다만 많이 바뀌었다면 commit body에 바뀐 내용 각각을 기록하고 해당하는 파일의 이름을 추가한다. 또한 "chore"를 사용하면 설치 또는 삭제한 모듈을 커밋 내용에 추가한다(ex. chore: CSS in JS로 변경(+ styled-components, - node-sass)).
 5. git-hook으로 husky를 사용한다. pre-commit으로 `yarn lint` 명령어로 검사하고, pre-push로 `yarn test` 명령어로 검사한다.
 6. 이미지는 용량이 작은 webp 포맷을 사용한다. 이미지 barrel 파일에서는 camelCase를 사용한다.
 7. 아이콘은 사이즈가 커져도 깨지지 않는 svg 포맷을 사용한다. ~(디자이너가 없기 때문에 사이즈별로 아이콘 만들기 힘들다)~ 작은 크기 파일에 적합하지 않은 ico나 `img` 태그의 src 속성을 사용하는 png(적용할 수 있는 css가 더 적음)는 사용을 지양한다. barrel 파일에서는 PascalCase를 사용한다.
