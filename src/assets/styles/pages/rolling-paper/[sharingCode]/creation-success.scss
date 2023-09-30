@@ -26,6 +26,8 @@
     margin-top: 96px;
 
     > * {
+      flex-direction: column;
+
       width: 80px;
       height: 80px;
 
@@ -37,14 +39,14 @@
 
     .url-copy {
       @include danger;
-
-      flex-direction: column;
     }
 
     .kakao-sharing {
       @include warning;
+    }
 
-      flex-direction: column;
+    .web-sharing {
+      @include normal;
     }
   }
 

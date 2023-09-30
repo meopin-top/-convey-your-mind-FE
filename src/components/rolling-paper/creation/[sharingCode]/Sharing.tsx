@@ -2,8 +2,9 @@
 
 import {useState, useEffect} from "react"
 import Image from "next/image"
-import {kakaoLogoBlack, kakaoLogo} from "@/assets/images"
-import {ClipboardCheck, Clipboard} from "@/assets/icons"
+import Loading from "@/components/Loading"
+import {kakaoLogoBlack} from "@/assets/images"
+import {ClipboardCheck, Clipboard, Share} from "@/assets/icons"
 import {DOMAIN} from "@/constants/service"
 
 type TProps = {
@@ -12,6 +13,7 @@ type TProps = {
 
 const Sharing = ({sharingCode}: TProps) => {
   const [isCopied, setIsCopied] = useState(false)
+  const [isOsShareLoading, setIsOsShareLoading] = useState(false)
 
   const SHARING_URL = `${DOMAIN}/${sharingCode}`
   const TIME_OUT = 5000
@@ -31,18 +33,66 @@ const Sharing = ({sharingCode}: TProps) => {
       return
     }
 
+    let temporaryElement: HTMLSpanElement | null = null
+
     try {
-      // navigator.permissions.query({name: "clipboard-write"})에서 "clipboard-write" 타입을 지원하는지 여부가 브라우저마다 다름
-      // 지원 안 해도 clipboard 복사가 되기 때문에 따로 확인하지 않음
-      await navigator.clipboard.writeText(SHARING_URL)
+      const isClipboardSupported = Boolean(navigator.clipboard)
+      isClipboardSupported
+        ? await copyWithClipboard(SHARING_URL)
+        : copyWithExecCommand(SHARING_URL)
 
-      setIsCopied(true)
-
-      timer = setTimeout(() => {
-        setIsCopied(false)
-      }, TIME_OUT)
+      handleIsCopied()
     } catch (_) {
       alert("클립보드에 복사하기를 실패했습니다.")
+    } finally {
+      if (temporaryElement) {
+        document.body.removeChild(temporaryElement)
+      }
+    }
+
+    async function copyWithClipboard(text: string) {
+      await navigator.clipboard.writeText(text)
+    }
+
+    function copyWithExecCommand(text: string) {
+      temporaryElement = document.createElement("span")
+      temporaryElement.textContent = text
+      temporaryElement.style.display = "none"
+
+      document.body.appendChild(temporaryElement)
+
+      temporaryElement.focus()
+      document.execCommand("copy")
+    }
+  }
+
+  function handleIsCopied() {
+    setIsCopied(true)
+
+    timer = setTimeout(() => {
+      setIsCopied(false)
+    }, TIME_OUT)
+  }
+
+  async function shareOverOs() {
+    const isShareSupported = Boolean(navigator.share)
+
+    setIsOsShareLoading(true)
+
+    try {
+      if (isShareSupported) {
+        await navigator.share({
+          title: "마음을 전해요",
+          text: "롤링페이퍼에 참여하세요",
+          url: SHARING_URL,
+        })
+      } else {
+        throw new Error("공유하기 기능을 호출하는 데 실패했습니다.")
+      }
+    } catch (error: unknown) {
+      alert((error as Error).message)
+    } finally {
+      setIsOsShareLoading(false)
     }
   }
 
@@ -63,22 +113,22 @@ const Sharing = ({sharingCode}: TProps) => {
       </button>
       <button className="kakao-sharing f-center">
         <Image
-          className="mb-1"
+          className="mb-2"
           src={kakaoLogoBlack}
           alt="카카오 공유하기"
           width={32}
           height={32}
         />
         카카오톡
-        <br />
+      </button>
+      <button className="web-sharing f-center" onClick={shareOverOs}>
+        {isOsShareLoading ? (
+          <Loading isLoading={true} className="mb-2" />
+        ) : (
+          <Share className="lg mb-1" />
+        )}
         공유하기
       </button>
-      <Image
-        src={kakaoLogo} // TODO: 이미지 교체
-        alt="OS 공유하기"
-        width={80}
-        height={80}
-      />
     </div>
   )
 }
