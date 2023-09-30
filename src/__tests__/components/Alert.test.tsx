@@ -28,7 +28,7 @@ describe("Alert", () => {
     expect(wrapper).not.toHaveClass("blur")
   })
 
-  test("제목, 내용, 버튼이 렌더링되고 버튼을 클릭할 수 있다.", () => {
+  it("제목, 내용, 버튼이 렌더링되고 버튼을 클릭할 수 있다.", () => {
     // given
     const handleButtonClick = jest.fn()
 
@@ -56,7 +56,7 @@ describe("Alert", () => {
     expect(handleButtonClick).toHaveBeenCalled()
   })
 
-  test("제목, 내용, 버튼이 렌더링되지 않고 버튼을 클릭할 수 없다.", () => {
+  it("제목, 내용, 버튼이 렌더링되지 않고 버튼을 클릭할 수 없다.", () => {
     // given, when
     render(<Alert isAlerting={true}>children</Alert>)
 

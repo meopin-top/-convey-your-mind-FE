@@ -12,7 +12,7 @@ function renderTestComponent(callback?: (event: TInputChangeEvent) => any) {
 }
 
 describe("useInput", () => {
-  test("값이 올바르게 업데이트되고, 콜백 함수가 호출된다.", () => {
+  it("값이 올바르게 업데이트되고, 콜백 함수가 호출된다.", () => {
     // given
     const value = "test"
     const setInputValue = jest.fn()
@@ -29,7 +29,7 @@ describe("useInput", () => {
     expect(input.value).toEqual(value)
   })
 
-  test("값이 올바르게 업데이트되고, 콜백 함수가 호출되지 않는다.", () => {
+  it("값이 올바르게 업데이트되고, 콜백 함수가 호출되지 않는다.", () => {
     // given
     const value = "test"
 
