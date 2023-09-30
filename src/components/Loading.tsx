@@ -2,13 +2,14 @@
 
 import {useState, useEffect, type MouseEvent, type HTMLAttributes} from "react"
 import {Close, Spinner} from "@/assets/icons"
+import type {TIconSize} from "@/@types/style"
 
 export type TProps = {
   isLoading: boolean
   blur?: boolean
   onClose?: (event: MouseEvent<HTMLOrSVGElement>) => void
   duration?: number
-  size?: string
+  size?: TIconSize
 } & HTMLAttributes<HTMLDivElement>
 
 const Loading = ({
