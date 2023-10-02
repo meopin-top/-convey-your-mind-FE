@@ -1,8 +1,8 @@
 import Alert from "./Alert"
 import BottomSheet from "./BottomSheet"
+import FlowAlert from "./FlowAlert"
 import Header from "./Header"
 import Loading from "./Loading"
-import LoginAlert from "./LoginAlert"
 import {NeedLoggedIn, NeedNotLoggedIn} from "./LoginChecker"
 import NavigationBar from "./NavigationBar"
 import Pagination from "./Pagination"
@@ -13,9 +13,9 @@ import SecretInput from "./SecretInput"
 export {
   Alert,
   BottomSheet,
+  FlowAlert,
   Header,
   Loading,
-  LoginAlert,
   NeedLoggedIn,
   NeedNotLoggedIn,
   NavigationBar,

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react"
 import Link from "next/link"
+import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import {UserInformation} from "./my"
 import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
@@ -28,7 +29,7 @@ import ROUTE from "@/constants/route"
 const Portal = dynamic(() => import("./Portal"), {
   loading: () => <></>,
 })
-const LoginAlert = dynamic(() => import("./LoginAlert"), {
+const LoginAlert = dynamic(() => import("./FlowAlert"), {
   loading: () => <></>,
 })
 
@@ -39,6 +40,8 @@ const NavigationBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [fullPath, setFullPath] = useState("")
   const {setSignUpTab: setTab} = useContext(SignUpTabStore)
+
+  const router = useRouter()
 
   const {lockScroll, unlockScroll} = useBodyScrollLock()
 
@@ -110,6 +113,10 @@ const NavigationBar = () => {
         {children}
       </button>
     )
+  }
+
+  function goToSignIn() {
+    router.push(ROUTE.MAIN)
   }
 
   return (
@@ -214,7 +221,20 @@ const NavigationBar = () => {
       </nav>
       <Portal
         render={() => (
-          <LoginAlert isAlerting={isAlertOpen} onClose={closeAlert} />
+          <LoginAlert
+            isAlerting={isAlertOpen}
+            content={
+              <>
+                로그인 후 이용할 수 있는 메뉴입니다🥲
+                <br />
+                로그인하시겠습니까?
+              </>
+            }
+            defaultButton="취소"
+            onClose={closeAlert}
+            additionalButton="확인"
+            onClick={goToSignIn}
+          />
         )}
       />
     </>
