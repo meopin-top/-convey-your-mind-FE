@@ -42,7 +42,7 @@ jest.mock("../../components/Portal.tsx", () => ({
   default: ({render}: TPortalProps) => <>{render()}</>,
 }))
 
-jest.mock("../../components/LoginAlert.tsx", () => ({
+jest.mock("../../components/FlowAlert.tsx", () => ({
   __esModule: true,
   default: ({isAlerting}: {isAlerting: boolean}) => (
     <>LoginAlert {isAlerting ? "open" : "close"}</>
