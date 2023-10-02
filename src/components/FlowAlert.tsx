@@ -17,7 +17,7 @@ const FlowAlert = ({
   blur,
   title,
   content,
-  defaultButton = "닫기",
+  defaultButton = "확인",
   onClose,
   additionalButton,
   onClick,
