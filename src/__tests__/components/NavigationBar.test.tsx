@@ -26,7 +26,6 @@ jest.mock("../../hooks/use-log-out.ts", () => ({
   __esModule: true,
   default: () => logOutMock,
 }))
-
 jest.mock("../../components/my/UserInformation.tsx", () => ({
   __esModule: true,
   default: ({right}: TUserInformationProps) => (
@@ -36,19 +35,16 @@ jest.mock("../../components/my/UserInformation.tsx", () => ({
     </>
   ),
 }))
-
 jest.mock("../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TPortalProps) => <>{render()}</>,
 }))
-
 jest.mock("../../components/FlowAlert.tsx", () => ({
   __esModule: true,
   default: ({isAlerting}: {isAlerting: boolean}) => (
     <>LoginAlert {isAlerting ? "open" : "close"}</>
   ),
 }))
-
 jest.mock("../../assets/icons", () => ({
   __esModule: true,
   Hamburger: ({...rest}: HTMLAttributes<HTMLOrSVGElement>) => (
