@@ -1,11 +1,14 @@
-import type {ReactNode} from "react"
+"use client"
+
+import {useEffect, useRef, type ReactNode, type KeyboardEvent} from "react"
 import Alert from "./Alert"
 
 type TProps = {
   isAlerting: boolean
+  isControllingKeyInput?: boolean
   blur?: boolean
   title?: string
-  content?: string | JSX.Element
+  content?: string | ReactNode
   defaultButton?: ReactNode
   onClose: () => void
   additionalButton?: ReactNode
@@ -14,6 +17,7 @@ type TProps = {
 
 const FlowAlert = ({
   isAlerting,
+  isControllingKeyInput = true,
   blur,
   title,
   content,
@@ -22,14 +26,40 @@ const FlowAlert = ({
   additionalButton,
   onClick,
 }: TProps) => {
+  const wrapper = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    wrapper.current?.focus()
+  }, [isAlerting])
+
+  function controlKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+    if (!isControllingKeyInput) {
+      return
+    }
+
+    event.stopPropagation()
+
+    const isCloseKeyDowned = event.key === "Enter" || event.key === "Escape"
+    if (isCloseKeyDowned) {
+      onClose()
+    }
+  }
+
   return (
-    <Alert isAlerting={isAlerting} blur={blur} style={{padding: "12px"}}>
+    <Alert
+      isAlerting={isAlerting}
+      blur={blur}
+      style={{padding: "12px"}}
+      onKeyDownCapture={controlKeyDown}
+      divRef={wrapper}
+      tabIndex={0}
+    >
       {title && <Alert.Title title={title} style={{marginBottom: "20px"}} />}
       {content && (
         <Alert.Content
           style={{
             width: "100%",
-            margin: "10px 0",
+            margin: "10px 0 20px",
             fontSize: "14px",
             textAlign: "center",
           }}
@@ -37,11 +67,11 @@ const FlowAlert = ({
           {content}
         </Alert.Content>
       )}
-      <Alert.ButtonWrapper style={{height: "36px", marginTop: "20px"}}>
+      <Alert.ButtonWrapper style={{height: "36px"}}>
         <Alert.Button
           onClick={onClose}
           style={{width: `${additionalButton ? "120px" : "100%"}`}}
-          type="dark-4"
+          type={additionalButton ? "dark-4" : "fill-dark-4"}
         >
           {defaultButton}
         </Alert.Button>

@@ -1,6 +1,11 @@
 "use client"
 
-import type {MouseEvent, HTMLAttributes, ReactNode} from "react"
+import type {
+  MouseEvent,
+  HTMLAttributes,
+  ReactNode,
+  MutableRefObject,
+} from "react"
 import type {TColor} from "@/@types/style"
 
 type TProps = {
@@ -8,14 +13,21 @@ type TProps = {
   blur?: boolean
   isUseCustomButton?: boolean
   children: ReactNode
+  divRef?: MutableRefObject<HTMLDivElement | null>
 } & HTMLAttributes<HTMLDivElement>
 
-const Alert = ({isAlerting, blur = false, children, ...props}: TProps) => {
+const Alert = ({
+  isAlerting,
+  blur = false,
+  divRef,
+  children,
+  ...props
+}: TProps) => {
   return (
     <>
       {isAlerting && (
         <div className={`alert f-center ${blur ? "blur" : ""}`}>
-          <div className="wrapper shadow-lg" {...props}>
+          <div className="wrapper shadow-lg" ref={divRef} {...props}>
             {children}
           </div>
         </div>

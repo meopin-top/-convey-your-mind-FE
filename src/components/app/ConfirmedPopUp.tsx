@@ -124,6 +124,7 @@ const ConfirmedPopUp = ({
               value={confirmedPassword}
               onChange={setConfirmedPassword}
               onKeyDown={handleSubmission}
+              autoFocus
             />
           </div>
           <div
