@@ -135,13 +135,13 @@ describe("OAuthMiddleware", () => {
 
     render(<OauthMiddleware />)
 
-    const ErrorAlert = screen.getByText("ErrorAlert open")
+    const errorAlert = screen.getByText("ErrorAlert open")
 
     // then
     await waitFor(() => {
       expect(routerReplacementMock).toHaveBeenCalledTimes(1)
       expect(routerReplacementMock).toHaveBeenCalledWith(ROUTE.MAIN)
-      expect(ErrorAlert).toBeInTheDocument()
+      expect(errorAlert).toBeInTheDocument()
     })
   })
 })

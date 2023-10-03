@@ -1,6 +1,6 @@
 "use client"
 
-import type {KeyboardEvent, MutableRefObject} from "react"
+import {useState, type KeyboardEvent, type MutableRefObject} from "react"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import Link from "next/link"
@@ -19,8 +19,13 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
+const ErrorAlert = dynamic(() => import("../FlowAlert"), {
+  loading: () => <></>,
+})
 
 const SignIn = () => {
+  const [alertMessage, setAlertMessage] = useState("")
+
   const router = useRouter()
 
   const {isLoading, request} = useRequest()
@@ -56,7 +61,11 @@ const SignIn = () => {
       return
     }
 
-    alert(message)
+    setAlertMessage(message)
+  }
+
+  function closeAlert() {
+    setAlertMessage("")
   }
 
   return (
@@ -93,7 +102,18 @@ const SignIn = () => {
       <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>
         내 계정 정보 찾기
       </Link>
-      <Portal render={() => <Loading isLoading={isLoading} />} />
+      <Portal
+        render={() => (
+          <>
+            <Loading isLoading={isLoading} />
+            <ErrorAlert
+              isAlerting={alertMessage.length !== 0}
+              onClose={closeAlert}
+              content={alertMessage}
+            />
+          </>
+        )}
+      />
     </>
   )
 }

@@ -142,11 +142,11 @@ describe("ConfirmedPopUp", () => {
     })
     fireEvent.click(signUpButton)
 
-    const ErrorAlert = screen.getByText("ErrorAlert open")
+    const errorAlert = screen.getByText("ErrorAlert open")
 
     // then
     expect(onSubmit).not.toBeCalled()
-    expect(ErrorAlert).toBeInTheDocument()
+    expect(errorAlert).toBeInTheDocument()
   })
 
   it("이메일 형식이 다르면 onSubmit를 호출하지 않고, ErrorAlert를 호출한다.", () => {
@@ -174,11 +174,11 @@ describe("ConfirmedPopUp", () => {
       })
       fireEvent.click(signUpButton)
 
-      const ErrorAlert = screen.getByText("ErrorAlert open")
+      const errorAlert = screen.getByText("ErrorAlert open")
 
       // then
       expect(onSubmit).not.toBeCalled()
-      expect(ErrorAlert).toBeInTheDocument()
+      expect(errorAlert).toBeInTheDocument()
     })
   })
 
