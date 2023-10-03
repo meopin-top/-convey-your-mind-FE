@@ -2,11 +2,11 @@
 
 import {useState} from "react"
 import {Portal, Alert} from "@/components"
-import type {THandleValue} from "@/hooks/use-input"
+import type {TInputChangeEvent} from "@/hooks/use-input"
 
 type TProps = {
   personnel: string
-  handlePersonnel: THandleValue
+  handlePersonnel: (event: TInputChangeEvent) => any
 }
 
 const Personnel = ({personnel, handlePersonnel}: TProps) => {

@@ -1,10 +1,10 @@
 "use client"
 
-import type {THandleValue} from "@/hooks/use-input"
+import type {TInputChangeEvent} from "@/hooks/use-input"
 
 type TProps = {
   toWhom: string
-  handleToWhom: THandleValue
+  handleToWhom: (event: TInputChangeEvent) => any
 }
 
 const Whom = ({toWhom, handleToWhom}: TProps) => {

@@ -1,11 +1,11 @@
 "use client"
 
 import {DOMAIN} from "@/constants/service"
-import type {THandleValue} from "@/hooks/use-input"
+import type {TInputChangeEvent} from "@/hooks/use-input"
 
 type TProps = {
   sharingCode: string
-  handleSharingCode: THandleValue
+  handleSharingCode: (event: TInputChangeEvent) => any
 }
 
 const SharingCode = ({sharingCode, handleSharingCode}: TProps) => {
