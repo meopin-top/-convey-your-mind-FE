@@ -14,7 +14,7 @@ import useRequest from "@/hooks/use-request"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
-import SignUpTabStore from "@/store/sign-up-tab"
+import SignInStore from "@/store/sign-in"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 import type {TSignInResponse} from "@/@types/auth"
@@ -32,7 +32,7 @@ const ErrorAlert = dynamic(() => import("../FlowAlert"), {
 const SignIn = () => {
   const [alertMessage, setAlertMessage] = useState("")
 
-  const {redirectTo, setRedirectTo} = useContext(SignUpTabStore)
+  const {redirectTo, setRedirectTo} = useContext(SignInStore)
 
   const router = useRouter()
 

@@ -1,4 +1,4 @@
-import {Provider as SignUpTabProvider} from "@/store/sign-up-tab"
+import {Provider as SignInProvider} from "@/store/sign-in"
 import "@/assets/styles/index.scss"
 
 export const metadata = {
@@ -10,7 +10,7 @@ const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <html lang="ko">
       <body>
-        <SignUpTabProvider>{children}</SignUpTabProvider>
+        <SignInProvider>{children}</SignInProvider>
         <div id="portal" />
       </body>
     </html>

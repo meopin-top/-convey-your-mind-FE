@@ -1,6 +1,6 @@
 import {render, screen, fireEvent} from "@testing-library/react"
 import Component from "@/components/app/WithSignUp"
-import {Provider} from "@/store/sign-up-tab"
+import {Provider} from "@/store/sign-in"
 
 const WithSignUp = () => {
   return (

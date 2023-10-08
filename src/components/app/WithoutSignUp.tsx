@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
-import SignUpTabStore from "@/store/sign-up-tab"
+import SignInStore from "@/store/sign-in"
 import {ROLLING_PAPER} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 
@@ -23,7 +23,7 @@ const WithoutSignUp = () => {
   const [isInvalidAlert, setIsInvalidAlert] = useState(true) // flow상 롤링페이퍼 작성이 불가능해서 생기는 alert인지 여부
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null)
 
-  const {setSignUpTab: setTab, setRedirectTo} = useContext(SignUpTabStore)
+  const {setTab, setRedirectTo} = useContext(SignInStore)
 
   const [sharedCode, handleSharedCode] = useInput()
 

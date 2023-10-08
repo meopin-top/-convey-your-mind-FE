@@ -22,7 +22,7 @@ import {
   Paper,
   Bulb,
 } from "@/assets/icons"
-import SignUpTabStore from "@/store/sign-up-tab"
+import SignInStore from "@/store/sign-in"
 import Storage from "@/store/local-storage"
 import ROUTE from "@/constants/route"
 
@@ -39,7 +39,7 @@ const NavigationBar = () => {
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [fullPath, setFullPath] = useState("")
-  const {setSignUpTab: setTab} = useContext(SignUpTabStore)
+  const {setTab} = useContext(SignInStore)
 
   const router = useRouter()
 
