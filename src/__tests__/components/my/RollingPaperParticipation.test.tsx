@@ -124,7 +124,9 @@ describe("RollingPaperParticipation", () => {
 
     // then
     await waitFor(() => {
-      expect(alertMock).toBeCalledWith("참여 가능한 공유 코드가 아닙니다.")
+      expect(alertMock).toHaveBeenCalledWith(
+        "참여 가능한 공유 코드가 아닙니다."
+      )
     })
   })
 })

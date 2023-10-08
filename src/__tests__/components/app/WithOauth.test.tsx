@@ -63,7 +63,7 @@ describe("WithOauth", () => {
     fireEvent.click(kakaoLoginButton)
 
     // then
-    expect(routerPushMock).toBeCalledWith(
+    expect(routerPushMock).toHaveBeenCalledWith(
       `https://kauth.kakao.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API_KEY}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}${ROUTE.OAUTH_MIDDLEWARE}&response_type=code`
     )
   })
@@ -85,7 +85,7 @@ describe("WithOauth", () => {
     fireEvent.click(naverLoginButton)
 
     // then
-    expect(routerPushMock).toBeCalledWith(
+    expect(routerPushMock).toHaveBeenCalledWith(
       `https://nid.naver.com/oauth2.0/authorize?client_id=${process.env.NEXT_PUBLIC_NAVER_CLIENT_ID}&state=${process.env.NEXT_PUBLIC_NAVER_STATE}&redirect_uri=${process.env.NEXT_PUBLIC_HOST}${ROUTE.OAUTH_MIDDLEWARE}&response_type=code`
     )
   })

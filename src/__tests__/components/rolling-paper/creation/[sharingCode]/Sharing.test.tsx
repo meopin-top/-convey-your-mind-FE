@@ -106,7 +106,7 @@ describe("Sharing", () => {
 
     // then
     await waitFor(() => {
-      expect(window.navigator.share).toBeCalled()
+      expect(window.navigator.share).toHaveBeenCalled()
 
       removeShareMock()
     })
@@ -129,7 +129,7 @@ describe("Sharing", () => {
 
     // then
     await waitFor(() => {
-      expect(windowAlertMock).toBeCalled()
+      expect(windowAlertMock).toHaveBeenCalled()
 
       windowAlertMock.mockRestore()
     })

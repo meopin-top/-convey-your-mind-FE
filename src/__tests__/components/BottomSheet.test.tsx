@@ -91,7 +91,7 @@ describe("BottomSheet", () => {
     fireEvent.click(wrapper)
 
     // then
-    expect(onCloseMock).not.toBeCalled()
+    expect(onCloseMock).not.toHaveBeenCalled()
   })
 
   it("isShowingClose props가 false면 닫기 버튼이 렌더링되지 말아야 한다.", () => {
@@ -149,8 +149,8 @@ describe("BottomSheet", () => {
       </BottomSheet>
     )
 
-    expect(lockScrollMock).not.toBeCalled()
-    expect(unlockScrollMock).not.toBeCalled()
+    expect(lockScrollMock).not.toHaveBeenCalled()
+    expect(unlockScrollMock).not.toHaveBeenCalled()
   })
 
   it("isControllingScroll props이 true이고 isOpen props가 true일 때 lockScroll이 호출된다.", () => {
@@ -161,8 +161,8 @@ describe("BottomSheet", () => {
       </BottomSheet>
     )
 
-    expect(lockScrollMock).toBeCalled()
-    expect(unlockScrollMock).not.toBeCalled()
+    expect(lockScrollMock).toHaveBeenCalled()
+    expect(unlockScrollMock).not.toHaveBeenCalled()
   })
 
   it("isControllingScroll props이 true이고 isOpen props가 true일 때 unlockScroll이 호출된다.", () => {
@@ -173,7 +173,7 @@ describe("BottomSheet", () => {
       </BottomSheet>
     )
 
-    expect(lockScrollMock).not.toBeCalled()
-    expect(unlockScrollMock).toBeCalled()
+    expect(lockScrollMock).not.toHaveBeenCalled()
+    expect(unlockScrollMock).toHaveBeenCalled()
   })
 })

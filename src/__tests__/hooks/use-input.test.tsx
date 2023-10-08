@@ -25,7 +25,7 @@ describe("useInput", () => {
     fireEvent.change(input, {target: {value}})
 
     // then
-    expect(setInputValue).toBeCalled()
+    expect(setInputValue).toHaveBeenCalled()
     expect(input.value).toEqual(value)
   })
 

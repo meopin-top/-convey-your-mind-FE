@@ -145,7 +145,7 @@ describe("ConfirmedPopUp", () => {
     const errorAlert = screen.getByText("ErrorAlert open")
 
     // then
-    expect(onSubmit).not.toBeCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
     expect(errorAlert).toBeInTheDocument()
   })
 
@@ -177,7 +177,7 @@ describe("ConfirmedPopUp", () => {
       const errorAlert = screen.getByText("ErrorAlert open")
 
       // then
-      expect(onSubmit).not.toBeCalled()
+      expect(onSubmit).not.toHaveBeenCalled()
       expect(errorAlert).toBeInTheDocument()
     })
   })
@@ -208,7 +208,7 @@ describe("ConfirmedPopUp", () => {
       fireEvent.click(signUpButton)
 
       // then
-      expect(onSubmit).toBeCalled()
+      expect(onSubmit).toHaveBeenCalled()
     })
   })
 
@@ -226,6 +226,6 @@ describe("ConfirmedPopUp", () => {
     fireEvent.click(cancelButton)
 
     // then
-    expect(onClose).toBeCalled()
+    expect(onClose).toHaveBeenCalled()
   })
 })

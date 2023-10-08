@@ -111,6 +111,7 @@ export default function Button({disabled, children, onClick}: TProps) {
 2. `toBe`, `toEqual`은 의미상 하는 일이 동일하기 때문에 `toEqual`로 통일하여 작성한다.
 3. 컴포넌트 테스트 시 특별한 경우가 아니라면 given은 다음과 같은 순서로 작성하며 개행으로 구분한다. 모킹 => 렌더링 => get / query / find element.
 4. 불필요한(호출 여부 테스트하는 부분이 아닌 곳 등) `jest.fn()` 선언은 지양한다.
+5. [expect documentation](https://jestjs.io/docs/expect#tohavebeencalled)을 참고하면 `toBeCalled`는 `toHaveBeenCalled`의 alias이다. 의미상 `toHaveBeenCalled`가 함수가 여지껏 몇 번, 어떻게 호출되었음을 나타내기에 더 적합하므로 특별한 경우가 아니면 `toBeCalled` 사용은 지양한다.
 
 ```tsx
 // 예시
