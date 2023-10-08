@@ -1,6 +1,11 @@
 "use client"
 
-import {useState, type KeyboardEvent, type MutableRefObject} from "react"
+import {
+  useState,
+  useContext,
+  type KeyboardEvent,
+  type MutableRefObject,
+} from "react"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import Link from "next/link"
@@ -9,6 +14,7 @@ import useRequest from "@/hooks/use-request"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
+import SignUpTabStore from "@/store/sign-up-tab"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 import type {TSignInResponse} from "@/@types/auth"
@@ -25,6 +31,8 @@ const ErrorAlert = dynamic(() => import("../FlowAlert"), {
 
 const SignIn = () => {
   const [alertMessage, setAlertMessage] = useState("")
+
+  const {redirectTo, setRedirectTo} = useContext(SignUpTabStore)
 
   const router = useRouter()
 
@@ -56,7 +64,8 @@ const SignIn = () => {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
 
-      router.push(ROUTE.MY_PAGE)
+      router.push(redirectTo)
+      setRedirectTo(ROUTE.MY_PAGE)
 
       return
     }

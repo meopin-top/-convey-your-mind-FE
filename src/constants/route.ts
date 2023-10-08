@@ -7,6 +7,8 @@ const ROUTE = {
   MY_ROLLING_PAPERS: `/my?${OPEN}=${ALL_RECEIVED_ROLLING_PAPERS}`,
   OAUTH_MIDDLEWARE: "/oauth-middleware",
   ACCOUNT_INQUIRY: "/account-inquiry",
+  ROLLING_PAPER_CREATION: "/rolling-paper/creation",
+  ROLLING_PAPER_WRITE: "/rolling-paper/write",
 } as const
 
 export default ROUTE

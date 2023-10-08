@@ -1,9 +1,11 @@
 "use client"
 
+import {useState, useContext, type ReactNode, type KeyboardEvent} from "react"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
+import SignUpTabStore from "@/store/sign-up-tab"
 import {ROLLING_PAPER} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 
@@ -13,26 +15,76 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
+const ErrorAlert = dynamic(() => import("../FlowAlert"), {
+  loading: () => <></>,
+})
 
 const WithoutSignUp = () => {
-  const router = useRouter()
+  const [isInvalidAlert, setIsInvalidAlert] = useState(true) // flow상 롤링페이퍼 작성이 불가능해서 생기는 alert인지 여부
+  const [alertMessage, setAlertMessage] = useState<ReactNode>(null)
+
+  const {setSignUpTab: setTab, setRedirectTo} = useContext(SignUpTabStore)
 
   const [sharedCode, handleSharedCode] = useInput()
 
   const {isLoading, request} = useRequest()
 
-  async function writeRollingPaper() {
-    const {code} = await request({
-      path: `/projects/invite-code/${encodeURIComponent(sharedCode)}`,
-    })
+  const router = useRouter()
 
-    if (code === ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS) {
-      router.push(ROUTE.MAIN) // TODO: route 변경
+  async function writeRollingPaper() {
+    if (sharedCode.length === 0) {
+      setAlertMessage(<>공유코드나 URL을 입력해주세요.</>)
 
       return
     }
 
-    alert("참여 가능한 공유 코드가 아닙니다.")
+    const {code} = await request({
+      path: `/projects/invite-code/${encodeURIComponent(sharedCode)}`,
+    })
+
+    if (code !== ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS) {
+      setAlertMessage(
+        <>
+          유효하지 않은 공유코드/URL입니다.
+          <br />
+          다시 한 번 확인해주세요.
+        </>
+      )
+
+      return
+    }
+
+    setIsInvalidAlert(false)
+    setAlertMessage(
+      <>
+        비회원으로 계속 하시겠습니까?
+        <br />
+        로그인 후 더욱 편리하게 사용할 수 있어요!
+      </>
+    )
+  }
+
+  function handleSharedCodeInput(event: KeyboardEvent<HTMLInputElement>) {
+    const isEnterKeyDowned = event.key === "Enter"
+    if (isEnterKeyDowned) {
+      writeRollingPaper()
+    }
+  }
+
+  function closeAlert() {
+    setAlertMessage(null)
+  }
+
+  function startWithSignIn() {
+    setTab("signIn")
+    setRedirectTo(ROUTE.ROLLING_PAPER_WRITE)
+
+    closeAlert()
+  }
+
+  function startWithoutSignIn() {
+    router.push(ROUTE.ROLLING_PAPER_WRITE)
+    // router.push(sharedCode) // TODO: 롤링페이퍼 작성 화면 생성 후 수정
   }
 
   return (
@@ -44,6 +96,7 @@ const WithoutSignUp = () => {
           placeholder="공유코드로 바로 편지쓰기"
           value={sharedCode}
           onChange={handleSharedCode}
+          onKeyDown={handleSharedCodeInput}
         />
         <button
           className="radius-sm"
@@ -53,7 +106,29 @@ const WithoutSignUp = () => {
           입력
         </button>
       </div>
-      <Portal render={() => <Loading isLoading={isLoading} />} />
+      <Portal
+        render={() => (
+          <>
+            <Loading isLoading={isLoading} />
+            {isInvalidAlert ? (
+              <ErrorAlert
+                isAlerting={Boolean(alertMessage)}
+                onClose={closeAlert}
+                content={alertMessage}
+              />
+            ) : (
+              <ErrorAlert
+                isAlerting={Boolean(alertMessage)}
+                content={alertMessage}
+                defaultButton="로그인"
+                onClose={startWithSignIn}
+                additionalButton="계속"
+                onClick={startWithoutSignIn}
+              />
+            )}
+          </>
+        )}
+      />
     </>
   )
 }
