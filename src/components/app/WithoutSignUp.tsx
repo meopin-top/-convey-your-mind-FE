@@ -15,7 +15,7 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
-const ErrorAlert = dynamic(() => import("../FlowAlert"), {
+const FlowAlert = dynamic(() => import("../FlowAlert"), {
   loading: () => <></>,
 })
 
@@ -111,13 +111,13 @@ const WithoutSignUp = () => {
           <>
             <Loading isLoading={isLoading} />
             {isInvalidAlert ? (
-              <ErrorAlert
+              <FlowAlert
                 isAlerting={Boolean(alertMessage)}
                 onClose={closeAlert}
                 content={alertMessage}
               />
             ) : (
-              <ErrorAlert
+              <FlowAlert
                 isAlerting={Boolean(alertMessage)}
                 content={alertMessage}
                 defaultButton="로그인"

@@ -3,7 +3,7 @@
 import {useEffect, useRef, type ReactNode, type KeyboardEvent} from "react"
 import Alert from "./Alert"
 
-type TProps = {
+export type TProps = {
   isAlerting: boolean
   isControllingKeyInput?: boolean
   blur?: boolean
