@@ -8,7 +8,7 @@ type TProps = {
   isControllingKeyInput?: boolean
   blur?: boolean
   title?: string
-  content?: string | ReactNode
+  content?: ReactNode
   defaultButton?: ReactNode
   onClose: () => void
   additionalButton?: ReactNode
