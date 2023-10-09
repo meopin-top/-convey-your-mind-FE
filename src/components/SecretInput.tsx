@@ -1,6 +1,11 @@
 "use client"
 
-import {useState, type InputHTMLAttributes, type MutableRefObject} from "react"
+import {
+  useState,
+  forwardRef,
+  type InputHTMLAttributes,
+  type MutableRefObject,
+} from "react"
 import {EyeClose, EyeOpen} from "@/assets/icons"
 import type {TIconSize} from "@/@types/style"
 
@@ -8,11 +13,11 @@ export type TProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "type" | "size"
 > & {
-  inputRef?: MutableRefObject<HTMLInputElement | null>
+  ref?: MutableRefObject<HTMLInputElement | null>
   size?: TIconSize
 }
 
-const SecretInput = ({className, inputRef, size = "md", ...props}: TProps) => {
+const SecretInput = ({className, ref, size = "md", ...props}: TProps) => {
   const [isShowing, setIsShowing] = useState(false)
 
   function handleIsShowing() {
@@ -21,11 +26,7 @@ const SecretInput = ({className, inputRef, size = "md", ...props}: TProps) => {
 
   return (
     <div className={`secret-input ${className}`}>
-      <input
-        type={`${isShowing ? "text" : "password"}`}
-        ref={inputRef}
-        {...props}
-      />
+      <input type={`${isShowing ? "text" : "password"}`} ref={ref} {...props} />
       <div className="icon-placer f-center mr-1" onClick={handleIsShowing}>
         {isShowing ? (
           <EyeClose className={size} />
@@ -37,4 +38,4 @@ const SecretInput = ({className, inputRef, size = "md", ...props}: TProps) => {
   )
 }
 
-export default SecretInput
+export default forwardRef(SecretInput)

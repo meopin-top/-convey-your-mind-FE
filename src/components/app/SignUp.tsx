@@ -161,7 +161,7 @@ const SignUp = () => {
         minLength={8}
         maxLength={20}
         required
-        inputRef={passwordInput as MutableRefObject<HTMLInputElement | null>}
+        ref={passwordInput as MutableRefObject<HTMLInputElement | null>}
         value={password}
         onKeyDown={handlePasswordInput}
         onChange={handlePassword}
