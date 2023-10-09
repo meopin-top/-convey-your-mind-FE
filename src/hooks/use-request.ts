@@ -1,4 +1,4 @@
-import {useState} from "react"
+import {useState, useMemo} from "react"
 import {UNAUTHORIZED} from "@/constants/response-code"
 import useLogOut from "./use-log-out"
 
@@ -10,13 +10,27 @@ type TRequestParameter = {
 
 export default function useRequest() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<unknown | null>(null)
+  const [error, setError] = useState<Error | null>(null)
 
   const logOut = useLogOut()
 
+  const controller = useMemo(() => new AbortController(), [])
+  const latestRequest = useMemo(() => new Map<string, number>(), [])
+  const coolDownTime = 500 // 500ms 이내에 같은 요청 발생 시 무시
+
   async function request({path, method = "get", body}: TRequestParameter) {
+    const currentTime = Date.now()
+    const lastRequestTime = latestRequest.get(path)
+    const isRequestDuplicated =
+      lastRequestTime && currentTime - lastRequestTime < coolDownTime
+    if (isRequestDuplicated) {
+      controller.abort()
+    }
+
     try {
       setIsLoading(true)
+
+      latestRequest.set(path, currentTime)
 
       const data = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/api${path}`,
@@ -26,11 +40,18 @@ export default function useRequest() {
           },
           method,
           body: body ? JSON.stringify(body) : null,
+          signal: controller.signal,
         }
       )
 
       if (!data.ok) {
-        throw new Error("데이터 fetch 에러 발생")
+        if (data.status >= 500) {
+          throw new Error("서버 측 오류")
+        } else if (data.status >= 400) {
+          throw new Error("클라이언트 측 오류")
+        } else {
+          throw new Error("데이터 fetch 오류")
+        }
       }
 
       const response = await data.json()
@@ -43,8 +64,15 @@ export default function useRequest() {
       }
 
       return response
-    } catch (error) {
+    } catch (e) {
+      const error = e as Error
       setError(error)
+
+      if (error.name === "AbortError") {
+        console.error("API Abortion!")
+      } else {
+        console.error(error.message)
+      }
     } finally {
       setIsLoading(false)
     }

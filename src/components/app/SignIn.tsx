@@ -83,7 +83,11 @@ const SignIn = () => {
         onKeyDown={handlePasswordInput}
         onChange={handlePassword}
       />
-      <button className="login md shadow-sm radius-md mb-4" onClick={signIn}>
+      <button
+        className="login md shadow-sm radius-md mb-4"
+        onClick={signIn}
+        disabled={isLoading}
+      >
         로그인하기
       </button>
       <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>

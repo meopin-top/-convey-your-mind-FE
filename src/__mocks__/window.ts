@@ -45,3 +45,28 @@ export function createAlertMock() {
     configurable: true,
   })
 }
+
+export function createDateMock({
+  dateTime = 0,
+  delta = 0,
+}: {
+  dateTime?: number
+  delta?: number
+}) {
+  const dateMock = (function () {
+    let i = 0
+
+    return {
+      now: jest.fn().mockImplementation(() => dateTime + delta * i++),
+    }
+  })()
+
+  Object.defineProperty(window, "Date", {
+    value: dateMock,
+    configurable: true,
+  })
+}
+
+export function deleteDateMock() {
+  delete (window as any).Date
+}

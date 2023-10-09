@@ -1,7 +1,7 @@
 "use client"
 
-import type {TColor} from "@/@types/style"
 import type {MouseEvent, HTMLAttributes, ReactNode} from "react"
+import type {TColor} from "@/@types/style"
 
 type TProps = {
   isAlerting: boolean
@@ -72,6 +72,7 @@ const Button = ({
   children: ReactNode
   onClick: (event: MouseEvent<HTMLButtonElement>) => any
   type?: TColor
+  disabled?: boolean
 } & HTMLAttributes<HTMLButtonElement>) => {
   return (
     <button

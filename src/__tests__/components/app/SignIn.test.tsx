@@ -1,11 +1,13 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import {useRouter} from "next/navigation"
 import SignIn from "@/components/app/SignIn"
-import type {TProps} from "@/components/SecretInput"
+import type {TProps as TSecretInputProps} from "@/components/SecretInput"
+import type {TProps as TPortalProps} from "@/components/Portal"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
 
+const isLoading = false
 const requestMock = jest.fn()
 
 jest.mock("next/navigation", () => ({
@@ -13,14 +15,17 @@ jest.mock("next/navigation", () => ({
 }))
 jest.mock("../../../components", () => ({
   __esModule: true,
-  SecretInput: ({inputRef, ...props}: Omit<TProps, "size">) => (
+  SecretInput: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
     <input className="password" ref={inputRef} {...props} />
   ),
+  Portal: ({render}: TPortalProps) => <>{render()}</>,
+  Loading: () => <>loading</>,
 }))
 jest.mock("../../../hooks/use-request.ts", () => ({
   __esModule: true,
   default: () => ({
     request: requestMock,
+    isLoading,
   }),
 }))
 
@@ -30,7 +35,7 @@ describe("SignIn", () => {
     createLocalStorageMock()
   })
 
-  afterAll(() => {
+  afterEach(() => {
     window.localStorage.clear()
   })
 
@@ -88,8 +93,36 @@ describe("SignIn", () => {
     })
   })
 
+  it("로그인하기 버튼 disabled 상태는 isLoading 상태와 동일하다.", () => {
+    // given, when
+    render(<SignIn />)
+
+    const signInButton = screen.getByRole("button", {
+      name: "로그인하기",
+    })
+
+    // then
+    expect(signInButton).not.toBeDisabled()
+  })
+
+  it("로딩 컴포넌트 렌더링 상태는 isLoading 상태와 동일하다.", () => {
+    // given, when
+    render(<SignIn />)
+
+    const loading = screen.queryByText("loading")
+
+    // then
+    expect(loading).not.toBeInTheDocument()
+  })
+
   it("로그인을 시도하면 request가 호출되고, 로그인 성공 유무와 상관 없이 alert가 호출된다.", async () => {
     // given
+    const message = "로그인 시도"
+
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({
+      message,
+    })
+
     render(<SignIn />)
 
     const userIdInput = screen.getByPlaceholderText(
@@ -102,22 +135,16 @@ describe("SignIn", () => {
       name: "로그인하기",
     })
 
-    const message = "로그인 시도"
+    // when
     const userId = "userId"
     const password = "password"
 
-    ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      message,
-    })
-
-    // when
     fireEvent.change(userIdInput, {target: {value: userId}})
     fireEvent.change(passwordInput, {target: {value: password}})
     fireEvent.click(signInButton)
 
     await waitFor(() => {
       expect(requestMock).toHaveBeenCalledTimes(1)
-
       expect(window.alert).toBeCalledTimes(1)
       expect(window.alert).toHaveBeenCalledWith(message)
     })

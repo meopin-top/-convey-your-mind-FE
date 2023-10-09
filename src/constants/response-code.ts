@@ -12,3 +12,11 @@ export const SIGN_IN = {
   NONEXISTENT_ID: 1111,
   INVALID_PASSWORD: 1112,
 } as const
+
+export const ROLLING_PAPER = {
+  INVITE_CODE: {
+    CREATION_SUCCESS: 3101,
+    QUERY_SUCCESS: 3001,
+    QUERY_FAILURE: 3011,
+  },
+} as const
