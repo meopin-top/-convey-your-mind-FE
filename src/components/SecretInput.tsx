@@ -4,7 +4,7 @@ import {
   useState,
   forwardRef,
   type InputHTMLAttributes,
-  type MutableRefObject,
+  type ForwardedRef,
 } from "react"
 import {EyeClose, EyeOpen} from "@/assets/icons"
 import type {TIconSize} from "@/@types/style"
@@ -13,11 +13,13 @@ export type TProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   "type" | "size"
 > & {
-  ref?: MutableRefObject<HTMLInputElement | null>
   size?: TIconSize
 }
 
-const SecretInput = ({className, ref, size = "md", ...props}: TProps) => {
+const SecretInput = (
+  {className, size = "md", ...props}: TProps,
+  ref: ForwardedRef<HTMLInputElement>
+) => {
   const [isShowing, setIsShowing] = useState(false)
 
   function handleIsShowing() {
@@ -38,4 +40,4 @@ const SecretInput = ({className, ref, size = "md", ...props}: TProps) => {
   )
 }
 
-export default forwardRef(SecretInput)
+export default forwardRef<HTMLInputElement, TProps>(SecretInput)
