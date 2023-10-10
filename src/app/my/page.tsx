@@ -19,7 +19,7 @@ const MyPage = () => {
           <UserInformation
             right={
               <button className="profile-edit xxxs radius-sm mt-2">
-                <Link href={"#"}>프로필 편집</Link>
+                <Link href={"#"}>⚙️ 설정</Link>
               </button>
             }
           />
