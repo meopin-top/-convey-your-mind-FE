@@ -13,6 +13,10 @@ jest.mock("next/image", () => ({
     return <img alt="" {...newProps} />
   },
 }))
+jest.mock("../../../components/Loading.tsx", () => ({
+  __esModule: true,
+  default: () => <>loading</>,
+}))
 
 describe("UserInformation", () => {
   beforeAll(() => {
