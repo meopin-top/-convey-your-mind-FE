@@ -44,7 +44,7 @@ const RollingPaperParticipation = () => {
         href={ROUTE.ROLLING_PAPER_CREATION}
         className="rolling-paper-creation f-center xxxl radius-sm shadow-md mb-4"
       >
-        롤링 페이퍼 새로 시작하기
+        롤링페이퍼 새로 시작하기
       </Link>
       <span className="shared-code-description">
         롤링페이퍼의 공유 코드를 알고 계신가요?
