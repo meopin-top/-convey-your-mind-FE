@@ -1,3 +1,4 @@
+@import "../common/boxes";
 @import "../common/colors";
 @import "../common/variables";
 @import "../common/user";
@@ -28,8 +29,11 @@
 
     .rolling-paper-creation {
       @include light-2;
+      @include box-xxxl;
 
       width: 100%;
+
+      font-size: 18px;
     }
 
     .shared-code-description {

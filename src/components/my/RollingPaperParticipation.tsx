@@ -1,6 +1,9 @@
 "use client"
 
+// TODO: flow I 수정
+
 import {useRouter} from "next/navigation"
+import Link from "next/link"
 import dynamic from "next/dynamic"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
@@ -37,9 +40,12 @@ const RollingPaperParticipation = () => {
 
   return (
     <>
-      <button className="rolling-paper-creation xxxl radius-sm shadow-md mb-4">
+      <Link
+        href={ROUTE.ROLLING_PAPER_CREATION}
+        className="rolling-paper-creation f-center xxxl radius-sm shadow-md mb-4"
+      >
         롤링 페이퍼 새로 시작하기
-      </button>
+      </Link>
       <span className="shared-code-description">
         롤링페이퍼의 공유 코드를 알고 계신가요?
       </span>

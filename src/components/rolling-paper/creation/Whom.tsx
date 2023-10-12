@@ -17,6 +17,7 @@ const Whom = ({toWhom, handleToWhom}: TProps) => {
         placeholder="받는 사람 이름 입력"
         value={toWhom}
         onChange={handleToWhom}
+        maxLength={30}
       />
     </div>
   )

@@ -1,22 +1,50 @@
 "use client"
 
-import {useState} from "react"
+import {useState, type ChangeEvent} from "react"
 import {Portal, Alert} from "@/components"
 import type {TInputChangeEvent} from "@/hooks/use-input"
 
 type TProps = {
   personnel: string
   handlePersonnel: (event: TInputChangeEvent) => any
+  setPersonnel: (personnel: string) => void
 }
 
-const Personnel = ({personnel, handlePersonnel}: TProps) => {
+const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
   const [isAlerting, setIsAlerting] = useState(false)
+  const [disabledElement, setDisabledElement] = useState<"button" | "input">(
+    "button"
+  )
+
+  function changePersonnel(event: ChangeEvent<HTMLInputElement>) {
+    const MIN = 1
+    const MAX = 9999
+
+    const personnel = parseInt(event.target.value)
+    if (
+      personnel > MAX ||
+      personnel < MIN ||
+      !/^[0-9]*$/.test(event.target.value)
+    ) {
+      return
+    }
+
+    handlePersonnel(event)
+  }
+
+  function disableButton() {
+    setDisabledElement("button")
+  }
+
+  function confirm() {
+    setPersonnel("") // TODO: API에서 미정을 어떻게 전달하는지 알아야 함
+    setDisabledElement("input")
+    handleIsAlerting()
+  }
 
   function handleIsAlerting() {
     setIsAlerting(!isAlerting)
   }
-
-  // TODO: 확정하기 클릭 시 handlePersonnel 관련해서 state 관리 추가
 
   return (
     <div className="personnel">
@@ -26,16 +54,23 @@ const Personnel = ({personnel, handlePersonnel}: TProps) => {
       <div className="selection f-center mt-2">
         <div>
           <input
-            className="radius-sm mr-2"
+            className={`${
+              disabledElement === "input" ? "disabled" : ""
+            } radius-sm mr-2`}
             type="number"
             value={personnel}
-            onChange={handlePersonnel}
+            onChange={changePersonnel}
+            onFocus={disableButton}
+            min="1"
+            max="9999"
           />
           <span>명</span>
         </div>
         <span>or</span>
         <button
-          className="not-determined xxs radius-md"
+          className={`not-determined ${
+            disabledElement === "button" ? "disabled" : ""
+          } xxs radius-md`}
           onClick={handleIsAlerting}
         >
           미정
@@ -63,7 +98,7 @@ const Personnel = ({personnel, handlePersonnel}: TProps) => {
             </Alert.Content>
             <Alert.ButtonWrapper style={{height: "40px", marginTop: "20px"}}>
               <Alert.Button
-                onClick={handleIsAlerting}
+                onClick={confirm}
                 style={{width: "120px"}}
                 type="fill-light-1"
               >

@@ -1,7 +1,9 @@
 "use client"
 
 import {useState} from "react"
+import {NeedLoggedIn, Header} from "@/components"
 import {
+  QuitAlert,
   Progress,
   Whom,
   Personnel,
@@ -24,20 +26,20 @@ const Creation = () => {
   const [toWhom, handleToWhom] = useInput("", (event: TInputChangeEvent) => {
     handleDoneStep(event.target.value.length !== 0, "WHOM")
   })
-  const [personnel, handlePersonnel] = useInput(
+  const [personnel, handlePersonnel, setPersonnel] = useInput(
     "",
     (event: TInputChangeEvent) => {
       handleDoneStep(event.target.value.length !== 0, "PERSONNEL")
     }
   )
-  const [sharingCode, handleSharingCode] = useInput(
+  const [sharingCode, handleSharingCode, setSharingCode] = useInput(
     "",
     (event: TInputChangeEvent) => {
       handleDoneStep(event.target.value.length !== 0, "SHARING_CODE")
     }
   )
 
-  const TOTAL_STEP = 4
+  const TOTAL_STEP = 5
   const DONE_COUNT = Object.values(doneStep).filter((done) => done).length
 
   function handleDoneStep(done: boolean, key: TCreationInformation) {
@@ -52,25 +54,38 @@ const Creation = () => {
     }
   }
 
-  // TODO: layout.tsx로 header 추가
   return (
-    <main className="creation root-wrapper">
-      <h2 className="title">롤링페이퍼 시작하기</h2>
-      <Progress totalCount={TOTAL_STEP} doneCount={DONE_COUNT} />
-      <Whom toWhom={toWhom} handleToWhom={handleToWhom} />
-      <Personnel personnel={personnel} handlePersonnel={handlePersonnel} />
-      <Types />
-      <SharingCode
-        sharingCode={sharingCode}
-        handleSharingCode={handleSharingCode}
-      />
-      <SubmitButton
-        disabled={TOTAL_STEP !== DONE_COUNT}
-        toWhom={toWhom}
-        personnel={personnel}
-        sharingCode={sharingCode}
-      />
-    </main>
+    <>
+      <NeedLoggedIn />
+      <QuitAlert />
+
+      <div className="creation root-wrapper">
+        <Header />
+
+        <main className="main">
+          <h2 className="title">롤링페이퍼 시작하기</h2>
+          <Progress totalCount={TOTAL_STEP} doneCount={DONE_COUNT} />
+          <Whom toWhom={toWhom} handleToWhom={handleToWhom} />
+          <Personnel
+            personnel={personnel}
+            handlePersonnel={handlePersonnel}
+            setPersonnel={setPersonnel}
+          />
+          <Types />
+          <SharingCode
+            sharingCode={sharingCode}
+            handleSharingCode={handleSharingCode}
+            setSharingCode={setSharingCode}
+          />
+          <SubmitButton
+            disabled={TOTAL_STEP !== DONE_COUNT}
+            toWhom={toWhom}
+            personnel={personnel}
+            sharingCode={sharingCode}
+          />
+        </main>
+      </div>
+    </>
   )
 }
 

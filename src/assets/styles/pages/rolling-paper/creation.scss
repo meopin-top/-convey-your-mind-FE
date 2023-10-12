@@ -1,160 +1,170 @@
 @import "../../common/colors";
 
 .creation {
-  .title {
-    font-family: dohyeon;
-  }
+  .main {
+    .title {
+      font-family: dohyeon;
+    }
 
-  .description {
-    font: bold 15px "hanna-air";
-  }
+    .description {
+      font: bold 15px "hanna-air";
+    }
 
-  .progress-bar-wrapper {
-    .progress-bar {
-      $HEIGHT: 14px;
-      $BORDER_RADIUS: 30px;
+    .progress-bar-wrapper {
+      .progress-bar {
+        $HEIGHT: 14px;
+        $BORDER_RADIUS: 30px;
 
-      width: 100%;
-      height: $HEIGHT;
-
-      background-color: #d9d9d9;
-
-      border-radius: $BORDER_RADIUS;
-
-      .progress {
-        @include fill-info;
-
+        width: 100%;
         height: $HEIGHT;
+
+        background-color: #d9d9d9;
 
         border-radius: $BORDER_RADIUS;
 
-        transition: width 0.1s linear;
-      }
-    }
-  }
-
-  .whom {
-    margin-top: 28px;
-
-    input {
-      width: 100%;
-    }
-  }
-
-  .personnel {
-    margin-top: 32px;
-
-    .selection {
-      justify-content: space-between;
-
-      input {
-        max-width: 100px;
-      }
-
-      input + span {
-        font: bold 13px "hanna-air";
-      }
-
-      div + span {
-        font: bold 12px "hanna-air";
-      }
-
-      .not-determined {
-        @include fill-default;
-
-        width: 68px;
-
-        cursor: pointer;
-      }
-    }
-
-    .caution {
-      font: normal 12px "hanna-air";
-    }
-  }
-
-  .types {
-    margin-top: 32px;
-
-    .type-wrapper {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-
-      .type {
-        $HEIGHT: 70px;
-
-        position: relative;
-
-        height: $HEIGHT;
-
-        font-size: 15px;
-
-        text-align: center;
-
-        .recommendation {
-          position: absolute;
-          top: 0;
-          left: -12px;
-
-          height: 18px;
-
-          font-size: 10px;
-
-          background-color: #e5e5e5;
-
-          border: 1px solid rgba(0, 0, 0, 0.3);
-
-          transform: rotate(-21.01deg);
-        }
-
-        .coming-soon {
-          position: absolute;
-          top: 0;
-          left: 0;
+        .progress {
+          @include fill-info;
 
           height: $HEIGHT;
-          width: 100%;
 
-          font: bold 20px "hanna-11-years";
-          color: #fff;
+          border-radius: $BORDER_RADIUS;
 
-          background-color: rgba(0, 0, 0, 0.5);
+          transition: width 0.1s linear;
         }
       }
     }
-  }
 
-  .sharing-code {
-    margin-top: 28px;
+    .whom {
+      margin-top: 28px;
 
-    .service-domain {
-      font-weight: 300;
-      font-size: 13px;
+      input {
+        width: 100%;
+      }
     }
 
-    input {
-      width: calc(100% - 160px);
-      height: 20px;
+    .personnel {
+      margin-top: 32px;
 
-      padding: 0 10px;
+      .selection {
+        justify-content: space-between;
+
+        input {
+          max-width: 100px;
+
+          &.disabled {
+            background-color: rgba(#a1a1a1, 0.3);
+          }
+        }
+
+        input + span {
+          font: bold 13px "hanna-air";
+        }
+
+        div + span {
+          font: bold 12px "hanna-air";
+        }
+
+        .not-determined {
+          @include fill-default;
+
+          width: 68px;
+
+          cursor: pointer;
+
+          &.disabled {
+            background-color: rgba(#a1a1a1, 0.3);
+          }
+        }
+      }
+
+      .caution {
+        font: normal 12px "hanna-air";
+      }
     }
-  }
 
-  .submit-button {
-    @include fill-info;
+    .types {
+      margin-top: 32px;
 
-    width: 100%;
-    height: 56px;
+      .type-wrapper {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
 
-    font-size: 15px;
+        .type {
+          $HEIGHT: 70px;
 
-    transition: background-color 0.1s linear;
+          position: relative;
 
-    cursor: pointer;
+          height: $HEIGHT;
 
-    &.disabled {
-      background-color: #d9d9d9;
+          font-size: 15px;
+
+          text-align: center;
+
+          .recommendation {
+            position: absolute;
+            top: 0;
+            left: -12px;
+
+            height: 18px;
+
+            font-size: 10px;
+
+            background-color: #e5e5e5;
+
+            border: 1px solid rgba(0, 0, 0, 0.3);
+
+            transform: rotate(-21.01deg);
+          }
+
+          .coming-soon {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            height: $HEIGHT;
+            width: 100%;
+
+            font: bold 20px "hanna-11-years";
+            color: #fff;
+
+            background-color: rgba(0, 0, 0, 0.5);
+          }
+        }
+      }
+    }
+
+    .sharing-code {
+      margin-top: 28px;
+
+      .service-domain {
+        font-weight: 300;
+        font-size: 13px;
+      }
+
+      input {
+        width: calc(100% - 160px);
+        height: 20px;
+
+        padding: 0 10px;
+      }
+    }
+
+    .submit-button {
+      @include fill-info;
+
+      width: 100%;
+      height: 56px;
+
+      font-size: 15px;
+
+      transition: background-color 0.1s linear;
+
+      cursor: pointer;
+
+      &.disabled {
+        background-color: #d9d9d9;
+      }
     }
   }
 }
