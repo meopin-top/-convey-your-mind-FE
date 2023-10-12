@@ -1,13 +1,22 @@
-import Link from "next/link"
+"use client"
+
+import {useState} from "react"
 import {NeedLoggedIn, Header} from "@/components"
 import {
   UserInformation,
   RollingPaperParticipation,
   ProjectsInProgressing,
   ReceivedRollingPapers,
+  SettingConfirmAlert,
 } from "@/components/my"
 
 const MyPage = () => {
+  const [isAlerting, setIsAlerting] = useState(false)
+
+  function handleIsAlerting() {
+    setIsAlerting(!isAlerting)
+  }
+
   return (
     <>
       <NeedLoggedIn />
@@ -18,8 +27,11 @@ const MyPage = () => {
         <main className="main f-center">
           <UserInformation
             right={
-              <button className="profile-edit xxxs radius-sm mt-2">
-                <Link href={"#"}>⚙️ 설정</Link>
+              <button
+                className="profile-edit xxxs radius-sm mt-2"
+                onClick={handleIsAlerting}
+              >
+                ⚙️ 설정
               </button>
             }
           />
@@ -28,6 +40,7 @@ const MyPage = () => {
           <ReceivedRollingPapers />
         </main>
       </div>
+      <SettingConfirmAlert isAlerting={isAlerting} onClose={handleIsAlerting} />
     </>
   )
 }

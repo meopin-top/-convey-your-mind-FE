@@ -33,7 +33,7 @@ const UserInformation = ({right}: TProps) => {
       )}
       <div className="nick-name">
         <h2>반가워요!</h2>
-        <h2 suppressHydrationWarning>{nickName}님!</h2>
+        <h2>{nickName}님!</h2>
         {right}
       </div>
     </div>

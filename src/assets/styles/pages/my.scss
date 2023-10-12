@@ -20,7 +20,7 @@
         width: 120px;
 
         color: #fff;
-        font-size: 10px;
+        font-size: 11px;
 
         background-color: #000;
       }
@@ -237,32 +237,32 @@
 
         .project {
           display: list-item;
-  
+
           a {
             display: flex;
             align-items: center;
             column-gap: 4px;
-  
+
             padding: 4px 8px;
-  
+
             border: 1px solid #dedede;
-  
+
             .crown {
               &.shown {
                 opacity: 1;
               }
-  
+
               &.hidden {
                 opacity: 0;
               }
             }
-  
+
             .name {
               @include txt-ellipsis-n(2);
             }
           }
         }
-      }      
+      }
     }
   }
 }
