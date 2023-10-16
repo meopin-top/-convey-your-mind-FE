@@ -2,11 +2,24 @@ export type TProps = {
   children: React.ReactNode
   recommendationText?: string
   isReady?: boolean
+  type?: string
+  isSelected?: boolean
 }
 
-const Type = ({children, recommendationText, isReady = true}: TProps) => {
+const Type = ({
+  children,
+  recommendationText,
+  isReady = true,
+  type,
+  isSelected,
+}: TProps) => {
   return (
-    <div className="type f-center shadow-md radius-md">
+    <div
+      className={`${
+        isSelected ? "active" : ""
+      } type f-center shadow-md radius-md`}
+      data-type={type}
+    >
       {children}
       {recommendationText && (
         <div className="recommendation f-center pl-1 pr-1">

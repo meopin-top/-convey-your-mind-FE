@@ -1,20 +1,48 @@
 "use client"
 
+import type {MouseEvent} from "react"
 import {Type} from "@/components/rolling-paper/creation"
+import type {TRollingPaperType} from "@/@types/rolling-paper"
 
-const Types = () => {
-  // TODO: state 관리. Type 클릭하면 어떻게 되는건지 알고 난 뒤에 개발하기
+type TProps = {
+  type: TRollingPaperType | null
+  handleType: (type: TRollingPaperType) => void
+}
+
+const Types = ({type, handleType}: TProps) => {
+  function setType(event: MouseEvent<HTMLDivElement>) {
+    if (!(event.target instanceof HTMLDivElement)) {
+      return
+    }
+
+    const template = event.target.dataset.type
+    if (!template) {
+      return
+    }
+
+    const innerTexts = event.target.innerText.split("\n")
+    const text = innerTexts.slice(0, innerTexts.length - 1).join(" ")
+
+    handleType({
+      template,
+      text,
+    })
+  }
 
   return (
     <div className="types">
       <section className="description">어떤 롤링페이퍼를 만들까요?</section>
-      <div className="type-wrapper mt-4">
-        <Type recommendationText="n명 이하 추천">
+      <div className="type-wrapper mt-4" onClick={setType}>
+        <Type
+          recommendationText="n명 이하 추천"
+          type="D"
+          isSelected={type?.template === "D"}
+        >
           큰 종이에
           <br />
           자유롭게 편지쓰기
         </Type>
-        <Type recommendationText="많은 인원 추천">
+        <Type recommendationText="많은 인원 추천" isReady={false}>
           포스트잇으로
           <br />
           깔끔하게 만들기

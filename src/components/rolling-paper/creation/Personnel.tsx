@@ -16,10 +16,10 @@ const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
     "button"
   )
 
-  function changePersonnel(event: ChangeEvent<HTMLInputElement>) {
-    const MIN = 1
-    const MAX = 9999
+  const MIN = 1
+  const MAX = 9999
 
+  function changePersonnel(event: ChangeEvent<HTMLInputElement>) {
     const personnel = parseInt(event.target.value)
     if (
       personnel > MAX ||
@@ -37,7 +37,7 @@ const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
   }
 
   function confirm() {
-    setPersonnel("") // TODO: API에서 미정을 어떻게 전달하는지 알아야 함
+    setPersonnel("")
     setDisabledElement("input")
     handleIsAlerting()
   }
@@ -61,8 +61,8 @@ const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
             value={personnel}
             onChange={changePersonnel}
             onFocus={disableButton}
-            min="1"
-            max="9999"
+            min={MIN}
+            max={MAX}
           />
           <span>명</span>
         </div>
@@ -82,7 +82,7 @@ const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
 
       <Portal
         render={() => (
-          <Alert isAlerting={isAlerting} style={{height: "160px"}}>
+          <Alert isAlerting={isAlerting} style={{height: "158px"}}>
             <Alert.Content
               style={{
                 fontWeight: "bold",
@@ -98,18 +98,18 @@ const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
             </Alert.Content>
             <Alert.ButtonWrapper style={{height: "40px", marginTop: "20px"}}>
               <Alert.Button
-                onClick={confirm}
-                style={{width: "120px"}}
-                type="fill-light-1"
-              >
-                확정하기
-              </Alert.Button>
-              <Alert.Button
                 onClick={handleIsAlerting}
                 type="default"
                 style={{width: "120px"}}
               >
                 취소
+              </Alert.Button>
+              <Alert.Button
+                onClick={confirm}
+                style={{width: "120px"}}
+                type="fill-light-1"
+              >
+                확정하기
               </Alert.Button>
             </Alert.ButtonWrapper>
           </Alert>

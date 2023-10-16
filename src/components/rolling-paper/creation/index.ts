@@ -1,3 +1,4 @@
+import DueDate from "./DueDate"
 import Personnel from "./Personnel"
 import Progress from "./Progress"
 import QuitAlert from "./QuitAlert"
@@ -8,6 +9,7 @@ import Types from "./Types"
 import Whom from "./Whom"
 
 export {
+  DueDate,
   Personnel,
   Progress,
   QuitAlert,

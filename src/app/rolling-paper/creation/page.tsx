@@ -8,11 +8,15 @@ import {
   Whom,
   Personnel,
   Types,
+  DueDate,
   SharingCode,
   SubmitButton,
 } from "@/components/rolling-paper/creation"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
-import type {TCreationInformation} from "@/@types/rolling-paper"
+import type {
+  TCreationInformation,
+  TRollingPaperType,
+} from "@/@types/rolling-paper"
 
 const Creation = () => {
   const [doneStep, setDoneStep] = useState<{
@@ -20,9 +24,13 @@ const Creation = () => {
   }>({
     WHOM: false,
     PERSONNEL: false,
-    TYPE: true,
+    TYPE: false, // TODO: type 선택 시 증가하는 기능 추가 안 함
+    DUE_DATE: true,
     SHARING_CODE: false,
-  }) // TODO: 바꿔야 될 수 있음(공유 코드는 기본적으로 완성된거라고 생각한다면 SHARING_CODE: true가 맞음)
+  })
+  const [type, setType] = useState<TRollingPaperType | null>(null)
+  const [dDay, setDDay] = useState<number>(100)
+
   const [toWhom, handleToWhom] = useInput("", (event: TInputChangeEvent) => {
     handleDoneStep(event.target.value.length !== 0, "WHOM")
   })
@@ -32,7 +40,7 @@ const Creation = () => {
       handleDoneStep(event.target.value.length !== 0, "PERSONNEL")
     }
   )
-  const [sharingCode, handleSharingCode, setSharingCode] = useInput(
+  const [sharingCode, handleSharingCode] = useInput(
     "",
     (event: TInputChangeEvent) => {
       handleDoneStep(event.target.value.length !== 0, "SHARING_CODE")
@@ -54,6 +62,16 @@ const Creation = () => {
     }
   }
 
+  function handleType(type: TRollingPaperType) {
+    setType(type)
+    handleDoneStep(true, "TYPE")
+  }
+
+  function handleDDay(dDay: number) {
+    setDDay(dDay)
+    handleDoneStep(dDay !== 0, "DUE_DATE")
+  }
+
   return (
     <>
       <NeedLoggedIn />
@@ -71,16 +89,18 @@ const Creation = () => {
             handlePersonnel={handlePersonnel}
             setPersonnel={setPersonnel}
           />
-          <Types />
+          <Types type={type} handleType={handleType} />
+          <DueDate dDay={dDay} handleDDay={handleDDay} />
           <SharingCode
             sharingCode={sharingCode}
             handleSharingCode={handleSharingCode}
-            setSharingCode={setSharingCode}
           />
           <SubmitButton
             disabled={TOTAL_STEP !== DONE_COUNT}
             toWhom={toWhom}
             personnel={personnel}
+            type={type}
+            dDay={dDay}
             sharingCode={sharingCode}
           />
         </main>

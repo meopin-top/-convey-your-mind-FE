@@ -9,14 +9,9 @@ import {DOMAIN} from "@/constants/service"
 type TProps = {
   sharingCode: string
   handleSharingCode: (event: TInputChangeEvent) => any
-  setSharingCode: (sharingCode: string) => void
 }
 
-const SharingCode = ({
-  sharingCode,
-  handleSharingCode,
-  setSharingCode,
-}: TProps) => {
+const SharingCode = ({sharingCode, handleSharingCode}: TProps) => {
   const {isLoading, request} = useRequest()
 
   useEffect(() => {
@@ -25,7 +20,9 @@ const SharingCode = ({
         path: "/projects/invite-code",
       })
 
-      setSharingCode(data ?? "")
+      handleSharingCode({
+        target: {value: data ?? ""},
+      } as TInputChangeEvent)
     }
 
     getInviteCode()
@@ -35,14 +32,17 @@ const SharingCode = ({
   return (
     <>
       <div className="sharing-code">
-        <section className="description">
-          롤링페이퍼의 공유 코드를 만들까요?
+        <section className="description mb-1">
+          롤링페이퍼의 공유 코드는 무엇인가요?
+        </section>
+        <section className="sub-description mb-1">
+          * 기본 코드를 수정할 수 있습니다(빈 칸일 경우 진행 불가).
         </section>
         <span className="service-domain">{DOMAIN}/</span>
         <input
           className="radius-sm"
           type="text"
-          placeholder="기본 코드 디폴트" // TODO: change
+          placeholder="공유 코드를 입력해주세요"
           value={sharingCode}
           onChange={handleSharingCode}
         />

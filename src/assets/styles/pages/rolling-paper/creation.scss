@@ -2,12 +2,14 @@
 
 .creation {
   .main {
+    $DISABLED_COLOR: #d9d9d9;
+
     .title {
       font-family: dohyeon;
     }
 
     .description {
-      font: bold 15px "hanna-air";
+      font: 700 15px "hanna-air";
     }
 
     .progress-bar-wrapper {
@@ -23,7 +25,7 @@
         border-radius: $BORDER_RADIUS;
 
         .progress {
-          @include fill-info;
+          @include fill-default;
 
           height: $HEIGHT;
 
@@ -57,11 +59,11 @@
         }
 
         input + span {
-          font: bold 13px "hanna-air";
+          font: 700 13px "hanna-air";
         }
 
         div + span {
-          font: bold 12px "hanna-air";
+          font: 700 12px "hanna-air";
         }
 
         .not-determined {
@@ -98,8 +100,20 @@
           height: $HEIGHT;
 
           font-size: 15px;
+          color: unset;
+
+          background-color: unset;
 
           text-align: center;
+
+          &.active {
+            @include default;
+
+            color: map-get($COLOR, DEFAULT);
+            font-weight: 700;
+
+            border-width: 2px;
+          }
 
           .recommendation {
             position: absolute;
@@ -125,7 +139,7 @@
             height: $HEIGHT;
             width: 100%;
 
-            font: bold 20px "hanna-11-years";
+            font: 700 20px "hanna-11-years";
             color: #fff;
 
             background-color: rgba(0, 0, 0, 0.5);
@@ -134,8 +148,112 @@
       }
     }
 
+    .due-date {
+      margin-top: 32px;
+
+      .selection {
+        .sub-description {
+          font: normal 12px "hanna-air";
+        }
+
+        display: flex;
+        align-items: center;
+
+        border: none;
+
+        font-size: 14px;
+
+        .option {
+          display: flex;
+          align-items: center;
+
+          position: relative;
+
+          input {
+            position: relative;
+            top: 1px;
+
+            width: 1.25em;
+            height: 1.25em;
+
+            padding: 0;
+
+            border: 4px solid $DISABLED_COLOR;
+            border-radius: 50%;
+
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+          }
+
+          &.checked {
+            font-weight: 700;
+            color: map-get($COLOR, DARK_2);
+
+            input {
+              background-color: map-get($COLOR, WARNING);
+
+              border: 4px solid map-get($COLOR, DARK_2);
+            }
+          }
+
+          &.disabled {
+            font-weight: normal;
+
+            color: $DISABLED_COLOR;
+
+            background-color: unset;
+          }
+        }
+
+        @media screen and (min-width: 1024px) {
+          .option {
+            padding-right: 25vw;
+          }
+        }
+
+        @media screen and (max-width: 1023px) {
+          .option {
+            padding-right: 20vw;
+          }
+        }
+
+        @media screen and (max-width: 767px) {
+          .option {
+            padding-right: 10vw;
+          }
+        }
+      }
+
+      .datetime {
+        display: flex;
+        align-items: center;
+
+        height: 30px;
+
+        font-size: 12px;
+
+        input {
+          padding: 5px 10px;
+        }
+
+        input[type="number"] {
+          width: 50px;
+        }
+
+        .highlight {
+          text-decoration: none;
+          font-weight: 700;
+        }
+      }
+    }
+
     .sharing-code {
       margin-top: 28px;
+
+      .sub-description {
+        font: normal 12px "hanna-air";
+      }
 
       .service-domain {
         font-weight: 300;
@@ -146,12 +264,12 @@
         width: calc(100% - 160px);
         height: 20px;
 
-        padding: 0 10px;
+        padding: 0 5px;
       }
     }
 
     .submit-button {
-      @include fill-info;
+      @include fill-dark-4;
 
       width: 100%;
       height: 56px;
@@ -163,7 +281,7 @@
       cursor: pointer;
 
       &.disabled {
-        background-color: #d9d9d9;
+        background-color: $DISABLED_COLOR;
       }
     }
   }
