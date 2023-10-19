@@ -8,6 +8,7 @@ import NavigationBar from "./NavigationBar"
 import Pagination from "./Pagination"
 import Portal from "./Portal"
 import Redirecting from "./Redirecting"
+import Reducer from "./Reducer"
 import SecretInput from "./SecretInput"
 
 export {
@@ -22,5 +23,6 @@ export {
   Pagination,
   Portal,
   Redirecting,
+  Reducer,
   SecretInput,
 }

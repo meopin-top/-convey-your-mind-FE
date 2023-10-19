@@ -1,6 +1,7 @@
 "use client"
 
 import {NeedLoggedIn, Header} from "@/components"
+import {Reducer} from "@/components"
 import {
   QuitAlert,
   Progress,
@@ -31,28 +32,25 @@ const Creation = () => {
       <div className="creation root-wrapper">
         <Header />
 
-        <Provider>
-          <WhomProvider>
-            <PersonnelProvider>
-              <TypeProvider>
-                <DDayProvider>
-                  <SharingCodeProvider>
-                    <main className="main">
-                      <h2 className="title">롤링페이퍼 시작하기</h2>
-                      <Progress totalCount={TOTAL_STEP} />
-                      <Whom />
-                      <Personnel />
-                      <Types />
-                      <DueDate />
-                      <SharingCode />
-                      <SubmitButton totalStep={TOTAL_STEP} />
-                    </main>
-                  </SharingCodeProvider>
-                </DDayProvider>
-              </TypeProvider>
-            </PersonnelProvider>
-          </WhomProvider>
-        </Provider>
+        <Reducer components={[
+          Provider,
+          WhomProvider,
+          PersonnelProvider,
+          TypeProvider,
+          DDayProvider,
+          SharingCodeProvider,
+        ]}>
+          <main className="main">
+            <h2 className="title">롤링페이퍼 시작하기</h2>
+            <Progress totalCount={TOTAL_STEP} />
+            <Whom />
+            <Personnel />
+            <Types />
+            <DueDate />
+            <SharingCode />
+            <SubmitButton totalStep={TOTAL_STEP} />
+          </main>
+        </Reducer>
       </div>
     </>
   )
