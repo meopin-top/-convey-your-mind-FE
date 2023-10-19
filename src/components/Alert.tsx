@@ -16,13 +16,38 @@ type TProps = {
   divRef?: MutableRefObject<HTMLDivElement | null>
 } & HTMLAttributes<HTMLDivElement>
 
-const Alert = ({
-  isAlerting,
-  blur = false,
-  divRef,
-  children,
-  ...props
-}: TProps) => {
+const Alert: {
+  ({isAlerting, blur, divRef, children, ...props}: TProps): JSX.Element
+  Title: ({
+    title,
+    ...props
+  }: {
+    title?: string | undefined
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  Content: ({
+    children,
+    ...props
+  }: {
+    children: ReactNode
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  ButtonWrapper: ({
+    children,
+    ...props
+  }: {
+    children: ReactNode
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  Button: ({
+    children,
+    onClick,
+    type,
+    ...props
+  }: {
+    children: ReactNode
+    onClick: (event: MouseEvent<HTMLButtonElement>) => any
+    type?: TColor | undefined
+    disabled?: boolean | undefined
+  } & HTMLAttributes<HTMLButtonElement>) => JSX.Element
+} = ({isAlerting, blur = false, divRef, children, ...props}: TProps) => {
   return (
     <>
       {isAlerting && (

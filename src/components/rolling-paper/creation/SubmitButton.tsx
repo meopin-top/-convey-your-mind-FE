@@ -1,42 +1,60 @@
 "use client"
 
 import {useState} from "react"
-import {Portal, Alert} from "@/components"
+import dynamic from "next/dynamic"
+import {calculateDateOffset, isBefore} from "@/utils/date"
+import type {TRollingPaperType} from "@/@types/rolling-paper"
+
+const Portal = dynamic(() => import("../../Portal"), {
+  loading: () => <></>,
+})
+const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
+  loading: () => <></>,
+})
+const ErrorAlert = dynamic(() => import("../../FlowAlert"), {
+  loading: () => <></>,
+})
 
 type TProps = {
   disabled: boolean
   toWhom: string
   personnel: string
+  type: TRollingPaperType | null
   sharingCode: string
+  dDay: number
 }
 
-const SubmitButton = ({disabled, toWhom, personnel, sharingCode}: TProps) => {
-  const [isAlerting, setIsAlerting] = useState(false)
+const SubmitButton = ({
+  disabled,
+  toWhom,
+  personnel,
+  type,
+  dDay,
+  sharingCode,
+}: TProps) => {
+  const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
+  const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false)
 
-  const dataToCheck: {description: string; data: string}[] = [
-    {
-      description: "받는 사람",
-      data: toWhom,
-    },
-    {
-      description: "참여 인원",
-      data: personnel,
-    },
-    {
-      description: "선택한 탬플릿",
-      data: sharingCode, // TODO: 템플릿으로 고치기
-    },
-  ]
+  const expiredAt = calculateDateOffset(dDay)
 
-  function handleIsAlerting() {
-    setIsAlerting(!isAlerting)
+  function handleAlertOpen() {
+    const now = new Date()
+    const isInvalidExpiredAt = isBefore(expiredAt, now)
+    if (isInvalidExpiredAt) {
+      setIsErrorAlertOpen(true)
+
+      return
+    }
+
+    setIsConfirmAlertOpen(true)
   }
 
-  function submit() {
-    // TODO
-    console.log("toWhom", toWhom)
-    console.log("personnel", personnel)
-    console.log("sharingCode", sharingCode)
+  function closeConfirmAlert() {
+    setIsConfirmAlertOpen(false)
+  }
+
+  function closeErrorAlert() {
+    setIsErrorAlertOpen(false)
   }
 
   return (
@@ -46,49 +64,29 @@ const SubmitButton = ({disabled, toWhom, personnel, sharingCode}: TProps) => {
           disabled ? "disabled" : ""
         }`}
         disabled={disabled}
-        onClick={handleIsAlerting}
+        onClick={handleAlertOpen}
       >
         롤링 페이퍼 만들기
       </button>
 
       <Portal
         render={() => (
-          <Alert isAlerting={isAlerting} style={{height: "246px"}} blur>
-            <Alert.Title title="마지막으로 확인해 주세요!" />
-            <Alert.Content>
-              <ul
-                style={{
-                  padding: "20px 10%",
-                  lineHeight: "1.6",
-                }}
-              >
-                {dataToCheck.map(({description, data}) => (
-                  <li className="txt-ellipsis" key={description}>
-                    <span style={{fontWeight: "bold"}}>· </span>
-                    {description}:{" "}
-                    <span style={{fontWeight: "bold"}}>{data}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="f-center">롤링페이퍼를 만들까요?</div>
-            </Alert.Content>
-            <Alert.ButtonWrapper style={{height: "40px", marginTop: "20px"}}>
-              <Alert.Button
-                onClick={submit}
-                style={{width: "120px"}}
-                type="fill-light-1"
-              >
-                시작하기
-              </Alert.Button>
-              <Alert.Button
-                onClick={handleIsAlerting}
-                type="default"
-                style={{width: "120px"}}
-              >
-                취소
-              </Alert.Button>
-            </Alert.ButtonWrapper>
-          </Alert>
+          <>
+            <ConfirmedPopUp
+              isAlerting={isConfirmAlertOpen}
+              onClose={closeConfirmAlert}
+              toWhom={toWhom}
+              personnel={personnel}
+              type={type}
+              dDay={dDay}
+              sharingCode={sharingCode}
+            />
+            <ErrorAlert
+              isAlerting={isErrorAlertOpen}
+              onClose={closeErrorAlert}
+              content="마감일을 오늘보다 나중으로 선택해주세요."
+            />
+          </>
         )}
       />
     </>
