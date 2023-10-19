@@ -1,41 +1,36 @@
 "use client"
 
-import {useState} from "react"
+import {useState, useContext} from "react"
 import dynamic from "next/dynamic"
+import {
+  Store,
+  DDayStore,
+} from "@/components/rolling-paper/creation/Context"
 import {calculateDateOffset, isBefore} from "@/utils/date"
-import type {TRollingPaperType} from "@/@types/rolling-paper"
 
 const Portal = dynamic(() => import("../../Portal"), {
-  loading: () => <></>,
+  loading: () => <></>
 })
 const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
-  loading: () => <></>,
+  loading: () => <></>
 })
 const ErrorAlert = dynamic(() => import("../../FlowAlert"), {
-  loading: () => <></>,
+  loading: () => <></>
 })
 
 type TProps = {
-  disabled: boolean
-  toWhom: string
-  personnel: string
-  type: TRollingPaperType | null
-  sharingCode: string
-  dDay: number
+  totalStep: number
 }
 
-const SubmitButton = ({
-  disabled,
-  toWhom,
-  personnel,
-  type,
-  dDay,
-  sharingCode,
-}: TProps) => {
+const SubmitButton = ({totalStep}: TProps) => {
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
   const [isConfirmAlertOpen, setIsConfirmAlertOpen] = useState(false)
 
+  const {doneStep} = useContext(Store)
+  const {dDay} = useContext(DDayStore)
+
   const expiredAt = calculateDateOffset(dDay)
+  const DONE_COUNT = Object.values(doneStep).filter((done) => done).length
 
   function handleAlertOpen() {
     const now = new Date()
@@ -61,9 +56,9 @@ const SubmitButton = ({
     <>
       <button
         className={`submit-button mt-4 radius-lg shadow-md ${
-          disabled ? "disabled" : ""
+          totalStep !== DONE_COUNT ? "disabled" : ""
         }`}
-        disabled={disabled}
+        disabled={totalStep !== DONE_COUNT}
         onClick={handleAlertOpen}
       >
         롤링 페이퍼 만들기
@@ -75,11 +70,6 @@ const SubmitButton = ({
             <ConfirmedPopUp
               isAlerting={isConfirmAlertOpen}
               onClose={closeConfirmAlert}
-              toWhom={toWhom}
-              personnel={personnel}
-              type={type}
-              dDay={dDay}
-              sharingCode={sharingCode}
             />
             <ErrorAlert
               isAlerting={isErrorAlertOpen}

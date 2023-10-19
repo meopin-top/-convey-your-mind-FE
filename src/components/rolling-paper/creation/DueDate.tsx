@@ -1,19 +1,19 @@
 "use client"
 
-import {useState, useMemo, type FormEvent, type KeyboardEvent} from "react"
+import {useState, useMemo, useContext, type FormEvent, type KeyboardEvent} from "react"
 import type {TInputChangeEvent} from "@/hooks/use-input"
+import {DDayStore} from "@/components/rolling-paper/creation/Context"
 import {formatDateTime} from "@/utils/formatter"
 import {calculateDDay, calculateDateOffset} from "@/utils/date"
 import {DISTANT_FUTURE_D_DAY} from "@/constants/date"
 import type {TDueDateType} from "@/@types/rolling-paper"
 
-type TProps = {
-  dDay: number
-  handleDDay: (dDay: number) => void
-}
+type TProps = {}
 
-const DueDate = ({dDay, handleDDay}: TProps) => {
+const DueDate = ({}: TProps) => {
   const [type, setType] = useState<TDueDateType>("DATE")
+
+  const {dDay, handleDDay} = useContext(DDayStore)
 
   const initialDDay = useMemo(
     () => dDay,

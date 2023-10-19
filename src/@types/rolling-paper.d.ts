@@ -5,6 +5,10 @@ export type TCreationInformation =
   | "DUE_DATE"
   | "SHARING_CODE"
 
+export type TDoneStep = {
+  [step in TCreationInformation]: boolean
+}
+
 export type TDueDateType = "DATE" | "D_DAY" | "NONE"
 
 export type TRollingPaperType = {

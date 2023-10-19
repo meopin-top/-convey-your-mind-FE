@@ -1,27 +1,26 @@
 "use client"
 
-import {useEffect} from "react"
+import {useEffect, useContext} from "react"
 import {Portal, Loading} from "@/components"
+import {SharingCodeStore} from "@/components/rolling-paper/creation/Context"
 import useRequest from "@/hooks/use-request"
 import type {TInputChangeEvent} from "@/hooks/use-input"
 import {DOMAIN} from "@/constants/service"
 
-type TProps = {
-  sharingCode: string
-  handleSharingCode: (event: TInputChangeEvent) => any
-}
+type TProps = {}
 
-const SharingCode = ({sharingCode, handleSharingCode}: TProps) => {
+const SharingCode = ({}: TProps) => {
+  const {sharingCode, handleSharingCode} = useContext(SharingCodeStore)
   const {isLoading, request} = useRequest()
 
   useEffect(() => {
     async function getInviteCode() {
       const {data} = await request({
-        path: "/projects/invite-code",
+        path: "/projects/invite-code"
       })
 
       handleSharingCode({
-        target: {value: data ?? ""},
+        target: {value: data ?? ""}
       } as TInputChangeEvent)
     }
 

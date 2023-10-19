@@ -1,20 +1,18 @@
 "use client"
 
-import {useState, type ChangeEvent} from "react"
+import {useState, useContext, type ChangeEvent} from "react"
 import {Portal, Alert} from "@/components"
-import type {TInputChangeEvent} from "@/hooks/use-input"
+import {PersonnelStore} from "@/components/rolling-paper/creation/Context"
 
-type TProps = {
-  personnel: string
-  handlePersonnel: (event: TInputChangeEvent) => any
-  setPersonnel: (personnel: string) => void
-}
+type TProps = {}
 
-const Personnel = ({personnel, handlePersonnel, setPersonnel}: TProps) => {
+const Personnel = ({}: TProps) => {
   const [isAlerting, setIsAlerting] = useState(false)
   const [disabledElement, setDisabledElement] = useState<"button" | "input">(
     "button"
   )
+
+  const {personnel, handlePersonnel, setPersonnel} = useContext(PersonnelStore)
 
   const MIN = 1
   const MAX = 9999

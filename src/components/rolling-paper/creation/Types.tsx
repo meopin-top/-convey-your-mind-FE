@@ -1,15 +1,14 @@
 "use client"
 
-import type {MouseEvent} from "react"
+import {useContext, type MouseEvent} from "react"
 import {Type} from "@/components/rolling-paper/creation"
-import type {TRollingPaperType} from "@/@types/rolling-paper"
+import {TypeStore} from "@/components/rolling-paper/creation/Context"
 
-type TProps = {
-  type: TRollingPaperType | null
-  handleType: (type: TRollingPaperType) => void
-}
+type TProps = {}
 
-const Types = ({type, handleType}: TProps) => {
+const Types = ({}: TProps) => {
+  const {type, handleType} = useContext(TypeStore)
+
   function setType(event: MouseEvent<HTMLDivElement>) {
     if (!(event.target instanceof HTMLDivElement)) {
       return
@@ -25,7 +24,7 @@ const Types = ({type, handleType}: TProps) => {
 
     handleType({
       template,
-      text,
+      text
     })
   }
 

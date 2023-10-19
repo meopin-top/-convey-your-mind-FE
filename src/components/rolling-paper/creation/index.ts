@@ -1,3 +1,4 @@
+import ConfirmedPopUp from "./ConfirmedPopUp"
 import DueDate from "./DueDate"
 import Personnel from "./Personnel"
 import Progress from "./Progress"
@@ -9,6 +10,7 @@ import Types from "./Types"
 import Whom from "./Whom"
 
 export {
+  ConfirmedPopUp,
   DueDate,
   Personnel,
   Progress,
@@ -17,5 +19,5 @@ export {
   SubmitButton,
   Type,
   Types,
-  Whom,
+  Whom
 }

@@ -1,39 +1,47 @@
 "use client"
 
+import {useContext} from "react"
 import {Alert} from "@/components"
 // import useRequest from "@/hooks/use-request"
+import {
+  WhomStore,
+  PersonnelStore,
+  TypeStore,
+  DDayStore,
+  SharingCodeStore
+} from "@/components/rolling-paper/creation/Context"
 import {formatDateTime} from "@/utils/formatter"
 import {calculateDateOffset} from "@/utils/date"
-import {TRollingPaperType} from "@/@types/rolling-paper"
 
 type TProps = {
   isAlerting: boolean
   onClose: () => void
-  toWhom: string
-  personnel: string
-  type: TRollingPaperType | null
-  sharingCode: string
-  dDay: number
 }
 
-const ConfirmedPopUp = ({isAlerting, onClose, toWhom, personnel, type, sharingCode, dDay}: TProps) => {
+const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
+  const {toWhom} = useContext(WhomStore)
+  const {personnel} = useContext(PersonnelStore)
+  const {type} = useContext(TypeStore)
+  const {dDay} = useContext(DDayStore)
+  const {sharingCode} = useContext(SharingCodeStore)
+
   const dataToCheck: {description: string; data: string}[] = [
     {
       description: "받는 사람",
-      data: toWhom,
+      data: toWhom
     },
     {
       description: "참여 인원",
-      data: personnel,
+      data: personnel
     },
     {
       description: "선택한 탬플릿",
-      data: type?.text ?? "",
+      data: type?.text ?? ""
     },
     {
       description: "마감일",
-      data: `${formatDateTime(calculateDateOffset(dDay))} (D-${dDay})`,
-    },
+      data: `${formatDateTime(calculateDateOffset(dDay))} (D-${dDay})`
+    }
   ]
 
   function submit() {
@@ -58,7 +66,7 @@ const ConfirmedPopUp = ({isAlerting, onClose, toWhom, personnel, type, sharingCo
         <ul
           style={{
             padding: "20px 10%",
-            lineHeight: "1.6",
+            lineHeight: "1.6"
           }}
         >
           {dataToCheck.map(({description, data}) => (

@@ -1,13 +1,13 @@
 "use client"
 
-import type {TInputChangeEvent} from "@/hooks/use-input"
+import {useContext} from "react"
+import {WhomStore} from "@/components/rolling-paper/creation/Context"
 
-type TProps = {
-  toWhom: string
-  handleToWhom: (event: TInputChangeEvent) => any
-}
+type TProps = {}
 
-const Whom = ({toWhom, handleToWhom}: TProps) => {
+const Whom = ({}: TProps) => {
+  const {toWhom, handleToWhom} = useContext(WhomStore)
+
   return (
     <div className="whom">
       <section className="description">누구에게 보내는 편지인가요?</section>
