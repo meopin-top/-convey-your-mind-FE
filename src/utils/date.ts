@@ -9,12 +9,12 @@ export function calculateDateOffset(offset: number): Date {
   return offsetDate
 }
 
+// 테스트 코드 작성 불가
 export function calculateDDay(targetDate: Date): number {
   const now = new Date()
   const timeDiff = targetDate.getTime() - now.getTime()
-  const days = Math.ceil(timeDiff / ONE_DAY)
 
-  return days
+  return Math.ceil(timeDiff / ONE_DAY)
 }
 
 export function isBefore(target: Date, comparable: Date): boolean {

@@ -1,7 +1,7 @@
-import type {ComponentType} from "react"
+import type {ComponentType, ReactNode} from "react"
 
 type TProps = {
-  components: ComponentType<any>[]
+  components: ComponentType<{children: ReactNode}>[]
   children: JSX.Element
 }
 
