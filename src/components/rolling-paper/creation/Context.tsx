@@ -20,10 +20,8 @@ const Store = createContext<{
     DUE_DATE: true,
     SHARING_CODE: false
   },
-  handleDoneStep: function() {
-  },
-  setDoneStep: function() {
-  }
+  handleDoneStep: function () {},
+  setDoneStep: function () {}
 })
 
 const Provider = ({children}: TProps) => {
@@ -65,8 +63,7 @@ const WhomStore = createContext<{
   handleToWhom: (event: TInputChangeEvent) => void
 }>({
   toWhom: "",
-  handleToWhom: function() {
-  }
+  handleToWhom: function () {}
 })
 
 const WhomProvider = ({children}: TProps) => {
@@ -88,10 +85,8 @@ const PersonnelStore = createContext<{
   setPersonnel: (personnel: string) => void
 }>({
   personnel: "",
-  handlePersonnel: function() {
-  },
-  setPersonnel: function() {
-  }
+  handlePersonnel: function () {},
+  setPersonnel: function () {}
 })
 
 const PersonnelProvider = ({children}: TProps) => {
@@ -115,8 +110,7 @@ const TypeStore = createContext<{
   handleType: (type: TRollingPaperType) => void
 }>({
   type: null,
-  handleType: function() {
-  }
+  handleType: function () {}
 })
 
 const TypeProvider = ({children}: TProps) => {
@@ -126,6 +120,7 @@ const TypeProvider = ({children}: TProps) => {
 
   function handleType(type: TRollingPaperType) {
     setType(type)
+    console.log(type)
     handleDoneStep(true, "TYPE")
   }
 
@@ -141,8 +136,7 @@ const DDayStore = createContext<{
   handleDDay: (dDay: number) => void
 }>({
   dDay: 100,
-  handleDDay: function() {
-  }
+  handleDDay: function () {}
 })
 
 const DDayProvider = ({children}: TProps) => {
@@ -167,8 +161,7 @@ const SharingCodeStore = createContext<{
   handleSharingCode: (event: TInputChangeEvent) => void
 }>({
   sharingCode: "",
-  handleSharingCode: function() {
-  }
+  handleSharingCode: function () {}
 })
 
 const SharingCodeProvider = ({children}: TProps) => {

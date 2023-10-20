@@ -1,44 +1,78 @@
-import {render, screen, fireEvent} from "@testing-library/react"
-import SharingCode from "@/components/rolling-paper/creation/SharingCode"
+import {render, screen, waitFor} from "@testing-library/react"
+import Component from "@/components/rolling-paper/creation/SharingCode"
+import {SharingCodeProvider} from "@/components/rolling-paper/creation/Context"
+
+const SharingCode = () => {
+  return (
+    <SharingCodeProvider>
+      <Component />
+    </SharingCodeProvider>
+  )
+}
+
+const requestMock = jest.fn()
+jest.mock("../../../../hooks/use-request.ts", () => ({
+  __esModule: true,
+  default: () => ({
+    request: requestMock,
+    isLoading: false,
+  }),
+}))
 
 describe("SharingCode", () => {
   it("컴포넌트를 올바르게 렌더링한다.", () => {
     // given, when
-    const sharingCode = "J1234"
+    requestMock.mockResolvedValueOnce({
+      data: "",
+    })
 
     render(
-      <SharingCode sharingCode={sharingCode} handleSharingCode={jest.fn()} />
+      <SharingCode />
     )
 
-    const description = screen.getByText("롤링페이퍼의 공유 코드를 만들까요?")
+    const description = screen.getByText(/롤링페이퍼의 공유 코드는 무엇인가요/)
+    const subDescription = screen.getByText(/기본 코드를 수정할 수 있습니다/)
     const input = screen.getByPlaceholderText(
-      "기본 코드 디폴트"
+      "공유 코드를 입력해주세요"
     ) as HTMLInputElement
 
     // then
     expect(description).toBeInTheDocument()
+    expect(subDescription).toBeInTheDocument()
     expect(input).toBeInTheDocument()
-    expect(input.value).toBe(sharingCode)
   })
 
-  it("인풋 값이 바뀌면 handleSharingCode을 호출한다.", () => {
+  it("API 호출 성공 시 자동으로 공유 코드가 입력된다.", async () => {
     // given
     const sharingCode = "J1234"
-    const handleSharingCode = jest.fn()
 
-    render(
-      <SharingCode
-        sharingCode={sharingCode}
-        handleSharingCode={handleSharingCode}
-      />
-    )
+    requestMock.mockResolvedValueOnce({
+      data: sharingCode,
+    })
 
-    const inputElement = screen.getByPlaceholderText("기본 코드 디폴트")
+    render(<SharingCode />)
 
-    // when
-    fireEvent.change(inputElement, {target: {value: "JK1234"}})
+    const inputElement = screen.getByPlaceholderText("공유 코드를 입력해주세요") as HTMLInputElement
 
     // then
-    expect(handleSharingCode).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(inputElement.value).toEqual(sharingCode)
+    })
+  })
+
+  it ("API 호출 실패 시 기본 공유 코드는 빈값으로 노출된다.", async () => {
+    // given
+    requestMock.mockResolvedValueOnce({
+      data: null,
+    })
+
+    render(<SharingCode />)
+
+    const inputElement = screen.getByPlaceholderText("공유 코드를 입력해주세요") as HTMLInputElement
+
+    // then
+    await waitFor(() => {
+      expect(inputElement.value).toEqual("")
+    })
   })
 })

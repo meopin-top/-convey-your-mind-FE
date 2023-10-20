@@ -8,7 +8,7 @@ type TProps = {
 }
 
 const Progress = ({totalCount}: TProps) => {
-  const doneStep = useContext(Store).doneStep
+  const {doneStep} = useContext(Store)
 
   const DONE_COUNT = Object.values(doneStep).filter((done) => done).length
 

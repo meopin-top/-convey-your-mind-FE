@@ -1,4 +1,4 @@
-import {render, screen} from "@testing-library/react"
+import {render, screen, act} from "@testing-library/react"
 import QuitAlert from "@/components/rolling-paper/creation/QuitAlert"
 import type {TProps as TPortalProps} from "@/components/Portal"
 
@@ -17,8 +17,10 @@ describe("QuitAlert", () => {
     render(<QuitAlert />)
 
     // when
-    const popstateEvent = new Event("popstate")
-    global.window.dispatchEvent(popstateEvent)
+    act(() => {
+      const popstateEvent = new Event("popstate")
+      global.window.dispatchEvent(popstateEvent)
+    })
 
     const content = await screen.findByText(/저장되지 않습니다/)
     const quitButton = await screen.findByRole("button", {name: "그만두기"})
