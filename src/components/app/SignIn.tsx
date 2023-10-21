@@ -1,6 +1,11 @@
 "use client"
 
-import type {KeyboardEvent, MutableRefObject} from "react"
+import {
+  useState,
+  useContext,
+  type KeyboardEvent,
+  type MutableRefObject,
+} from "react"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import Link from "next/link"
@@ -9,6 +14,7 @@ import useRequest from "@/hooks/use-request"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
+import SignInStore from "@/store/sign-in"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
 import type {TSignInResponse} from "@/@types/auth"
@@ -19,8 +25,15 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
+const ErrorAlert = dynamic(() => import("../FlowAlert"), {
+  loading: () => <></>,
+})
 
 const SignIn = () => {
+  const [alertMessage, setAlertMessage] = useState("")
+
+  const {redirectTo, setRedirectTo} = useContext(SignInStore)
+
   const router = useRouter()
 
   const {isLoading, request} = useRequest()
@@ -51,12 +64,17 @@ const SignIn = () => {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
 
-      router.push(ROUTE.MY_PAGE)
+      router.push(redirectTo)
+      setRedirectTo(ROUTE.MY_PAGE)
 
       return
     }
 
-    alert(message)
+    setAlertMessage(message)
+  }
+
+  function closeAlert() {
+    setAlertMessage("")
   }
 
   return (
@@ -78,7 +96,7 @@ const SignIn = () => {
         minLength={1}
         maxLength={100}
         required
-        inputRef={passwordInput as MutableRefObject<HTMLInputElement | null>}
+        ref={passwordInput as MutableRefObject<HTMLInputElement | null>}
         value={password}
         onKeyDown={handlePasswordInput}
         onChange={handlePassword}
@@ -93,7 +111,18 @@ const SignIn = () => {
       <Link className="my-account" href={ROUTE.ACCOUNT_INQUIRY}>
         내 계정 정보 찾기
       </Link>
-      <Portal render={() => <Loading isLoading={isLoading} />} />
+      <Portal
+        render={() => (
+          <>
+            <Loading isLoading={isLoading} />
+            <ErrorAlert
+              isAlerting={alertMessage.length !== 0}
+              onClose={closeAlert}
+              content={alertMessage}
+            />
+          </>
+        )}
+      />
     </>
   )
 }

@@ -43,9 +43,9 @@ describe("useLogOut", () => {
     fireEvent.click(logOutButton)
 
     // then
-    expect(window.localStorage.removeItem).toBeCalledTimes(2)
-    expect(window.localStorage.removeItem).toBeCalledWith("nickName")
-    expect(window.localStorage.removeItem).toBeCalledWith("profile")
+    expect(window.localStorage.removeItem).toHaveBeenCalledTimes(2)
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith("nickName")
+    expect(window.localStorage.removeItem).toHaveBeenCalledWith("profile")
   })
 
   it("logOut 함수가 호출되면 메인 화면으로 이동한다.", () => {
@@ -59,7 +59,7 @@ describe("useLogOut", () => {
 
     // then
 
-    expect(routerPushMock).toBeCalledWith(ROUTE.MAIN)
+    expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MAIN)
   })
 
   it("logOut 함수가 호출되면 API를 호출한다.", () => {
@@ -72,6 +72,6 @@ describe("useLogOut", () => {
     fireEvent.click(logOutButton)
 
     // then
-    expect(fetchMock).toBeCalled()
+    expect(fetchMock).toHaveBeenCalled()
   })
 })

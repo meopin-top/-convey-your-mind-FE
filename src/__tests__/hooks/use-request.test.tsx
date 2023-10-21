@@ -145,10 +145,10 @@ describe("useRequest", () => {
 
     // then
     await waitFor(() => {
-      expect(window.alert).toBeCalledWith(
+      expect(window.alert).toHaveBeenCalledWith(
         "인증이 만료되었습니다. 재로그인해주세요."
       )
-      expect(logOutMock).toBeCalled()
+      expect(logOutMock).toHaveBeenCalled()
     })
   })
 
@@ -174,7 +174,7 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).toBeCalledTimes(1)
+    expect(abortMock).toHaveBeenCalledTimes(1)
   })
 
   it("500ms를 넘은 간격으로 같은 API 경로로 요청이 발생하면 이전 API 호출을 중단하지 않는다.", async () => {
@@ -199,7 +199,7 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).not.toBeCalled()
+    expect(abortMock).not.toHaveBeenCalled()
   })
 
   it("500번대 에러가 반환되면 '서버 측 오류'가 콘솔에 출력된다.", async () => {
@@ -217,7 +217,7 @@ describe("useRequest", () => {
 
     // then
     await waitFor(() => {
-      expect(consoleErrorMock).toBeCalledWith("서버 측 오류")
+      expect(consoleErrorMock).toHaveBeenCalledWith("서버 측 오류")
     })
   })
 
@@ -236,7 +236,7 @@ describe("useRequest", () => {
 
     // then
     await waitFor(() => {
-      expect(consoleErrorMock).toBeCalledWith("클라이언트 측 오류")
+      expect(consoleErrorMock).toHaveBeenCalledWith("클라이언트 측 오류")
     })
   })
 
@@ -255,7 +255,7 @@ describe("useRequest", () => {
 
     // then
     await waitFor(() => {
-      expect(consoleErrorMock).toBeCalledWith("데이터 fetch 오류")
+      expect(consoleErrorMock).toHaveBeenCalledWith("데이터 fetch 오류")
     })
   })
 })

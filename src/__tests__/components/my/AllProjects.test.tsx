@@ -87,7 +87,7 @@ describe("AllProjects", () => {
     const bottomSheet = screen.getByText("isOpen: 열림")
 
     // then
-    expect(routerPushMock).toBeCalledWith(ROUTE.MY_PROJECTS)
+    expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MY_PROJECTS)
     expect(bottomSheet).toBeInTheDocument()
   })
 
@@ -154,7 +154,7 @@ describe("AllProjects", () => {
     })
 
     // then
-    expect(window.alert).toBeCalledWith("API 연동")
+    expect(window.alert).toHaveBeenCalledWith("API 연동")
   })
 
   // TODO: API 연동

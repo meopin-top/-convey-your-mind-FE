@@ -10,7 +10,7 @@ jest.mock("react-dom", () => ({
 jest.mock("../../hooks/use-portal", () => jest.fn())
 
 describe("Portal", () => {
-  test("컴포넌트가 포탈로 렌더링된다.", () => {
+  it("컴포넌트가 포탈로 렌더링된다.", () => {
     // given
     const MockComponent = () => <div>Mock Component</div>
     const mockRender = jest.fn().mockReturnValue(<MockComponent />)
@@ -26,7 +26,7 @@ describe("Portal", () => {
     expect(createPortal).toHaveBeenCalledWith(<MockComponent />, mockPortal)
   })
 
-  test("컴포넌트가 포탈로 렌더링되지 않는다.", () => {
+  it("컴포넌트가 포탈로 렌더링되지 않는다.", () => {
     // given
     const mockRender = jest.fn()
     ;(usePortal as jest.Mock).mockReturnValue(null)

@@ -2,6 +2,7 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import ConfirmedPopUp, {
   type TProps as TConfirmedPopUpProps,
 } from "@/components/app/ConfirmedPopUp"
+import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import {
   VALID_USER_ID as TEST_USER_ID,
@@ -9,12 +10,21 @@ import {
   INVALID_EMAILS,
   VALID_EMAILS,
 } from "@/__mocks__/fixtures/input"
-import {createAlertMock} from "@/__mocks__/window"
 
 jest.mock("../../../components/SecretInput", () => ({
   __esModule: true,
-  default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
-    <input className="password" ref={inputRef} {...props} />
+  default: ({...props}: Omit<TSecretInputProps, "size">) => (
+    <input className="password" {...props} />
+  ),
+}))
+jest.mock("../../../components/Portal.tsx", () => ({
+  __esModule: true,
+  default: ({render}: TPortalProps) => <>{render()}</>,
+}))
+jest.mock("../../../components/FlowAlert.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>ErrorAlert {isAlerting ? "open" : "close"}</>
   ),
 }))
 
@@ -39,10 +49,6 @@ function renderConfirmedPopUp({
 }
 
 describe("ConfirmedPopUp", () => {
-  beforeAll(() => {
-    createAlertMock()
-  })
-
   it("유저 아이디는 변경이 불가능하다.", () => {
     // given, when
     renderConfirmedPopUp({})
@@ -117,7 +123,7 @@ describe("ConfirmedPopUp", () => {
     expect(signUpButton).toBeDisabled()
   })
 
-  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 onSubmit를 호출하지 않고, alert를 호출한다", () => {
+  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 onSubmit를 호출하지 않고, ErrorAlert를 호출한다", () => {
     // given
     const onSubmit = jest.fn()
 
@@ -136,12 +142,14 @@ describe("ConfirmedPopUp", () => {
     })
     fireEvent.click(signUpButton)
 
+    const errorAlert = screen.getByText("ErrorAlert open")
+
     // then
-    expect(onSubmit).not.toBeCalled()
-    expect(window.alert).toBeCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+    expect(errorAlert).toBeInTheDocument()
   })
 
-  it("이메일 형식이 다르면 onSubmit를 호출하지 않고, alert를 호출한다.", () => {
+  it("이메일 형식이 다르면 onSubmit를 호출하지 않고, ErrorAlert를 호출한다.", () => {
     // given
     const onSubmit = jest.fn()
 
@@ -166,9 +174,11 @@ describe("ConfirmedPopUp", () => {
       })
       fireEvent.click(signUpButton)
 
+      const errorAlert = screen.getByText("ErrorAlert open")
+
       // then
-      expect(onSubmit).not.toBeCalled()
-      expect(window.alert).toBeCalled()
+      expect(onSubmit).not.toHaveBeenCalled()
+      expect(errorAlert).toBeInTheDocument()
     })
   })
 
@@ -198,8 +208,7 @@ describe("ConfirmedPopUp", () => {
       fireEvent.click(signUpButton)
 
       // then
-      expect(onSubmit).toBeCalled()
-      expect(window.alert).toBeCalled()
+      expect(onSubmit).toHaveBeenCalled()
     })
   })
 
@@ -217,6 +226,6 @@ describe("ConfirmedPopUp", () => {
     fireEvent.click(cancelButton)
 
     // then
-    expect(onClose).toBeCalled()
+    expect(onClose).toHaveBeenCalled()
   })
 })

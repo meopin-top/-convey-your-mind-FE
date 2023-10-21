@@ -21,8 +21,12 @@ const Loading = dynamic(() => import("../Loading"), {
 const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
   loading: () => <></>,
 })
+const ErrorAlert = dynamic(() => import("../FlowAlert"), {
+  loading: () => <></>,
+})
 
 const SignUp = () => {
+  const [alertMessage, setAlertMessage] = useState("")
   const [isPopUpOpened, setIsPopUpOpened] = useState(false)
 
   const {isLoading, request} = useRequest()
@@ -43,25 +47,27 @@ const SignUp = () => {
 
   function checkValidation() {
     if (userId.length === 0) {
-      alert("ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
+      setAlertMessage("ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
 
       return
     }
 
     if (password.length === 0) {
-      alert("PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
+      setAlertMessage("PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요.")
 
       return
     }
 
     if (!VALIDATOR.USER_ID.test(userId)) {
-      alert("영문, 숫자, 특수문자만 사용 가능합니다.")
+      setAlertMessage("영문, 숫자, 특수문자만 사용 가능합니다.")
 
       return
     }
 
     if (!VALIDATOR.PASSWORD._.test(password)) {
-      alert("안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요.")
+      setAlertMessage(
+        "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
+      )
 
       return
     }
@@ -92,7 +98,11 @@ const SignUp = () => {
       return
     }
 
-    alert(message)
+    setAlertMessage(message)
+  }
+
+  function closeAlert() {
+    setAlertMessage("")
   }
 
   return (
@@ -151,7 +161,7 @@ const SignUp = () => {
         minLength={8}
         maxLength={20}
         required
-        inputRef={passwordInput as MutableRefObject<HTMLInputElement | null>}
+        ref={passwordInput as MutableRefObject<HTMLInputElement | null>}
         value={password}
         onKeyDown={handlePasswordInput}
         onChange={handlePassword}
@@ -174,6 +184,11 @@ const SignUp = () => {
               onSubmit={signUp}
             />
             <Loading isLoading={isLoading} />
+            <ErrorAlert
+              isAlerting={alertMessage.length !== 0}
+              onClose={closeAlert}
+              content={alertMessage}
+            />
           </>
         )}
       />

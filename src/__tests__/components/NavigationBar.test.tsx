@@ -26,7 +26,6 @@ jest.mock("../../hooks/use-log-out.ts", () => ({
   __esModule: true,
   default: () => logOutMock,
 }))
-
 jest.mock("../../components/my/UserInformation.tsx", () => ({
   __esModule: true,
   default: ({right}: TUserInformationProps) => (
@@ -36,19 +35,16 @@ jest.mock("../../components/my/UserInformation.tsx", () => ({
     </>
   ),
 }))
-
 jest.mock("../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TPortalProps) => <>{render()}</>,
 }))
-
-jest.mock("../../components/LoginAlert.tsx", () => ({
+jest.mock("../../components/FlowAlert.tsx", () => ({
   __esModule: true,
   default: ({isAlerting}: {isAlerting: boolean}) => (
     <>LoginAlert {isAlerting ? "open" : "close"}</>
   ),
 }))
-
 jest.mock("../../assets/icons", () => ({
   __esModule: true,
   Hamburger: ({...rest}: HTMLAttributes<HTMLOrSVGElement>) => (
@@ -152,7 +148,7 @@ describe("NavigationBar", () => {
     render(<NavigationBar />)
 
     // then
-    expect(unlockScrollMock).toBeCalledTimes(1)
+    expect(unlockScrollMock).toHaveBeenCalledTimes(1)
   })
 
   it("네비게이션 바가 open되면 scroll이 lock 상태이다.", () => {
@@ -165,7 +161,7 @@ describe("NavigationBar", () => {
     fireEvent.click(hamburger)
 
     // then
-    expect(lockScrollMock).toBeCalledTimes(1)
+    expect(lockScrollMock).toHaveBeenCalledTimes(1)
   })
 
   it("네비게이션 바가 close 되면 scroll이 unlock 상태이다.", () => {
@@ -180,7 +176,7 @@ describe("NavigationBar", () => {
     fireEvent.click(close)
 
     // then
-    expect(unlockScrollMock).toBeCalledTimes(2)
+    expect(unlockScrollMock).toHaveBeenCalledTimes(2)
   })
 
   it("로그인되지 않았을 때 회원가입과 로그인 버튼이 노출된다.", () => {
@@ -272,7 +268,7 @@ describe("NavigationBar", () => {
     fireEvent.click(logOutButton)
 
     // then
-    expect(logOutMock).toBeCalledTimes(1)
+    expect(logOutMock).toHaveBeenCalledTimes(1)
   })
 
   it("미로그인 시 마이페이지 링크를 누르면 LoginAlert가 open된다.", () => {

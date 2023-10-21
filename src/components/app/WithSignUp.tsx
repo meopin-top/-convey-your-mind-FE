@@ -2,11 +2,11 @@
 
 import {useContext, type MouseEvent} from "react"
 import {SignIn, SignUp} from "./"
-import SignUpTabStore from "@/store/sign-up-tab"
-import type {TTab} from "@/@types/sign-up-tab"
+import SignInStore from "@/store/sign-in"
+import type {TTab} from "@/@types/sign-in"
 
 const WithSignUp = () => {
-  const {signUpTab: tab, setSignUpTab: setTab} = useContext(SignUpTabStore)
+  const {tab, setTab} = useContext(SignInStore)
 
   function handleTab(event: MouseEvent) {
     setTab(event.currentTarget.getAttribute("data-tab") as TTab)

@@ -1,7 +1,8 @@
 "use client"
 
-import {useEffect} from "react"
+import {useState, useEffect} from "react"
 import {useSearchParams, useRouter} from "next/navigation"
+import dynamic from "next/dynamic"
 import {Redirecting} from "@/components"
 import useRequest from "@/hooks/use-request"
 import Storage from "@/store/local-storage"
@@ -9,7 +10,16 @@ import ROUTE from "@/constants/route"
 import {SIGN_IN} from "@/constants/response-code"
 import type {TSignInResponse} from "@/@types/auth"
 
+const Portal = dynamic(() => import("../../components/Portal"), {
+  loading: () => <></>,
+})
+const ErrorAlert = dynamic(() => import("../../components/FlowAlert"), {
+  loading: () => <></>,
+})
+
 const OauthMiddleware = () => {
+  const [alertMessage, setAlertMessage] = useState("")
+
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -41,7 +51,7 @@ const OauthMiddleware = () => {
         return
       }
 
-      alert(message)
+      setAlertMessage(message)
     }
 
     if (isKakaoSucceeded) {
@@ -49,14 +59,31 @@ const OauthMiddleware = () => {
     } else if (isNaverSucceeded) {
       requestOauth("/oauth/naver/callback")
     } else {
-      alert(failureMessage)
+      setAlertMessage(failureMessage as string)
 
       router.replace(ROUTE.MAIN)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router])
+  }, [])
 
-  return <Redirecting isRedirecting blur />
+  function closeAlert() {
+    setAlertMessage("")
+  }
+
+  return (
+    <>
+      <Redirecting isRedirecting blur />
+      <Portal
+        render={() => (
+          <ErrorAlert
+            isAlerting={alertMessage.length !== 0}
+            onClose={closeAlert}
+            content={alertMessage}
+          />
+        )}
+      />
+    </>
+  )
 }
 
 export default OauthMiddleware

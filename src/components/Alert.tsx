@@ -1,6 +1,11 @@
 "use client"
 
-import type {MouseEvent, HTMLAttributes, ReactNode} from "react"
+import type {
+  MouseEvent,
+  HTMLAttributes,
+  ReactNode,
+  MutableRefObject,
+} from "react"
 import type {TColor} from "@/@types/style"
 
 type TProps = {
@@ -8,14 +13,46 @@ type TProps = {
   blur?: boolean
   isUseCustomButton?: boolean
   children: ReactNode
+  divRef?: MutableRefObject<HTMLDivElement | null>
 } & HTMLAttributes<HTMLDivElement>
 
-const Alert = ({isAlerting, blur = false, children, ...props}: TProps) => {
+const Alert: {
+  ({isAlerting, blur, divRef, children, ...props}: TProps): JSX.Element
+  Title: ({
+    title,
+    ...props
+  }: {
+    title?: string | undefined
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  Content: ({
+    children,
+    ...props
+  }: {
+    children: ReactNode
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  ButtonWrapper: ({
+    children,
+    ...props
+  }: {
+    children: ReactNode
+  } & HTMLAttributes<HTMLDivElement>) => JSX.Element
+  Button: ({
+    children,
+    onClick,
+    type,
+    ...props
+  }: {
+    children: ReactNode
+    onClick: (event: MouseEvent<HTMLButtonElement>) => any
+    type?: TColor | undefined
+    disabled?: boolean | undefined
+  } & HTMLAttributes<HTMLButtonElement>) => JSX.Element
+} = ({isAlerting, blur = false, divRef, children, ...props}: TProps) => {
   return (
     <>
       {isAlerting && (
         <div className={`alert f-center ${blur ? "blur" : ""}`}>
-          <div className="wrapper shadow-lg" {...props}>
+          <div className="wrapper shadow-lg" ref={divRef} {...props}>
             {children}
           </div>
         </div>

@@ -1,3 +1,4 @@
+import {forwardRef, type ForwardedRef} from "react"
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import SignUp from "@/components/app/SignUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
@@ -9,34 +10,40 @@ import {
   INVALID_PASSWORDS,
 } from "@/__mocks__/fixtures/input"
 
-const CONFIRMED_POP_UP_TITLE = /정보를 확인해주세요/
-
 jest.mock("next/navigation", () => ({
   __esModule: true,
   useRouter: jest.fn(),
 }))
+jest.mock("../../../components/app/ConfirmedPopUp.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>{isAlerting ? "정보를 확인해주세요" : ""}</>
+  ),
+}))
 jest.mock("../../../components/SecretInput.tsx", () => ({
   __esModule: true,
-  default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
-    <input className="password" ref={inputRef} {...props} />
+  // eslint-disable-next-line react/display-name
+  default: forwardRef<HTMLInputElement, Omit<TSecretInputProps, "size">>(
+    (
+      {...props}: Omit<TSecretInputProps, "size">,
+      ref: ForwardedRef<HTMLInputElement>
+    ) => {
+      return <input className="password" ref={ref} {...props} />
+    }
   ),
 }))
 jest.mock("../../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TPortalProps) => <>{render()}</>,
 }))
+jest.mock("../../../components/FlowAlert.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>ErrorAlert {isAlerting ? "open" : "close"}</>
+  ),
+}))
 
 describe("SignUp", () => {
-  let alertMock: jest.SpyInstance
-
-  beforeEach(() => {
-    alertMock = jest.spyOn(window, "alert").mockImplementation(() => {})
-  })
-
-  afterEach(() => {
-    alertMock.mockRestore()
-  })
-
   it("유저 아이디 인풋, 유저 비밀번호 인풋, 회원가입 버튼을 올바르게 렌더링한다.", async () => {
     // given, when
     render(<SignUp />)
@@ -235,7 +242,7 @@ describe("SignUp", () => {
     })
   })
 
-  it("유저 아이디를 입력하지 않으면 alert를 호출한다.", async () => {
+  it("유저 아이디를 입력하지 않으면 ErrorAlert를 호출한다.", async () => {
     // given
     render(<SignUp />)
 
@@ -247,11 +254,9 @@ describe("SignUp", () => {
     fireEvent.click(signUpButton)
 
     // then
-    await waitFor(() => {
-      expect(alertMock).toBeCalledWith(
-        "ID가 입력되지 않았습니다. 다시 한 번 확인해 주세요."
-      )
-    })
+    const errorAlert = await screen.findByText("ErrorAlert open")
+
+    expect(errorAlert).toBeInTheDocument()
   })
 
   it("유저 아이디를 입력하지 않으면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
@@ -267,13 +272,13 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+      const confirmedPopUp = screen.queryByText(/정보를 확인해주세요/)
 
       expect(confirmedPopUp).not.toBeInTheDocument()
     })
   })
 
-  it("유저 아이디를 입력해도 유저 비밀번호를 입력하지 않으면 alert를 호출한다.", async () => {
+  it("유저 아이디를 입력해도 유저 비밀번호를 입력하지 않으면 errorAlert를 호출한다.", async () => {
     // given
     render(<SignUp />)
 
@@ -291,11 +296,9 @@ describe("SignUp", () => {
     fireEvent.click(signUpButton)
 
     // then
-    await waitFor(() => {
-      expect(alertMock).toBeCalledWith(
-        "PW가 입력되지 않았습니다. 다시 한 번 확인해 주세요."
-      )
-    })
+    const errorAlert = await screen.findByText("ErrorAlert open")
+
+    expect(errorAlert).toBeInTheDocument()
   })
 
   it("유저 아이디를 입력해도 유저 비밀번호를 입력하지 않으면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
@@ -317,46 +320,43 @@ describe("SignUp", () => {
 
     // then
     await waitFor(() => {
-      const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+      const confirmedPopUp = screen.queryByText(/정보를 확인해주세요/)
 
       expect(confirmedPopUp).not.toBeInTheDocument()
     })
   })
 
-  it("유저 아이디 형식이 다르면 alert를 호출한다.", async () => {
-    // given
-    render(<SignUp />)
+  for (const userId of INVALID_USER_IDS) {
+    it("유저 아이디 형식이 다르면 errorAlert를 호출한다.", async () => {
+      // given
+      render(<SignUp />)
 
-    const userIdInput = screen.getByPlaceholderText(
-      "나만의 ID로 시작하기"
-    ) as HTMLInputElement
-    const passwordInput = screen.getByPlaceholderText(
-      "나만의 PW로 시작하기"
-    ) as HTMLInputElement
-    const signUpButton = screen.getByRole("button", {
-      name: "가입하기",
-    })
+      const userIdInput = screen.getByPlaceholderText(
+        "나만의 ID로 시작하기"
+      ) as HTMLInputElement
+      const passwordInput = screen.getByPlaceholderText(
+        "나만의 PW로 시작하기"
+      ) as HTMLInputElement
+      const signUpButton = screen.getByRole("button", {
+        name: "가입하기",
+      })
 
-    // when
-    fireEvent.change(passwordInput, {
-      target: {value: VALID_PASSWORD},
-    })
+      // when
+      fireEvent.change(passwordInput, {
+        target: {value: VALID_PASSWORD},
+      })
 
-    for (const userId of INVALID_USER_IDS) {
       fireEvent.change(userIdInput, {
         target: {value: userId},
       })
       fireEvent.click(signUpButton)
-    }
 
-    // then
-    await waitFor(() => {
-      expect(alertMock).toBeCalledTimes(INVALID_USER_IDS.length)
-      expect(alertMock).toBeCalledWith(
-        "영문, 숫자, 특수문자만 사용 가능합니다."
-      )
+      const errorAlert = await screen.findByText("ErrorAlert open")
+
+      // then
+      expect(errorAlert).toBeInTheDocument()
     })
-  })
+  }
 
   it("유저 아이디 형식이 다르면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
     // given
@@ -385,47 +385,44 @@ describe("SignUp", () => {
 
       // then
       await waitFor(() => {
-        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+        const confirmedPopUp = screen.queryByText(/정보를 확인해주세요/)
 
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     }
   })
 
-  it("유저 비밀번호 형식이 다르면 alert를 호출한다.", async () => {
-    // given
-    render(<SignUp />)
+  for (const password of INVALID_PASSWORDS) {
+    it("유저 비밀번호 형식이 다르면 errorAlert를 호출한다.", async () => {
+      // given
+      render(<SignUp />)
 
-    const userIdInput = screen.getByPlaceholderText(
-      "나만의 ID로 시작하기"
-    ) as HTMLInputElement
-    const passwordInput = screen.getByPlaceholderText(
-      "나만의 PW로 시작하기"
-    ) as HTMLInputElement
-    const signUpButton = screen.getByRole("button", {
-      name: "가입하기",
-    })
+      const userIdInput = screen.getByPlaceholderText(
+        "나만의 ID로 시작하기"
+      ) as HTMLInputElement
+      const passwordInput = screen.getByPlaceholderText(
+        "나만의 PW로 시작하기"
+      ) as HTMLInputElement
+      const signUpButton = screen.getByRole("button", {
+        name: "가입하기",
+      })
 
-    // when
-    fireEvent.change(userIdInput, {
-      target: {value: VALID_USER_ID},
-    })
+      // when
+      fireEvent.change(userIdInput, {
+        target: {value: VALID_USER_ID},
+      })
 
-    for (const password of INVALID_PASSWORDS) {
       fireEvent.change(passwordInput, {
         target: {value: password},
       })
       fireEvent.click(signUpButton)
-    }
 
-    // then
-    await waitFor(() => {
-      expect(alertMock).toBeCalledTimes(INVALID_PASSWORDS.length)
-      expect(alertMock).toBeCalledWith(
-        "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
-      )
+      const errorAlert = await screen.findByText("ErrorAlert open")
+
+      // then
+      expect(errorAlert).toBeInTheDocument()
     })
-  })
+  }
 
   it("유저 비밀번호 형식이 다르면 ConfirmedPopUp을 렌더링하지 않는다.", async () => {
     // given
@@ -454,14 +451,14 @@ describe("SignUp", () => {
 
       // then
       await waitFor(() => {
-        const confirmedPopUp = screen.queryByText(CONFIRMED_POP_UP_TITLE)
+        const confirmedPopUp = screen.queryByText(/정보를 확인해주세요/)
 
         expect(confirmedPopUp).not.toBeInTheDocument()
       })
     }
   })
 
-  it("유저 아이디와 유저 비밀번호 형식이 올바르면 alert를 호출하지 않는다.", async () => {
+  it("유저 아이디와 유저 비밀번호 형식이 올바르면 errorAlert를 호출하지 않는다.", async () => {
     // given
     render(<SignUp />)
 
@@ -484,10 +481,10 @@ describe("SignUp", () => {
     })
     fireEvent.click(signUpButton)
 
-    await waitFor(() => {
-      // then
-      expect(alertMock).not.toBeCalled()
-    })
+    const errorAlert = await screen.findByText(/ErrorAlert close/)
+
+    // then
+    expect(errorAlert).toBeInTheDocument()
   })
 
   it("유저 아이디와 유저 비밀번호 형식이 올바르면 ConfirmedPopUp을 렌더링한다.", async () => {
@@ -515,7 +512,7 @@ describe("SignUp", () => {
 
     await waitFor(() => {
       // then
-      const confirmedPopUp = screen.getByText(CONFIRMED_POP_UP_TITLE)
+      const confirmedPopUp = screen.getByText(/정보를 확인해주세요/)
 
       expect(confirmedPopUp).toBeInTheDocument()
     })

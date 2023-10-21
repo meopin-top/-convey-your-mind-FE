@@ -1,8 +1,9 @@
-import {render, waitFor} from "@testing-library/react"
+import {render, screen, waitFor} from "@testing-library/react"
 import OauthMiddleware from "@/app/oauth-middleware/page"
+import type {TProps as TPortalProps} from "@/components/Portal"
 import {SIGN_IN} from "@/constants/response-code"
 import ROUTE from "@/constants/route"
-import {createLocalStorageMock, createAlertMock} from "@/__mocks__/window"
+import {createLocalStorageMock} from "@/__mocks__/window"
 
 const getSearchParamsMock = jest.fn()
 const routerReplacementMock = jest.fn()
@@ -27,10 +28,19 @@ jest.mock("../../components/Redirecting.tsx", () => ({
   __esModule: true,
   default: () => <div>리다이렉션 중...</div>,
 }))
+jest.mock("../../components/Portal.tsx", () => ({
+  __esModule: true,
+  default: ({render}: TPortalProps) => <>{render()}</>,
+}))
+jest.mock("../../components/FlowAlert.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>ErrorAlert {isAlerting ? "open" : "close"}</>
+  ),
+}))
 
 describe("OAuthMiddleware", () => {
   beforeAll(() => {
-    createAlertMock()
     createLocalStorageMock()
   })
 
@@ -77,7 +87,6 @@ describe("OAuthMiddleware", () => {
 
   it("네이버 로그인에 성공하면 API 요청 후 MY_PAGE로 리다이렉트되어야 한다.", async () => {
     // given, when
-    // given, when
     const nickName = "testNickName"
     const profile = "testProfile"
 
@@ -110,7 +119,7 @@ describe("OAuthMiddleware", () => {
     })
   })
 
-  it("Oauth에 실패하면 alert 호출 후 MAIN으로 리다이렉트되어야 한다.", async () => {
+  it("Oauth에 실패하면 ErrorAlert 호출 후 MAIN으로 리다이렉트되어야 한다.", async () => {
     // given, when
     const responseMock = {
       code: "SIGN_IN.FAILURE",
@@ -126,11 +135,13 @@ describe("OAuthMiddleware", () => {
 
     render(<OauthMiddleware />)
 
+    const errorAlert = screen.getByText("ErrorAlert open")
+
     // then
     await waitFor(() => {
       expect(routerReplacementMock).toHaveBeenCalledTimes(1)
       expect(routerReplacementMock).toHaveBeenCalledWith(ROUTE.MAIN)
-      expect(window.alert).toHaveBeenCalledTimes(1)
+      expect(errorAlert).toBeInTheDocument()
     })
   })
 })

@@ -70,3 +70,34 @@ export function createDateMock({
 export function deleteDateMock() {
   delete (window as any).Date
 }
+
+export function removeLocalStorageMock() {
+  delete (window.localStorage as {getItem: any}).getItem
+  delete (window.localStorage as {setItem: any}).setItem
+  delete (window.localStorage as {removeItem: any}).removeItem
+  delete (window.localStorage as {clear: any}).clear
+}
+
+export function createWriteTextMock() {
+  Object.defineProperty(window.navigator, "clipboard", {
+    value: {
+      writeText: jest.fn(() => Promise.resolve(undefined)),
+    },
+    configurable: true,
+  })
+}
+
+export function removeCreateWriteTextMock() {
+  delete (window.navigator.clipboard as {writeText: any}).writeText
+}
+
+export function createShareMock() {
+  Object.defineProperty(window.navigator, "share", {
+    value: jest.fn(() => Promise.resolve(undefined)),
+    configurable: true,
+  })
+}
+
+export function removeShareMock() {
+  delete (window.navigator as {share: any}).share
+}

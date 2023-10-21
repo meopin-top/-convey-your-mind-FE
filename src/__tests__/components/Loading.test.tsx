@@ -17,20 +17,20 @@ jest.mock("../../assets/icons/close.svg", () => ({
 
 function renderLoading({
   isLoading,
-  testid = "loading-wrapper",
+  testId = "loading-wrapper",
   ...props
-}: TProps & {testid?: string}) {
-  render(<Loading isLoading={isLoading} data-testid={testid} {...props} />)
+}: TProps & {testId?: string}) {
+  render(<Loading isLoading={isLoading} data-testid={testId} {...props} />)
 }
 
-const testid = "loading-wrapper"
+const testId = "loading-wrapper"
 
 describe("without onClose 버튼", () => {
   it("로딩 중이 아니면 아무것도 렌더링하지 않는다", () => {
     // given, when
     renderLoading({isLoading: false})
 
-    const wrapper = screen.queryByTestId(testid)
+    const wrapper = screen.queryByTestId(testId)
 
     // then
     expect(wrapper).not.toBeInTheDocument()
@@ -50,7 +50,7 @@ describe("without onClose 버튼", () => {
     // given, when
     renderLoading({isLoading: true, blur: true})
 
-    const wrapper = screen.getByTestId(testid)
+    const wrapper = screen.getByTestId(testId)
 
     // then
     expect(wrapper).toHaveClass("blur")
@@ -60,7 +60,7 @@ describe("without onClose 버튼", () => {
     // given, when
     renderLoading({isLoading: true})
 
-    const wrapper = screen.getByTestId(testid)
+    const wrapper = screen.getByTestId(testId)
 
     // then
     expect(wrapper).not.toHaveClass("blur")

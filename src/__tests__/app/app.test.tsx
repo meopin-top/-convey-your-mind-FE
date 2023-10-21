@@ -1,13 +1,23 @@
 import {render, screen} from "@testing-library/react"
 import Home from "@/app/page"
 
-jest.mock("../../components/app", () => ({
+const withOutSignUpId = "without-sign-up"
+const withSignUpId = "with-sign-up"
+const withOauthId = "with-oauth"
+
+jest.mock("../../components/app/WithoutSignUp.tsx", () => ({
   __esModule: true,
-  WithoutSignUp: () => (
-    <div data-testid="without-signup">WithoutSignUp Component</div>
+  default: () => (
+    <div data-testid={withOutSignUpId}>WithoutSignUp Component</div>
   ),
-  WithSignUp: () => <div data-testid="with-signup">WithSignUp Component</div>,
-  WithOauth: () => <div data-testid="with-oauth">WithOauth Component</div>,
+}))
+jest.mock("../../components/app/WithSignUp.tsx", () => ({
+  __esModule: true,
+  default: () => <div data-testid={withSignUpId}>WithSignUp Component</div>,
+}))
+jest.mock("../../components/app/WithOauth.tsx", () => ({
+  __esModule: true,
+  default: () => <div data-testid={withOauthId}>WithOauth Component</div>,
 }))
 jest.mock("../../components/LoginChecker.tsx", () => ({
   __esModule: true,
@@ -23,15 +33,15 @@ describe("Home", () => {
     const subtitle = screen.getByText(
       "subtitle 영역, 최대 2줄 정도 소개 문구? 느낌으로 넣으면 좋을듯!"
     )
-    const withoutSignup = screen.getByTestId("without-signup")
-    const withSignup = screen.getByTestId("with-signup")
-    const withOauth = screen.getByTestId("with-oauth")
+    const withoutSignUp = screen.getByTestId(withOutSignUpId)
+    const withSignUp = screen.getByTestId(withSignUpId)
+    const withOauth = screen.getByTestId(withOauthId)
 
     // then
     expect(slogan).toBeInTheDocument()
     expect(subtitle).toBeInTheDocument()
-    expect(withoutSignup).toBeInTheDocument()
-    expect(withSignup).toBeInTheDocument()
+    expect(withoutSignUp).toBeInTheDocument()
+    expect(withSignUp).toBeInTheDocument()
     expect(withOauth).toBeInTheDocument()
   })
 })

@@ -70,6 +70,7 @@ input {
 #navigation-bar {
   position: fixed;
   inset: 0;
+  z-index: 99;
 }
 
 .root-wrapper {
