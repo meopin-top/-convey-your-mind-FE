@@ -1,3 +1,4 @@
+import {forwardRef, type ForwardedRef} from "react"
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import SignUp from "@/components/app/SignUp"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
@@ -21,8 +22,14 @@ jest.mock("../../../components/app/ConfirmedPopUp.tsx", () => ({
 }))
 jest.mock("../../../components/SecretInput.tsx", () => ({
   __esModule: true,
-  default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
-    <input className="password" ref={inputRef} {...props} />
+  // eslint-disable-next-line react/display-name
+  default: forwardRef<HTMLInputElement, Omit<TSecretInputProps, "size">>(
+    (
+      {...props}: Omit<TSecretInputProps, "size">,
+      ref: ForwardedRef<HTMLInputElement>
+    ) => {
+      return <input className="password" ref={ref} {...props} />
+    }
   ),
 }))
 jest.mock("../../../components/Portal.tsx", () => ({

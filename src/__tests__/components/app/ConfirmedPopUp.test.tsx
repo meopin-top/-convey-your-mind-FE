@@ -13,8 +13,8 @@ import {
 
 jest.mock("../../../components/SecretInput", () => ({
   __esModule: true,
-  default: ({inputRef, ...props}: Omit<TSecretInputProps, "size">) => (
-    <input className="password" ref={inputRef} {...props} />
+  default: ({...props}: Omit<TSecretInputProps, "size">) => (
+    <input className="password" {...props} />
   ),
 }))
 jest.mock("../../../components/Portal.tsx", () => ({
