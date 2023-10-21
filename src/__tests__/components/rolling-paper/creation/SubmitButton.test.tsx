@@ -1,129 +1,127 @@
 import {render, screen, fireEvent} from "@testing-library/react"
-import SubmitButton from "@/components/rolling-paper/creation/SubmitButton"
+import Component from "@/components/rolling-paper/creation/SubmitButton"
+import {
+  Provider,
+  DDayProvider,
+} from "@/components/rolling-paper/creation/Context"
+import {isBefore} from "@/utils/date"
 import type {TProps} from "@/components/Portal"
 
 jest.mock("../../../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TProps) => render(),
 }))
-
-function renderSubmitButtonAndGetButton(disabled: boolean) {
-  render(
-    <SubmitButton
-      toWhom={"Jacob"}
-      personnel={"5"}
-      sharingCode={"J1234"}
-      disabled={disabled}
-    />
-  )
-
-  const submitButton = screen.getByRole("button", {
-    name: "롤링 페이퍼 만들기",
+jest.mock(
+  "../../../../components/rolling-paper/creation/ConfirmedPopUp.tsx",
+  () => ({
+    __esModule: true,
+    default: ({isAlerting}: {isAlerting: boolean}) => (
+      <>ConfirmedPopUp {isAlerting ? "open" : "close"}</>
+    ),
   })
+)
+jest.mock("../../../../components/FlowAlert.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>ErrorAlert {isAlerting ? "open" : "close"}</>
+  ),
+}))
+jest.mock("../../../../utils/date.ts", () => ({
+  __esModule: true,
+  ...jest.requireActual("../../../../utils/date.ts"),
+  isBefore: jest.fn(),
+}))
 
-  return submitButton
+const SubmitButton = ({totalStep = 5}: {totalStep?: number}) => {
+  return (
+    <Provider>
+      <DDayProvider>
+        <Component totalStep={totalStep} />
+      </DDayProvider>
+    </Provider>
+  )
 }
 
 describe("SubmitButton", () => {
-  it("올바르게 컴포넌트를 렌더링한다.", () => {
+  it("올바르게 컴포넌트를 렌더링한다.", async () => {
     // given, when
-    const submitButton = renderSubmitButtonAndGetButton(true)
+    render(<SubmitButton />)
+
+    const submitButton = screen.getByRole("button", {
+      name: "롤링페이퍼 만들기",
+    })
+    const confirmedPopUp = await screen.findByText(/ConfirmedPopUp close/)
+    const errorAlert = await screen.findByText(/ErrorAlert close/)
 
     // then
     expect(submitButton).toBeInTheDocument()
+    expect(confirmedPopUp).toBeInTheDocument()
+    expect(errorAlert).toBeInTheDocument()
   })
 
-  it("disabled가 true면 버튼은 disabled 처리된다.", () => {
+  it("totalStep과 DONE_COUNT가 다르면 '롤링페이퍼 만들기' 버튼은 disabled 상태가 된다.", () => {
     // given, when
-    const submitButton = renderSubmitButtonAndGetButton(true)
+    render(<SubmitButton totalStep={5} />)
+
+    const submitButton = screen.getByRole("button", {
+      name: "롤링페이퍼 만들기",
+    })
 
     // then
     expect(submitButton).toBeDisabled()
   })
 
-  it("disabled가 false인 상태에서 '롤링 페이퍼 만들기' 버튼을 클릭하면 Alert가 렌더링된다.", () => {
-    // given
-    const toWhom = "Jacob"
-    const personnel = "5"
-    const sharingCode = "J1234"
-
-    render(
-      <SubmitButton
-        toWhom={toWhom}
-        personnel={personnel}
-        sharingCode={sharingCode}
-        disabled={false}
-      />
-    )
-
-    const submitButton = screen.getByRole("button", {
-      name: "롤링 페이퍼 만들기",
-    })
-
-    // when
-    fireEvent.click(submitButton)
-    const contents = [
-      screen.getByText(/받는 사람/),
-      screen.getByText(toWhom),
-      screen.getByText(/참여 인원/),
-      screen.getByText(personnel),
-      screen.getByText(/선택한 탬플릿/),
-      screen.getByText(sharingCode),
-    ]
-
-    // then
-    contents.forEach((content) => {
-      expect(content).toBeInTheDocument()
-    })
-  })
-
-  it("Alert가 렌더링된 이후 '시작하기' 버튼을 누르면 시작하기 API를 호출한다.", () => {
+  it("totalStep과 DONE_COUNT가 같으면 '롤링페이퍼 만들기' 버튼은 disabled 상태가 아니다.", () => {
     // given, when
-
-    // then
-    expect(1 + 1).toEqual(2)
-  })
-
-  it("Alert가 렌더링된 이후 '취소' 버튼을 누르면 Alert가 사라진다.", () => {
-    // given
-    const toWhom = "Jacob"
-    const personnel = "5"
-    const sharingCode = "J1234"
-
-    render(
-      <SubmitButton
-        toWhom={toWhom}
-        personnel={personnel}
-        sharingCode={sharingCode}
-        disabled={false}
-      />
-    )
+    render(<SubmitButton totalStep={1} />)
 
     const submitButton = screen.getByRole("button", {
-      name: "롤링 페이퍼 만들기",
+      name: "롤링페이퍼 만들기",
     })
 
-    fireEvent.click(submitButton)
+    // then
+    expect(submitButton).not.toBeDisabled()
+  })
 
-    const cancelButton = screen.getByRole("button", {
-      name: "취소",
+  it("'롤링페이퍼 만들기'을 클릭할 때 D-day가 현재 날짜보다 이전이면 ErrorAlert를 렌더링한다.", async () => {
+    // given
+    ;(isBefore as jest.Mock).mockReturnValueOnce(true)
+
+    render(<SubmitButton totalStep={1} />)
+
+    const submitButton = screen.getByRole("button", {
+      name: "롤링페이퍼 만들기",
     })
 
     // when
-    fireEvent.click(cancelButton)
-
-    const contents = [
-      screen.queryByText(/받는 사람/),
-      screen.queryByText(toWhom),
-      screen.queryByText(/참여 인원/),
-      screen.queryByText(personnel),
-      screen.queryByText(/선택한 탬플릿/),
-      screen.queryByText(sharingCode),
-    ]
+    fireEvent.click(submitButton)
 
     // then
-    contents.forEach((content) => {
-      expect(content).not.toBeInTheDocument()
+    const confirmedPopUp = await screen.findByText(/ConfirmedPopUp close/)
+    const errorAlert = await screen.findByText(/ErrorAlert open/)
+
+    expect(confirmedPopUp).toBeInTheDocument()
+    expect(errorAlert).toBeInTheDocument()
+  })
+
+  it("'롤링페이퍼 만들기'을 클릭할 때 D-day가 현재 날짜보다 미래면 ConfirmedPopUp을 렌더링한다.", async () => {
+    // given
+    ;(isBefore as jest.Mock).mockReturnValueOnce(false)
+
+    render(<SubmitButton totalStep={1} />)
+
+    const submitButton = screen.getByRole("button", {
+      name: "롤링페이퍼 만들기",
     })
+
+    // when
+    fireEvent.click(submitButton)
+
+    // then
+    const confirmedPopUp = await screen.findByText(/ConfirmedPopUp open/)
+    const errorAlert = await screen.findByText(/ErrorAlert close/)
+
+    expect(confirmedPopUp).toBeInTheDocument()
+    expect(errorAlert).toBeInTheDocument()
   })
 })

@@ -1,7 +1,7 @@
 import {render, screen} from "@testing-library/react"
 import Progress from "@/components/rolling-paper/creation/Progress"
 
-const TOTAL_STEPS = 5
+const TOTAL_STEP = 5
 const DONE_STEP = 3
 
 jest.mock("react", () => ({
@@ -13,21 +13,21 @@ jest.mock("react", () => ({
       PERSONNEL: true,
       TYPE: true,
       DUE_DATE: false,
-      SHARING_CODE: false
-    }
-  })
+      SHARING_CODE: false,
+    },
+  }),
 }))
 
 describe("Progress", () => {
   it("프로그래스 바가 올바르게 표시된다.", () => {
     // given, when
-    render(<Progress totalCount={TOTAL_STEPS} />)
+    render(<Progress totalCount={TOTAL_STEP} />)
 
     const progressBarElement = screen.getByRole("progressbar").childNodes[0]
 
     // then
     expect(progressBarElement).toHaveStyle(
-      `width: ${(DONE_STEP * 100) / TOTAL_STEPS}%;`
+      `width: ${(DONE_STEP * 100) / TOTAL_STEP}%;`
     )
   })
 })

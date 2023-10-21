@@ -2,20 +2,17 @@
 
 import {useState, useContext} from "react"
 import dynamic from "next/dynamic"
-import {
-  Store,
-  DDayStore,
-} from "@/components/rolling-paper/creation/Context"
+import {Store, DDayStore} from "@/components/rolling-paper/creation/Context"
 import {calculateDateOffset, isBefore} from "@/utils/date"
 
 const Portal = dynamic(() => import("../../Portal"), {
-  loading: () => <></>
+  loading: () => <></>,
 })
 const ConfirmedPopUp = dynamic(() => import("./ConfirmedPopUp"), {
-  loading: () => <></>
+  loading: () => <></>,
 })
 const ErrorAlert = dynamic(() => import("../../FlowAlert"), {
-  loading: () => <></>
+  loading: () => <></>,
 })
 
 type TProps = {
@@ -61,7 +58,7 @@ const SubmitButton = ({totalStep}: TProps) => {
         disabled={totalStep !== DONE_COUNT}
         onClick={handleAlertOpen}
       >
-        롤링 페이퍼 만들기
+        롤링페이퍼 만들기
       </button>
 
       <Portal
