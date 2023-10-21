@@ -1,8 +1,8 @@
 import {ONE_DAY} from "@/constants/date"
 
-export function calculateDateOffset(offset: number): Date {
-  const now = new Date()
-  const offsetDate = new Date(now.getTime() + offset * ONE_DAY)
+export function calculateDateOffset(offset: number, target?: Date): Date {
+  const now = target ? target.getTime() : new Date().getTime()
+  const offsetDate = new Date(now + offset * ONE_DAY)
 
   offsetDate.setUTCHours(0, 0, 0, 0)
 

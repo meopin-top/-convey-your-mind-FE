@@ -4,12 +4,12 @@ import {ONE_DAY} from "@/constants/date"
 describe("calculateDateOffset", () => {
   it("n일 뒤의 날짜와 년/월/일이 같아야 한다.", () => {
     // given
-    const now = new Date("2023-10-19T12:00:00Z")
+    const target = new Date("2023-10-19T12:00:00Z")
     let offset = 5
-    let expectedDate = new Date(now.getTime() + offset * ONE_DAY)
+    let expectedDate = new Date(target.getTime() + offset * ONE_DAY)
 
     // when
-    let result = calculateDateOffset(offset)
+    let result = calculateDateOffset(offset, target)
 
     // then
     expect(result.getFullYear()).toEqual(expectedDate.getFullYear())
@@ -17,10 +17,10 @@ describe("calculateDateOffset", () => {
     expect(result.getDate()).toEqual(expectedDate.getDate())
 
     offset = 10
-    expectedDate = new Date(now.getTime() + offset * ONE_DAY)
+    expectedDate = new Date(target.getTime() + offset * ONE_DAY)
 
     // when
-    result = calculateDateOffset(offset)
+    result = calculateDateOffset(offset, target)
 
     // then
     expect(result.getFullYear()).toEqual(expectedDate.getFullYear())
