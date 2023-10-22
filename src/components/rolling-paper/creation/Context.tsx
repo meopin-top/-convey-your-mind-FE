@@ -2,7 +2,11 @@
 
 import {useState, createContext, useContext, type ReactNode} from "react"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
-import type {TCreationInformation, TDoneStep, TRollingPaperType} from "@/@types/rolling-paper"
+import type {
+  TCreationInformation,
+  TDoneStep,
+  TRollingPaperType,
+} from "@/@types/rolling-paper"
 
 type TProps = {
   children: ReactNode
@@ -18,10 +22,10 @@ const Store = createContext<{
     PERSONNEL: false,
     TYPE: false,
     DUE_DATE: true,
-    SHARING_CODE: false
+    SHARING_CODE: false,
   },
   handleDoneStep: function () {},
-  setDoneStep: function () {}
+  setDoneStep: function () {},
 })
 
 const Provider = ({children}: TProps) => {
@@ -32,7 +36,7 @@ const Provider = ({children}: TProps) => {
     PERSONNEL: false,
     TYPE: false,
     DUE_DATE: true,
-    SHARING_CODE: false
+    SHARING_CODE: false,
   })
 
   function handleDoneStep(done: boolean, key: TCreationInformation) {
@@ -42,17 +46,19 @@ const Provider = ({children}: TProps) => {
     if (increase || decrease) {
       setDoneStep({
         ...doneStep,
-        [key]: done
+        [key]: done,
       })
     }
   }
 
   return (
-    <Store.Provider value={{
-      doneStep,
-      handleDoneStep,
-      setDoneStep
-    }}>
+    <Store.Provider
+      value={{
+        doneStep,
+        handleDoneStep,
+        setDoneStep,
+      }}
+    >
       {children}
     </Store.Provider>
   )
@@ -63,7 +69,7 @@ const WhomStore = createContext<{
   handleToWhom: (event: TInputChangeEvent) => void
 }>({
   toWhom: "",
-  handleToWhom: function () {}
+  handleToWhom: function () {},
 })
 
 const WhomProvider = ({children}: TProps) => {
@@ -86,7 +92,7 @@ const PersonnelStore = createContext<{
 }>({
   personnel: "",
   handlePersonnel: function () {},
-  setPersonnel: function () {}
+  setPersonnel: function () {},
 })
 
 const PersonnelProvider = ({children}: TProps) => {
@@ -110,7 +116,7 @@ const TypeStore = createContext<{
   handleType: (type: TRollingPaperType) => void
 }>({
   type: null,
-  handleType: function () {}
+  handleType: function () {},
 })
 
 const TypeProvider = ({children}: TProps) => {
@@ -120,7 +126,6 @@ const TypeProvider = ({children}: TProps) => {
 
   function handleType(type: TRollingPaperType) {
     setType(type)
-    console.log(type)
     handleDoneStep(true, "TYPE")
   }
 
@@ -136,7 +141,7 @@ const DDayStore = createContext<{
   handleDDay: (dDay: number) => void
 }>({
   dDay: 100,
-  handleDDay: function () {}
+  handleDDay: function () {},
 })
 
 const DDayProvider = ({children}: TProps) => {
@@ -161,7 +166,7 @@ const SharingCodeStore = createContext<{
   handleSharingCode: (event: TInputChangeEvent) => void
 }>({
   sharingCode: "",
-  handleSharingCode: function () {}
+  handleSharingCode: function () {},
 })
 
 const SharingCodeProvider = ({children}: TProps) => {
@@ -192,5 +197,5 @@ export {
   DDayStore,
   DDayProvider,
   SharingCodeStore,
-  SharingCodeProvider
+  SharingCodeProvider,
 }

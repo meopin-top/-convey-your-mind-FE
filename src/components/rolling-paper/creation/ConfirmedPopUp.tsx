@@ -10,14 +10,15 @@ import {
   PersonnelStore,
   TypeStore,
   DDayStore,
-  SharingCodeStore
+  SharingCodeStore,
 } from "@/components/rolling-paper/creation/Context"
 import {formatDateTime} from "@/utils/formatter"
 import {calculateDateOffset} from "@/utils/date"
 import {ROLLING_PAPER} from "@/constants/response-code"
+import ROUTE from "@/constants/route"
 
 const ErrorAlert = dynamic(() => import("../../FlowAlert"), {
-  loading: () => <></>
+  loading: () => <></>,
 })
 
 type TProps = {
@@ -27,6 +28,7 @@ type TProps = {
 
 const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
 
   const {toWhom} = useContext(WhomStore)
   const {personnel} = useContext(PersonnelStore)
@@ -41,20 +43,23 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
   const dataToCheck: {description: string; data: string}[] = [
     {
       description: "받는 사람",
-      data: toWhom
+      data: toWhom,
     },
     {
       description: "참여 인원",
-      data: personnel === "" ? "0명" : `${personnel}명`
+      data: personnel === "" ? "0명" : `${personnel}명`,
     },
     {
       description: "선택한 탬플릿",
-      data: type?.text ?? ""
+      data: type?.text ?? "",
     },
     {
       description: "마감일",
-      data: dDay === Infinity ? "무기한 (D-∞)" : `${formatDateTime(calculateDateOffset(dDay))} (D-${dDay})`
-    }
+      data:
+        dDay === Infinity
+          ? "무기한 (D-∞)"
+          : `${formatDateTime(calculateDateOffset(dDay))} (D-${dDay})`,
+    },
   ]
 
   async function submit() {
@@ -65,48 +70,54 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
         destination: toWhom,
         maxInviteNum: personnel === "" ? 0 : parseInt(personnel),
         type: type!.template,
-        expiredDatetime: dDay === Infinity ? null : formatDateTime(calculateDateOffset(dDay), true),
-        inviteCode: sharingCode
-      }
+        expiredDatetime:
+          dDay === Infinity
+            ? null
+            : formatDateTime(calculateDateOffset(dDay), true),
+        inviteCode: sharingCode,
+      },
     })
 
-    if (code !== ROLLING_PAPER.CREATION.SUCCESS) {
+    if (code === ROLLING_PAPER.CREATION.DUPLICATED_SHARING_CODE) {
       setIsErrorAlertOpen(true)
+      setErrorMessage("이미 존재하는 공유코드입니다.")
 
       return
     }
 
-    console.log(data.inviteCode) // TODO: 초대 코드 이용해서 redirection 추가
-    router.push("/my")
+    if (code === ROLLING_PAPER.CREATION.FAILURE) {
+      setIsErrorAlertOpen(true)
+      setErrorMessage("롤링페이퍼를 생성하는 데 실패했습니다.")
+
+      return
+    }
+
+    router.push(`${ROUTE.ROLLING_PAPER_CREATION}/${data.inviteCode}`)
   }
 
   function closeErrorAlert() {
     setIsErrorAlertOpen(false)
+    setErrorMessage("")
   }
 
   return (
     <>
-      <Alert
-        isAlerting={isAlerting}
-        style={{height: "256px"}}
-        blur
-      >
+      <Alert isAlerting={isAlerting} style={{height: "256px"}} blur>
         <Alert.Title
-          title="마지막으로 확인해 주세요!"
+          title="마지막으로 확인해주세요!"
           style={{fontFamily: "hanna-11-years"}}
         />
         <Alert.Content>
           <ul
             style={{
               padding: "20px 10%",
-              lineHeight: "1.6"
+              lineHeight: "1.6",
             }}
           >
             {dataToCheck.map(({description, data}) => (
               <li className="txt-ellipsis" key={description}>
                 <span style={{fontWeight: "bold"}}>· </span>
-                {description}:{" "}
-                <span style={{fontWeight: "bold"}}>{data}</span>
+                {description}: <span style={{fontWeight: "bold"}}>{data}</span>
               </li>
             ))}
           </ul>
@@ -130,7 +141,11 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
         </Alert.ButtonWrapper>
       </Alert>
       <Loading isLoading={isLoading} />
-      <ErrorAlert isAlerting={isErrorAlertOpen} onClose={closeErrorAlert} />
+      <ErrorAlert
+        isAlerting={isErrorAlertOpen}
+        onClose={closeErrorAlert}
+        content={errorMessage}
+      />
     </>
   )
 }

@@ -22,5 +22,6 @@ export const ROLLING_PAPER = {
   CREATION: {
     SUCCESS: 3002,
     FAILURE: 3012,
+    DUPLICATED_SHARING_CODE: 3102,
   },
 } as const
