@@ -1,5 +1,5 @@
 import {Suspense} from "react"
-import {redirect} from "next/navigation"
+import {redirect} from "next/navigation" // TODO
 import Anchor from "next/link"
 import {Link, Sharing} from "@/components/rolling-paper/creation/[sharingCode]"
 import {Header, Loading, NeedLoggedIn} from "@/components"

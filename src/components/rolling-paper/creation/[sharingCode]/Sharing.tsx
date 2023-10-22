@@ -52,7 +52,7 @@ const Sharing = ({sharingCode}: TProps) => {
       return
     }
 
-    let temporaryElement: HTMLSpanElement | null = null
+    let temporaryElement: HTMLTextAreaElement | null = null
 
     try {
       const isClipboardSupported = Boolean(navigator?.clipboard)
@@ -74,13 +74,13 @@ const Sharing = ({sharingCode}: TProps) => {
     }
 
     function copyWithExecCommand(text: string) {
-      temporaryElement = document.createElement("span")
-      temporaryElement.textContent = text
-      temporaryElement.style.display = "none"
+      temporaryElement = document.createElement("textarea")
+      temporaryElement.value = text
+      temporaryElement.style.opacity = "0"
 
       document.body.appendChild(temporaryElement)
 
-      temporaryElement.focus()
+      temporaryElement.select()
       document.execCommand("copy")
     }
   }
