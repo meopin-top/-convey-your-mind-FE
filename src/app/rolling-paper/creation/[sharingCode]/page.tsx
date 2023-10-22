@@ -1,5 +1,5 @@
 import {Suspense} from "react"
-// import {redirect} from "next/navigation"
+import {redirect} from "next/navigation"
 import Anchor from "next/link"
 import {Link, Sharing} from "@/components/rolling-paper/creation/[sharingCode]"
 import {Header, Loading, NeedLoggedIn} from "@/components"
@@ -21,10 +21,9 @@ const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
 
   const {code} = await data.json()
 
-  // TODO: 주석 해제
   if (code === ROLLING_PAPER.INVITE_CODE.QUERY_FAILURE) {
     // 존재하지 않는 공유 코드면
-    // redirect(ROUTE.MY_PAGE)
+    redirect(ROUTE.MY_PAGE)
   }
 
   return (

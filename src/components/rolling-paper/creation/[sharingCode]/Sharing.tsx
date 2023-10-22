@@ -47,9 +47,7 @@ const Sharing = ({sharingCode}: TProps) => {
     setIsKakaoSDKLoadFailed(true)
   }
 
-  // TODO: 배포 상태에서 동작을 안 함
   async function copyToClipboard() {
-    console.log("isCopied", isCopied)
     if (isCopied) {
       return
     }
@@ -58,7 +56,6 @@ const Sharing = ({sharingCode}: TProps) => {
 
     try {
       const isClipboardSupported = Boolean(navigator?.clipboard)
-      console.log("isClipboardSupported", isClipboardSupported)
       isClipboardSupported
         ? await copyWithClipboard(SHARING_URL)
         : copyWithExecCommand(SHARING_URL)
@@ -73,12 +70,10 @@ const Sharing = ({sharingCode}: TProps) => {
     }
 
     async function copyWithClipboard(text: string) {
-      console.log("copyWithClipboard")
       await navigator.clipboard.writeText(text)
     }
 
     function copyWithExecCommand(text: string) {
-      console.log("copyWithExecCommand")
       temporaryElement = document.createElement("span")
       temporaryElement.textContent = text
       temporaryElement.style.display = "none"
