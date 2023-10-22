@@ -1,11 +1,20 @@
 "use client"
 
-import {useState, useEffect} from "react"
+import {useState, useEffect, type ReactNode} from "react"
+import dynamic from "next/dynamic"
+import Script from "next/script"
 import Image from "next/image"
 import Loading from "@/components/Loading"
-import {kakaoLogoBlack} from "@/assets/images"
+import {kakaoLogoBlackX, kakaoLogoBlack} from "@/assets/images"
 import {ClipboardCheck, Clipboard, Share} from "@/assets/icons"
 import {DOMAIN} from "@/constants/service"
+
+const Portal = dynamic(() => import("../../../Portal"), {
+  loading: () => <></>,
+})
+const ErrorAlert = dynamic(() => import("../../../FlowAlert"), {
+  loading: () => <></>,
+})
 
 type TProps = {
   sharingCode: string
@@ -13,9 +22,11 @@ type TProps = {
 
 const Sharing = ({sharingCode}: TProps) => {
   const [isCopied, setIsCopied] = useState(false)
+  const [isKakaoSDKLoadFailed, setIsKakaoSDKLoadFailed] = useState(false)
   const [isOsShareLoading, setIsOsShareLoading] = useState(false)
+  const [alertMessage, setAlertMessage] = useState<ReactNode>(null)
 
-  const SHARING_URL = `${DOMAIN}/${sharingCode}`
+  const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
   const TIME_OUT = 5000
   let timer: NodeJS.Timeout | null = null
 
@@ -28,7 +39,17 @@ const Sharing = ({sharingCode}: TProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  function initializeKakao() {
+    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_KEY)
+  }
+
+  function failToInitializeKakao() {
+    setIsKakaoSDKLoadFailed(true)
+  }
+
+  // TODO: 배포 상태에서 동작을 안 함
   async function copyToClipboard() {
+    console.log("isCopied", isCopied)
     if (isCopied) {
       return
     }
@@ -37,13 +58,14 @@ const Sharing = ({sharingCode}: TProps) => {
 
     try {
       const isClipboardSupported = Boolean(navigator?.clipboard)
+      console.log("isClipboardSupported", isClipboardSupported)
       isClipboardSupported
         ? await copyWithClipboard(SHARING_URL)
         : copyWithExecCommand(SHARING_URL)
 
       handleIsCopied()
     } catch (_) {
-      alert("클립보드에 복사하기를 실패했습니다.")
+      setAlertMessage("클립보드에 복사하기를 실패했습니다.")
     } finally {
       if (temporaryElement) {
         document.body.removeChild(temporaryElement)
@@ -51,10 +73,12 @@ const Sharing = ({sharingCode}: TProps) => {
     }
 
     async function copyWithClipboard(text: string) {
+      console.log("copyWithClipboard")
       await navigator.clipboard.writeText(text)
     }
 
     function copyWithExecCommand(text: string) {
+      console.log("copyWithExecCommand")
       temporaryElement = document.createElement("span")
       temporaryElement.textContent = text
       temporaryElement.style.display = "none"
@@ -74,6 +98,33 @@ const Sharing = ({sharingCode}: TProps) => {
     }, TIME_OUT)
   }
 
+  function shareOverKakao() {
+    // 개발자 도구에서 모바일 모드로 전환한 상태에서는 동작 안 함: https://devtalk.kakao.com/t/scheme-does-not-have-a-registered-handler/112757
+
+    const isKakaoInitialized = window.Kakao.isInitialized()
+    if (!isKakaoInitialized) {
+      setAlertMessage(
+        <>
+          현재 카카오톡 공유하기가 정상적으로 동작하지 않습니다.
+          <br />
+          재시도 또는 다른 방법을 이용해주세요.
+        </>
+      )
+      failToInitializeKakao()
+
+      return
+    }
+
+    window.Kakao.Share.sendDefault({
+      objectType: "text",
+      text: "기본 템플릿으로 제공되는 텍스트 템플릿은 텍스트를 최대 200자까지 표시할 수 있습니다. 텍스트 템플릿은 텍스트 영역과 하나의 기본 버튼을 가집니다. 임의의 버튼을 설정할 수도 있습니다. 여러 장의 이미지, 프로필 정보 등 보다 확장된 형태의 카카오톡 공유는 다른 템플릿을 이용해 보낼 수 있습니다.",
+      link: {
+        mobileWebUrl: SHARING_URL,
+        webUrl: SHARING_URL,
+      },
+    })
+  }
+
   async function shareOverOs() {
     const isShareSupported = Boolean(navigator?.share)
 
@@ -90,46 +141,72 @@ const Sharing = ({sharingCode}: TProps) => {
         throw new Error("공유하기 기능을 호출하는 데 실패했습니다.")
       }
     } catch (error: unknown) {
-      alert((error as Error).message)
+      setAlertMessage((error as Error).message)
     } finally {
       setIsOsShareLoading(false)
     }
   }
 
+  function closeAlert() {
+    setAlertMessage(null)
+  }
+
   return (
-    <div className="sharing pl-4 pr-4">
-      <button className="url-copy f-center" onClick={copyToClipboard}>
-        {isCopied ? (
-          <>
-            <ClipboardCheck className="lg mb-1" />
-            복사완료
-          </>
-        ) : (
-          <>
-            <Clipboard className="lg mb-1" />
-            URL 복사
-          </>
+    <>
+      <Script
+        src="https://t1.kakaocdn.net/kakao_js_sdk/2.4.0/kakao.min.js"
+        onLoad={initializeKakao}
+        onError={failToInitializeKakao}
+      />
+
+      <div className="sharing pl-4 pr-4">
+        <button className="url-copy f-center" onClick={copyToClipboard}>
+          {isCopied ? (
+            <>
+              <ClipboardCheck className="lg mb-1" />
+              복사완료
+            </>
+          ) : (
+            <>
+              <Clipboard className="lg mb-1" />
+              URL 복사
+            </>
+          )}
+        </button>
+        <button
+          className="kakao-sharing f-center"
+          onClick={shareOverKakao}
+          disabled={isKakaoSDKLoadFailed}
+        >
+          <Image
+            className="mb-2"
+            src={isKakaoSDKLoadFailed ? kakaoLogoBlackX : kakaoLogoBlack}
+            alt="카카오 공유하기"
+            width={32}
+            height={32}
+          />
+          {isKakaoSDKLoadFailed ? "준비중" : "카카오톡"}
+        </button>
+        <button className="web-sharing f-center" onClick={shareOverOs}>
+          {isOsShareLoading ? (
+            <Loading isLoading className="mb-2" />
+          ) : (
+            <Share className="lg mb-1" />
+          )}
+          공유하기
+        </button>
+      </div>
+
+      <Portal
+        render={() => (
+          <ErrorAlert
+            isAlerting={alertMessage !== null}
+            content={alertMessage}
+            onClose={closeAlert}
+          />
         )}
-      </button>
-      <button className="kakao-sharing f-center">
-        <Image
-          className="mb-2"
-          src={kakaoLogoBlack}
-          alt="카카오 공유하기"
-          width={32}
-          height={32}
-        />
-        카카오톡
-      </button>
-      <button className="web-sharing f-center" onClick={shareOverOs}>
-        {isOsShareLoading ? (
-          <Loading isLoading={true} className="mb-2" />
-        ) : (
-          <Share className="lg mb-1" />
-        )}
-        공유하기
-      </button>
-    </div>
+      />
+    </>
   )
 }
 

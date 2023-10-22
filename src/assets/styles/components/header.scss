@@ -3,7 +3,8 @@
 
 // 헤더 사용하는 페이지 최상단 wrapper 추가
 .my-page,
-.creation {
+.creation,
+.creation-success {
   header {
     display: flex;
     justify-content: space-between;
