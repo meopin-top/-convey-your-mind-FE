@@ -19,4 +19,8 @@ export const ROLLING_PAPER = {
     QUERY_SUCCESS: 3001,
     QUERY_FAILURE: 3011,
   },
+  CREATION: {
+    SUCCESS: 3002,
+    FAILURE: 3012,
+  },
 } as const
