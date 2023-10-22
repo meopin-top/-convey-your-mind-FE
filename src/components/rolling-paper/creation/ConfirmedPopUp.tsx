@@ -28,7 +28,7 @@ type TProps = {
 
 const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
   const [isErrorAlertOpen, setIsErrorAlertOpen] = useState(false)
-  const [errorMessage, setErrorMessage] = useState("")
+  const [alertMessage, setAlertMessage] = useState("")
 
   const {toWhom} = useContext(WhomStore)
   const {personnel} = useContext(PersonnelStore)
@@ -80,14 +80,14 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
 
     if (code === ROLLING_PAPER.CREATION.DUPLICATED_SHARING_CODE) {
       setIsErrorAlertOpen(true)
-      setErrorMessage("이미 존재하는 공유코드입니다.")
+      setAlertMessage("이미 존재하는 공유코드입니다.")
 
       return
     }
 
     if (code === ROLLING_PAPER.CREATION.FAILURE) {
       setIsErrorAlertOpen(true)
-      setErrorMessage("롤링페이퍼를 생성하는 데 실패했습니다.")
+      setAlertMessage("롤링페이퍼를 생성하는 데 실패했습니다.")
 
       return
     }
@@ -97,7 +97,7 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
 
   function closeErrorAlert() {
     setIsErrorAlertOpen(false)
-    setErrorMessage("")
+    setAlertMessage("")
   }
 
   return (
@@ -144,7 +144,7 @@ const ConfirmedPopUp = ({isAlerting, onClose}: TProps) => {
       <ErrorAlert
         isAlerting={isErrorAlertOpen}
         onClose={closeErrorAlert}
-        content={errorMessage}
+        content={alertMessage}
       />
     </>
   )
