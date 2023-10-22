@@ -1,8 +1,9 @@
 import {SIGN_IN} from "@/constants/response-code"
 
-interface Window {
-  Kakao: any
-  naver: any
+declare global {
+  interface Window {
+    Kakao: any
+  }
 }
 
 export type TSignInResponse = {

@@ -1,6 +1,10 @@
+import {Suspense} from "react"
+// import {redirect} from "next/navigation"
 import Anchor from "next/link"
 import {Link, Sharing} from "@/components/rolling-paper/creation/[sharingCode]"
-// import ROUTE from "@/constants/route"
+import {Header, Loading, NeedLoggedIn} from "@/components"
+import ROUTE from "@/constants/route"
+import {ROLLING_PAPER} from "@/constants/response-code"
 
 type TProps = {
   params: {
@@ -8,26 +12,46 @@ type TProps = {
   }
 }
 
-const CreationSuccess = ({params}: TProps) => {
+const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
+  const data = await fetch(
+    `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/invite-code/${encodeURI(
+      sharingCode
+    )}`
+  )
+
+  const {code} = await data.json()
+
+  // TODO: 주석 해제
+  if (code === ROLLING_PAPER.INVITE_CODE.QUERY_FAILURE) {
+    // 존재하지 않는 공유 코드면
+    // redirect(ROUTE.MY_PAGE)
+  }
+
   return (
-    <main className="creation-success root-wrapper">
-      <div className="title f-center">
-        <h2>롤링페이퍼 만들기</h2>
-        <h1>성공!</h1>
-      </div>
-      <Link sharingCode={params.sharingCode} />
-      <Sharing sharingCode={params.sharingCode} />
-      <button className="to-rolling-paper mt-4 radius-lg shadow-md">
-        <Anchor href={"#"} className="f-center">
-          롤링 페이퍼 쓰러 가기{/* TODO: href 변경 */}
-        </Anchor>
-      </button>
-      <button className="to-my-page mt-4 radius-lg shadow-md">
-        <Anchor href={"#"} className="f-center">
-          마이 페이지{/* TODO: href 변경 */}
-        </Anchor>
-      </button>
-    </main>
+    <Suspense fallback={<Loading isLoading />}>
+      <NeedLoggedIn />
+
+      <main className="creation-success root-wrapper">
+        <Header />
+
+        <div className="title f-center mt-2">
+          <h2>롤링페이퍼 만들기</h2>
+          <h1>성공!</h1>
+        </div>
+        <Link sharingCode={sharingCode} />
+        <Sharing sharingCode={sharingCode} />
+        <button className="to-rolling-paper mt-4 radius-lg shadow-md">
+          <Anchor href={"#"} className="f-center">
+            롤링 페이퍼 쓰러 가기{/* TODO: href 변경 */}
+          </Anchor>
+        </button>
+        <button className="to-my-page mt-4 radius-lg shadow-md">
+          <Anchor href={ROUTE.MY_PAGE} className="f-center">
+            마이 페이지
+          </Anchor>
+        </button>
+      </main>
+    </Suspense>
   )
 }
 
