@@ -5,6 +5,7 @@ import dynamic from "next/dynamic"
 import Script from "next/script"
 import Image from "next/image"
 import Loading from "@/components/Loading"
+import useCopy from "@/hooks/use-copy"
 import {kakaoLogoBlackX, kakaoLogoBlack} from "@/assets/images"
 import {ClipboardCheck, Clipboard, Share} from "@/assets/icons"
 import {DOMAIN} from "@/constants/service"
@@ -25,6 +26,8 @@ const Sharing = ({sharingCode}: TProps) => {
   const [isKakaoSDKLoadFailed, setIsKakaoSDKLoadFailed] = useState(false)
   const [isOsShareLoading, setIsOsShareLoading] = useState(false)
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null)
+
+  const {copy} = useCopy()
 
   const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
   const TIME_OUT = 5000
@@ -52,36 +55,12 @@ const Sharing = ({sharingCode}: TProps) => {
       return
     }
 
-    let temporaryElement: HTMLTextAreaElement | null = null
-
     try {
-      const isClipboardSupported = Boolean(navigator?.clipboard)
-      isClipboardSupported
-        ? await copyWithClipboard(SHARING_URL)
-        : copyWithExecCommand(SHARING_URL)
+      await copy(SHARING_URL)
 
       handleIsCopied()
     } catch (_) {
       setAlertMessage("클립보드에 복사하기를 실패했습니다.")
-    } finally {
-      if (temporaryElement) {
-        document.body.removeChild(temporaryElement)
-      }
-    }
-
-    async function copyWithClipboard(text: string) {
-      await navigator.clipboard.writeText(text)
-    }
-
-    function copyWithExecCommand(text: string) {
-      temporaryElement = document.createElement("textarea")
-      temporaryElement.value = text
-      temporaryElement.style.opacity = "0"
-
-      document.body.appendChild(temporaryElement)
-
-      temporaryElement.select()
-      document.execCommand("copy")
     }
   }
 
@@ -130,7 +109,7 @@ const Sharing = ({sharingCode}: TProps) => {
         await navigator.share({
           title: "마음을 전해요",
           text: "롤링페이퍼에 참여하세요",
-          url: SHARING_URL,
+          url: SHARING_URL
         })
       } else {
         throw new Error("공유하기 기능을 호출하는 데 실패했습니다.")
