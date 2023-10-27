@@ -87,8 +87,19 @@ export function createWriteTextMock() {
   })
 }
 
-export function removeCreateWriteTextMock() {
+export function removeWriteTextMock() {
   delete (window.navigator.clipboard as {writeText: any}).writeText
+}
+
+export function createExecCommandMock() {
+  Object.defineProperty(document, "execCommand", {
+    value: jest.fn(),
+    configurable: true,
+  })
+}
+
+export function removeExecCommandMock() {
+  delete (document as any).execCommand
 }
 
 export function createShareMock() {

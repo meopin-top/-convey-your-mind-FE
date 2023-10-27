@@ -1,9 +1,10 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import Sharing from "@/components/rolling-paper/creation/[sharingCode]/Sharing"
+import type {TProps as TPortalProps} from "@/components/Portal"
 import {
   createShareMock,
   createWriteTextMock,
-  removeCreateWriteTextMock,
+  removeWriteTextMock,
   removeShareMock,
 } from "@/__mocks__/window"
 
@@ -21,6 +22,16 @@ jest.mock("../../../../../components/Loading.tsx", () => ({
   __esModule: true,
   default: () => <div>loading</div>,
 }))
+jest.mock("../../../../../components/Portal.tsx", () => ({
+  __esModule: true,
+  default: ({render}: TPortalProps) => <>{render()}</>
+}))
+jest.mock("../../../../../components/FlowAlert.tsx", () => ({
+  __esModule: true,
+  default: ({isAlerting}: {isAlerting: boolean}) => (
+    <>ErrorAlert {isAlerting ? "open" : "close"}</>
+  ),
+}))
 
 describe("Sharing", () => {
   beforeAll(() => {
@@ -28,17 +39,21 @@ describe("Sharing", () => {
   })
 
   afterAll(() => {
-    removeCreateWriteTextMock()
+    removeWriteTextMock()
   })
 
-  it("'URL 복사'가 포함된 버튼을 렌더링한다.", () => {
+  it("'URL 복사'가 포함된 버튼을 렌더링한다.", async () => {
     // given, when
     render(<Sharing sharingCode="test" />)
+
     const copyButton = screen.getByRole("button", {
       name: /URL 복사/,
     })
+
     // then
-    expect(copyButton).toBeInTheDocument()
+    await waitFor(() => {
+      expect(copyButton).toBeInTheDocument()
+    })
   })
 
   it("'URL 복사' 버튼을 클릭한 뒤에는 '복사완료' 버튼을 렌더링한다.", async () => {
@@ -55,6 +70,7 @@ describe("Sharing", () => {
     const copiedButton = await screen.findByRole("button", {
       name: /복사완료/,
     })
+
     expect(copiedButton).toBeInTheDocument()
   })
 
@@ -81,13 +97,14 @@ describe("Sharing", () => {
   it("'공유하기' 버튼을 누르기 전에는 Share 아이콘을 렌더링한다.", () => {
     // given, when
     render(<Sharing sharingCode="test" />)
+
     const sharingButton = screen.getByRole("button", {
       name: /공유하기/,
     })
     const sharingIcon = screen.getByText("share")
 
     // then
-    expect(sharingButton).toBeInTheDocument
+    expect(sharingButton).toBeInTheDocument()
     expect(sharingIcon).toBeInTheDocument()
   })
 
@@ -112,12 +129,8 @@ describe("Sharing", () => {
     })
   })
 
-  it("'navigator.share가 정의되어 있지 않다면 'alert'가 호출된다.", async () => {
+  it("'navigator.share'가 정의되어 있지 않다면 ErrorAlert가 렌더링된다.", async () => {
     // given
-    const windowAlertMock: jest.SpyInstance = jest
-      .spyOn(window, "alert")
-      .mockImplementation()
-
     render(<Sharing sharingCode="test" />)
 
     const sharingButton = screen.getByRole("button", {
@@ -128,17 +141,13 @@ describe("Sharing", () => {
     fireEvent.click(sharingButton)
 
     // then
-    await waitFor(() => {
-      expect(windowAlertMock).toHaveBeenCalled()
+    const errorAlert = await screen.findByText("ErrorAlert open")
 
-      windowAlertMock.mockRestore()
-    })
+    expect(errorAlert).toBeInTheDocument()
   })
 
   it("'공유하기' 기능이 끝난 뒤에는 다시 Share 아이콘을 렌더링한다.", async () => {
     // given
-    jest.spyOn(window, "alert").mockImplementation()
-
     render(<Sharing sharingCode="test" />)
     const sharingButton = screen.getByRole("button", {
       name: /공유하기/,
