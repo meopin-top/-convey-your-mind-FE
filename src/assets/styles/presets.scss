@@ -64,7 +64,7 @@ input {
   }
 }
 
-#portal > *,
+#portal > *:not(#toast),
 #redirecting,
 #bottom-sheet,
 #navigation-bar {

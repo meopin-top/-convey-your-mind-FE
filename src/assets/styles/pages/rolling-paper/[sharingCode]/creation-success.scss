@@ -66,3 +66,11 @@
     }
   }
 }
+
+@media screen and (max-width: 320px) {
+  #toast {
+    .bell-icon {
+      display: none;
+    }
+  }
+}

@@ -4,10 +4,10 @@ import {useState, useEffect, type ReactNode} from "react"
 import dynamic from "next/dynamic"
 import Script from "next/script"
 import Image from "next/image"
-import Loading from "@/components/Loading"
+import {Loading, Toast} from "@/components"
 import useCopy from "@/hooks/use-copy"
 import {kakaoLogoBlackX, kakaoLogoBlack} from "@/assets/images"
-import {ClipboardCheck, Clipboard, Share} from "@/assets/icons"
+import {ClipboardCheck, Clipboard, Share, Bell} from "@/assets/icons"
 import {DOMAIN} from "@/constants/service"
 
 const Portal = dynamic(() => import("../../../Portal"), {
@@ -30,7 +30,7 @@ const Sharing = ({sharingCode}: TProps) => {
   const {copy} = useCopy()
 
   const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
-  const TIME_OUT = 5000
+  const TIME_OUT = 3_000
   let timer: NodeJS.Timeout | null = null
 
   useEffect(() => {
@@ -109,7 +109,7 @@ const Sharing = ({sharingCode}: TProps) => {
         await navigator.share({
           title: "마음을 전해요",
           text: "롤링페이퍼에 참여하세요",
-          url: SHARING_URL
+          url: SHARING_URL,
         })
       } else {
         throw new Error("공유하기 기능을 호출하는 데 실패했습니다.")
@@ -173,11 +173,33 @@ const Sharing = ({sharingCode}: TProps) => {
 
       <Portal
         render={() => (
-          <ErrorAlert
-            isAlerting={alertMessage !== null}
-            content={alertMessage}
-            onClose={closeAlert}
-          />
+          <>
+            <ErrorAlert
+              isAlerting={alertMessage !== null}
+              content={alertMessage}
+              onClose={closeAlert}
+            />
+            <Toast
+              isOpen={isCopied}
+              style={{
+                left: "10px",
+                top: "calc(100dvh - 74px - 20px)",
+                width: "calc(100vw - 20px)",
+                height: "74px",
+                color: "#000",
+                fontSize: "15px",
+                fontWeight: "bold",
+                backgroundColor: "rgba(123, 97, 255, 0.5)",
+                border: "1px solid #000",
+              }}
+            >
+              <Bell
+                className="lg mr-2 bell-icon"
+                style={{position: "absolute", left: "20px"}}
+              />
+              클립보드에 복사되었습니다
+            </Toast>
+          </>
         )}
       />
     </>
