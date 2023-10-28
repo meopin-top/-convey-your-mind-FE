@@ -17,6 +17,7 @@ jest.mock("../../../../../assets/icons/index.ts", () => ({
   ClipboardCheck: () => <svg>clipboard-check</svg>,
   Clipboard: () => <svg>clipboard</svg>,
   Share: () => <svg>share</svg>,
+  Bell: () => <svg>bell</svg>,
 }))
 jest.mock("../../../../../components/Loading.tsx", () => ({
   __esModule: true,
@@ -24,12 +25,18 @@ jest.mock("../../../../../components/Loading.tsx", () => ({
 }))
 jest.mock("../../../../../components/Portal.tsx", () => ({
   __esModule: true,
-  default: ({render}: TPortalProps) => <>{render()}</>
+  default: ({render}: TPortalProps) => <>{render()}</>,
 }))
 jest.mock("../../../../../components/FlowAlert.tsx", () => ({
   __esModule: true,
   default: ({isAlerting}: {isAlerting: boolean}) => (
     <>ErrorAlert {isAlerting ? "open" : "close"}</>
+  ),
+}))
+jest.mock("../../../../../components/Toast.tsx", () => ({
+  __esModule: true,
+  default: ({isOpen}: {isOpen: boolean}) => (
+    <>Toast {isOpen ? "open" : "close"}</>
   ),
 }))
 
@@ -56,7 +63,7 @@ describe("Sharing", () => {
     })
   })
 
-  it("'URL 복사' 버튼을 클릭한 뒤에는 '복사완료' 버튼을 렌더링한다.", async () => {
+  it("'URL 복사' 버튼을 클릭한 뒤에는 '복사완료' 버튼과 토스트 팝업을 렌더링한다.", async () => {
     // given
     render(<Sharing sharingCode="test" />)
     const copyButton = screen.getByRole("button", {
@@ -70,11 +77,13 @@ describe("Sharing", () => {
     const copiedButton = await screen.findByRole("button", {
       name: /복사완료/,
     })
+    const toastPopUp = await screen.findByText(/Toast open/)
 
     expect(copiedButton).toBeInTheDocument()
+    expect(toastPopUp).toBeInTheDocument()
   })
 
-  it("일정 시간이 지난 뒤 다시 'URL 복사' 버튼을 렌더링한다.", async () => {
+  it("일정 시간이 지난 뒤 다시 'URL 복사' 버튼을 렌더링하고 토스트 팝업이 사라진다.", async () => {
     // given
     jest.useFakeTimers()
     render(<Sharing sharingCode="test" />)
@@ -85,13 +94,16 @@ describe("Sharing", () => {
     fireEvent.click(copyButton)
 
     // when
-    jest.advanceTimersByTime(5000)
+    jest.advanceTimersByTime(3000)
 
     // then
     const copyButtonAgain = await screen.findByRole("button", {
       name: /URL 복사/,
     })
+    const toastPopUp = await screen.findByText(/Toast close/)
+
     expect(copyButtonAgain).toBeInTheDocument()
+    expect(toastPopUp).toBeInTheDocument()
   })
 
   it("'공유하기' 버튼을 누르기 전에는 Share 아이콘을 렌더링한다.", () => {
@@ -141,7 +153,7 @@ describe("Sharing", () => {
     fireEvent.click(sharingButton)
 
     // then
-    const errorAlert = await screen.findByText("ErrorAlert open")
+    const errorAlert = await screen.findByText(/ErrorAlert open/)
 
     expect(errorAlert).toBeInTheDocument()
   })
