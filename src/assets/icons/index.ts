@@ -1,3 +1,4 @@
+import Bell from "./bell.svg"
 import Bulb from "./bulb.svg"
 import ClipboardCheck from "./clipboard-check.svg"
 import Clipboard from "./clipboard.svg"
@@ -15,6 +16,7 @@ import UserCircle from "./user-circle.svg"
 import WritePaper from "./write-paper.svg"
 
 export {
+  Bell,
   Bulb,
   ClipboardCheck,
   Clipboard,

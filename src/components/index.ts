@@ -10,6 +10,7 @@ import Portal from "./Portal"
 import Redirecting from "./Redirecting"
 import Reducer from "./Reducer"
 import SecretInput from "./SecretInput"
+import Toast from "./Toast"
 
 export {
   Alert,
@@ -25,4 +26,5 @@ export {
   Redirecting,
   Reducer,
   SecretInput,
+  Toast,
 }

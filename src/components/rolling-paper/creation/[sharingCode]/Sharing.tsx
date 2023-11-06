@@ -4,9 +4,10 @@ import {useState, useEffect, type ReactNode} from "react"
 import dynamic from "next/dynamic"
 import Script from "next/script"
 import Image from "next/image"
-import Loading from "@/components/Loading"
+import {Loading, Toast} from "@/components"
+import useCopy from "@/hooks/use-copy"
 import {kakaoLogoBlackX, kakaoLogoBlack} from "@/assets/images"
-import {ClipboardCheck, Clipboard, Share} from "@/assets/icons"
+import {ClipboardCheck, Clipboard, Share, Bell} from "@/assets/icons"
 import {DOMAIN} from "@/constants/service"
 
 const Portal = dynamic(() => import("../../../Portal"), {
@@ -26,8 +27,10 @@ const Sharing = ({sharingCode}: TProps) => {
   const [isOsShareLoading, setIsOsShareLoading] = useState(false)
   const [alertMessage, setAlertMessage] = useState<ReactNode>(null)
 
+  const {copy} = useCopy()
+
   const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
-  const TIME_OUT = 5000
+  const TIME_OUT = 3_000
   let timer: NodeJS.Timeout | null = null
 
   useEffect(() => {
@@ -47,46 +50,17 @@ const Sharing = ({sharingCode}: TProps) => {
     setIsKakaoSDKLoadFailed(true)
   }
 
-  // TODO: 배포 상태에서 동작을 안 함
   async function copyToClipboard() {
-    console.log("isCopied", isCopied)
     if (isCopied) {
       return
     }
 
-    let temporaryElement: HTMLSpanElement | null = null
-
     try {
-      const isClipboardSupported = Boolean(navigator?.clipboard)
-      console.log("isClipboardSupported", isClipboardSupported)
-      isClipboardSupported
-        ? await copyWithClipboard(SHARING_URL)
-        : copyWithExecCommand(SHARING_URL)
+      await copy(SHARING_URL)
 
       handleIsCopied()
     } catch (_) {
       setAlertMessage("클립보드에 복사하기를 실패했습니다.")
-    } finally {
-      if (temporaryElement) {
-        document.body.removeChild(temporaryElement)
-      }
-    }
-
-    async function copyWithClipboard(text: string) {
-      console.log("copyWithClipboard")
-      await navigator.clipboard.writeText(text)
-    }
-
-    function copyWithExecCommand(text: string) {
-      console.log("copyWithExecCommand")
-      temporaryElement = document.createElement("span")
-      temporaryElement.textContent = text
-      temporaryElement.style.display = "none"
-
-      document.body.appendChild(temporaryElement)
-
-      temporaryElement.focus()
-      document.execCommand("copy")
     }
   }
 
@@ -199,11 +173,33 @@ const Sharing = ({sharingCode}: TProps) => {
 
       <Portal
         render={() => (
-          <ErrorAlert
-            isAlerting={alertMessage !== null}
-            content={alertMessage}
-            onClose={closeAlert}
-          />
+          <>
+            <ErrorAlert
+              isAlerting={alertMessage !== null}
+              content={alertMessage}
+              onClose={closeAlert}
+            />
+            <Toast
+              isOpen={isCopied}
+              style={{
+                left: "10px",
+                top: "calc(100dvh - 74px - 20px)",
+                width: "calc(100vw - 20px)",
+                height: "74px",
+                color: "#000",
+                fontSize: "15px",
+                fontWeight: "bold",
+                backgroundColor: "rgba(123, 97, 255, 0.5)",
+                border: "1px solid #000",
+              }}
+            >
+              <Bell
+                className="lg mr-2 bell-icon"
+                style={{position: "absolute", left: "20px"}}
+              />
+              클립보드에 복사되었습니다
+            </Toast>
+          </>
         )}
       />
     </>
