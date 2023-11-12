@@ -25,3 +25,8 @@ export const ROLLING_PAPER = {
     DUPLICATED_SHARING_CODE: 3102,
   },
 } as const
+
+export const ACCOUNT_INQUIRY = {
+  SUCCESS: 1303,
+  FAILURE: 1311,
+}
