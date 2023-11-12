@@ -12,7 +12,7 @@ const Canvas = () => {
   const {handleMouseDown, handleMouseUp, getCoordinate} = useMouseTracker()
 
   function handleCanvasMouseDown(event: MouseEvent<HTMLDivElement>) {
-    if (!Boolean(drawingMode)) {
+    if (!drawingMode) {
       return
     }
 
@@ -20,7 +20,7 @@ const Canvas = () => {
   }
 
   function handleCanvasMouseUp(event: MouseEvent<HTMLDivElement>) {
-    if (!Boolean(drawingMode)) {
+    if (!drawingMode) {
       return
     }
 

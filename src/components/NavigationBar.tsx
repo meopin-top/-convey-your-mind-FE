@@ -48,7 +48,7 @@ const NavigationBar = () => {
   const logOut = useLogOut()
 
   useEffect(() => {
-    setIsLoggedIn(Boolean(Storage.get("nickName")))
+    setIsLoggedIn(!!Storage.get("nickName"))
   }, [])
 
   useEffect(() => {

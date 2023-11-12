@@ -107,7 +107,7 @@ const Sharing = ({sharingCode}: TProps) => {
   }
 
   async function shareOverOs() {
-    const isShareSupported = Boolean(navigator?.share)
+    const isShareSupported = !!navigator?.share
 
     setIsOsShareLoading(true)
 

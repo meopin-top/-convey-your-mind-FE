@@ -112,13 +112,13 @@ const WithoutSignUp = () => {
             <Loading isLoading={isLoading} />
             {isInvalidAlert ? (
               <FlowAlert
-                isAlerting={Boolean(alertMessage)}
+                isAlerting={!!alertMessage}
                 onClose={closeAlert}
                 content={alertMessage}
               />
             ) : (
               <FlowAlert
-                isAlerting={Boolean(alertMessage)}
+                isAlerting={!!alertMessage}
                 content={alertMessage}
                 defaultButton="로그인"
                 onClose={startWithSignIn}

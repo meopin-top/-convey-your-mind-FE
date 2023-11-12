@@ -25,12 +25,12 @@ const OauthMiddleware = () => {
 
   const {request} = useRequest()
 
-  const isKakaoSucceeded = Boolean(
+  const isKakaoSucceeded = !!(
     searchParams.get("code") && !searchParams.get("state")
   )
-  const isNaverSucceeded = Boolean(
+  const isNaverSucceeded = !!(
     searchParams.get("code") &&
-      searchParams.get("state") === process.env.NEXT_PUBLIC_NAVER_STATE
+    searchParams.get("state") === process.env.NEXT_PUBLIC_NAVER_STATE
   )
   const failureMessage = searchParams.get("error")
     ? searchParams.get("error_description")
