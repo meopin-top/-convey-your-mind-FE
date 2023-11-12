@@ -41,7 +41,7 @@ const EmailInput = () => {
   }
 
   function checkValidation() {
-    if (email.length !== 0 && !VALIDATOR.EMAIL.test(email)) {
+    if (email.length === 0 || !VALIDATOR.EMAIL.test(email)) {
       setAlert({
         message: (
           <>
