@@ -64,7 +64,7 @@ const SignUp = () => {
       return
     }
 
-    if (!VALIDATOR.PASSWORD._.test(password)) {
+    if (!VALIDATOR.PASSWORD.test(password)) {
       setAlertMessage(
         "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
       )
@@ -128,23 +128,21 @@ const SignUp = () => {
       <section className="validity mb-1">
         <div
           className={`${
-            VALIDATOR.PASSWORD.ENGLISH.test(password) ? "valid" : "invalid"
+            VALIDATOR.ENGLISH.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
         <span>영문</span>
         <div
           className={`${
-            VALIDATOR.PASSWORD.NUMBER.test(password) ? "valid" : "invalid"
+            VALIDATOR.NUMBER.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
         <span>숫자</span>
         <div
           className={`${
-            VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)
-              ? "valid"
-              : "invalid"
+            VALIDATOR.SPECIAL_CHARACTER.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
