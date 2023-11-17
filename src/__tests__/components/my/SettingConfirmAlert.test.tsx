@@ -1,12 +1,24 @@
-import {render, screen} from "@testing-library/react"
-import SettingConfirmAlert from "@/components/my/SettingConfirmAlert"
+import {render, screen, fireEvent} from "@testing-library/react"
+import Component from "@/components/my/SettingConfirmAlert"
+import Store from "@/store/setting-auth"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 
-// jest.mock("next/navigation", () => ({
-//   __esModule: true,
-//   useRouter: jest.fn(),
-// }))
+const SettingConfirmAlert = ({setChecked = jest.fn()}: {setChecked?: () => void}) => {
+  return (
+    <Store.Provider value={{checked: false, setChecked}}>
+      <Component isAlerting onClose={jest.fn()} />
+    </Store.Provider>
+  )
+}
+
+const routerPushMock = jest.fn()
+jest.mock("next/navigation", () => ({
+  __esModule: true,
+  useRouter: () => ({
+    push: routerPushMock,
+  }),
+}))
 jest.mock("../../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TPortalProps) => <>{render()}</>,
@@ -21,7 +33,7 @@ jest.mock("../../../components/SecretInput.tsx", () => ({
 describe("SettingConfirmAlert", () => {
   it("내용과 버튼을 올바르게 렌더링한다.", async () => {
     // given
-    render(<SettingConfirmAlert isAlerting onClose={jest.fn()} />)
+    render(<SettingConfirmAlert />)
 
     // when
     const title = await screen.findByText(/내 설정 접근/)
@@ -36,5 +48,21 @@ describe("SettingConfirmAlert", () => {
     expect(content).toBeInTheDocument()
     expect(cancelButton).toBeInTheDocument()
     expect(confirmButton).toBeInTheDocument()
+  })
+
+  // TODO: change
+  it("확인하기 버튼을 누르면 인증 확인 Context가 true로 변경된다.", async () => {
+    // given
+    const setCheckedMock = jest.fn()
+
+    render(<SettingConfirmAlert setChecked={setCheckedMock} />)
+
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+
+    // when
+    fireEvent.click(confirmButton)
+
+    // then
+    expect(setCheckedMock).toHaveBeenCalledWith(true)
   })
 })
