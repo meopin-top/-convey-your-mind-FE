@@ -1,7 +1,9 @@
-// TODO: useRouter <- 비밀번호 일치 시 내 설정 페이지로 이동
-import type {KeyboardEvent} from "react"
-import {Alert, SecretInput, Portal} from "../"
+import {useContext, type KeyboardEvent} from "react"
+import {useRouter} from "next/navigation"
+import {Alert, SecretInput, Portal} from "@/components"
+import Store from "@/store/setting-auth"
 import useInput from "@/hooks/use-input"
+import ROUTE from "@/constants/route"
 // TODO: useRequest <- 비밀번호 확인 API 호출
 // TODO: FlowAlert <- 비밀번호가 일치하지 않습니다.
 
@@ -11,13 +13,24 @@ type TProps = {
 }
 
 const SettingConfirmAlert = ({isAlerting, onClose}: TProps) => {
+  const {setChecked} = useContext(Store)
+
+  const router = useRouter()
+
   const [password, handlePassword] = useInput()
 
   function handlePasswordInput(event: KeyboardEvent<HTMLInputElement>) {
     const isEnterKeyDowned = event.key === "Enter"
     if (isEnterKeyDowned) {
-      //   signIn()
+      checkPassword()
     }
+  }
+
+  async function checkPassword() {
+    // TODO: API 연동
+
+    setChecked(true)
+    router.push(ROUTE.MY_SETTING)
   }
 
   return (
@@ -49,7 +62,7 @@ const SettingConfirmAlert = ({isAlerting, onClose}: TProps) => {
               취소
             </Alert.Button>
             <Alert.Button
-              onClick={() => {}}
+              onClick={checkPassword}
               type="fill-dark-4"
               style={{flex: "1 0 120px", height: "32px"}}
             >
