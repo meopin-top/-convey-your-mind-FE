@@ -8,7 +8,8 @@ const ROUTE = {
   OAUTH_MIDDLEWARE: "/oauth-middleware",
   ACCOUNT_INQUIRY: "/account-inquiry",
   ROLLING_PAPER_CREATION: "/rolling-paper/creation",
-  ROLLING_PAPER_WRITE: "/rolling-paper/write",
+  ROLLING_PAPER_EDIT: "/rolling-paper/edit",
+  ROLLING_PAPER_VIEW: "/rolling-paper/view",
 } as const
 
 export default ROUTE
