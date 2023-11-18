@@ -16,7 +16,7 @@ export type TProps = {
   userId: string
   password: string
   onClose: () => void
-  onSubmit: (confirmedPassword: string) => void
+  submit: (confirmedPassword: string, email: string) => void
 }
 
 const ConfirmedPopUp = ({
@@ -25,7 +25,7 @@ const ConfirmedPopUp = ({
   userId,
   password,
   onClose,
-  onSubmit,
+  submit,
 }: TProps) => {
   const [alertMessage, setAlertMessage] = useState<ReactNode | null>(null)
 
@@ -64,7 +64,7 @@ const ConfirmedPopUp = ({
       return
     }
 
-    onSubmit(confirmedPassword)
+    submit(confirmedPassword, email)
   }
 
   function closeAlert() {

@@ -79,15 +79,23 @@ const SignUp = () => {
     setIsPopUpOpened(!isPopUpOpened)
   }
 
-  async function signUp(confirmedPassword: string) {
+  async function signUp(confirmedPassword: string, email: string) {
     const {message, code, data} = await request({
       path: "/users/sign-up",
       method: "post",
-      body: {
-        userId,
-        password,
-        passwordCheck: confirmedPassword,
-      },
+      body:
+        email.length === 0
+          ? {
+              userId,
+              password,
+              passwordCheck: confirmedPassword,
+            }
+          : {
+              userId,
+              password,
+              passwordCheck: confirmedPassword,
+              email,
+            },
     })
 
     if (code === SIGN_UP.SUCCESS) {
@@ -179,7 +187,7 @@ const SignUp = () => {
               userId={userId}
               password={password}
               onClose={handlePopUp}
-              onSubmit={signUp}
+              submit={signUp}
             />
             <Loading isLoading={isLoading} />
             <ErrorAlert
