@@ -10,7 +10,7 @@ import {
 import Link from "next/link"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
-import UserInformation from "./UserInformation"
+import User from "./User"
 import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
 import useLogOut from "@/hooks/use-log-out"
 import {
@@ -135,7 +135,7 @@ const NavigationBar = () => {
           </div>
           <div className="content">
             {isLoggedIn ? (
-              <UserInformation
+              <User
                 right={
                   <button
                     onClick={handleLogOut}
@@ -219,6 +219,7 @@ const NavigationBar = () => {
           </div>
         </div>
       </nav>
+
       <Portal
         render={() => (
           <LoginAlert

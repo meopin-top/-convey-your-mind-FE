@@ -2,7 +2,7 @@
 
 import {useState, useContext, type KeyboardEvent} from "react"
 import {useRouter} from "next/navigation"
-import {UserInformation as User, Alert, SecretInput, Portal} from "@/components"
+import {User, Alert, SecretInput, Portal} from "@/components"
 import Store from "@/store/setting-auth"
 import useInput from "@/hooks/use-input"
 import {ROUTE} from "@/constants/service"

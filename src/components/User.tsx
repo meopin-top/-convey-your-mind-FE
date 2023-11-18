@@ -9,7 +9,7 @@ export type TProps = {
   right: ReactNode
 }
 
-const UserInformation = ({right}: TProps) => {
+const User = ({right}: TProps) => {
   const [profile, setProfile] = useState("")
   const [nickName, setNickName] = useState("")
 
@@ -40,4 +40,4 @@ const UserInformation = ({right}: TProps) => {
   )
 }
 
-export default UserInformation
+export default User
