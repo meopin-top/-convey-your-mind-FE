@@ -77,6 +77,7 @@ const EmailInput = () => {
 
   function closeAlert() {
     if (alert.type === "success") {
+      // sign-in store 변경할 필요는 없음
       router.push(ROUTE.MAIN)
     }
 
