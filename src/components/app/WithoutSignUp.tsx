@@ -42,7 +42,7 @@ const WithoutSignUp = () => {
       path: `/projects/invite-code/${encodeURIComponent(sharedCode)}`,
     })
 
-    if (code !== ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS) {
+    if (code !== ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS) {
       setAlertMessage(
         <>
           유효하지 않은 공유코드/URL입니다.

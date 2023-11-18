@@ -21,7 +21,7 @@ const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
 
   const {code} = await data.json()
 
-  if (code === ROLLING_PAPER.INVITE_CODE.QUERY_FAILURE) {
+  if (code === ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE) {
     // 존재하지 않는 공유 코드면
     redirect(ROUTE.MY_PAGE)
   }

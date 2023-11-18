@@ -14,7 +14,7 @@ export const SIGN_IN = {
 } as const
 
 export const ROLLING_PAPER = {
-  INVITE_CODE: {
+  INVITATION_CODE: {
     CREATION_SUCCESS: 3101,
     QUERY_SUCCESS: 3001,
     QUERY_FAILURE: 3011,
