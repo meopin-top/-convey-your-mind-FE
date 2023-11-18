@@ -4,7 +4,7 @@ import EmailInput from "@/components/account-inquiry/EmailInput"
 import {TProps as TPortalProps} from "@/components/Portal"
 import {INVALID_EMAILS, VALID_EMAIL} from "@/__mocks__/fixtures/input"
 import {ACCOUNT_INQUIRY} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 jest.mock("next/navigation", () => ({
   __esModule: true,

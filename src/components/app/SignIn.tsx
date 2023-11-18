@@ -16,7 +16,7 @@ import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
 import SignInStore from "@/store/sign-in"
 import {SIGN_IN} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import type {TSignInResponse} from "@/@types/auth"
 
 const Portal = dynamic(() => import("../Portal"), {

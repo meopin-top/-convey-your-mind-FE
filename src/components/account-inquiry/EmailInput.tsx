@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
 import {VALIDATOR} from "@/constants/input"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {ACCOUNT_INQUIRY} from "@/constants/response-code"
 
 const Portal = dynamic(() => import("../Portal"), {

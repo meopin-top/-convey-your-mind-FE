@@ -9,7 +9,7 @@ import useFocus from "@/hooks/use-focus"
 import useRequest from "@/hooks/use-request"
 import {SIGN_UP} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import Storage from "@/store/local-storage"
 
 const Portal = dynamic(() => import("../Portal"), {

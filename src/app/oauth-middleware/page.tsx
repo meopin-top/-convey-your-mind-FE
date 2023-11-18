@@ -6,7 +6,7 @@ import dynamic from "next/dynamic"
 import {Redirecting} from "@/components"
 import useRequest from "@/hooks/use-request"
 import Storage from "@/store/local-storage"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {SIGN_IN} from "@/constants/response-code"
 import type {TSignInResponse} from "@/@types/auth"
 

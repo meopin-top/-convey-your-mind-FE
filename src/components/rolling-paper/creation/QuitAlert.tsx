@@ -4,7 +4,7 @@ import {useState} from "react"
 import {useRouter} from "next/navigation"
 import {Alert, Portal} from "@/components"
 import useBackHandler from "@/hooks/use-back-handler"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const QuitAlert = () => {
   const [isAlerting, setIsAlerting] = useState(false)

@@ -2,7 +2,7 @@ import {render, screen, waitFor} from "@testing-library/react"
 import OauthMiddleware from "@/app/oauth-middleware/page"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {SIGN_IN} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {createLocalStorageMock} from "@/__mocks__/window"
 
 const getSearchParamsMock = jest.fn()

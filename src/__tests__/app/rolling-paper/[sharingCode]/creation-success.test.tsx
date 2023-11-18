@@ -1,7 +1,7 @@
 import {render, screen} from "@testing-library/react"
 import CreationSuccess from "@/app/rolling-paper/creation/[sharingCode]/page"
 import {redirect} from "next/navigation"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {createFetchMock, deleteFetchMock} from "@/__mocks__/window"
 import {ROLLING_PAPER} from "@/constants/response-code"
 

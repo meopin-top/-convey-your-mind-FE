@@ -1,7 +1,7 @@
 import {useState, useLayoutEffect} from "react"
 import {useRouter} from "next/navigation"
 import Storage from "@/store/local-storage"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 function useCheckLoginStatus(shouldBeLoggedIn: boolean): boolean {
   const [isRedirecting, setIsRedirecting] = useState(true)

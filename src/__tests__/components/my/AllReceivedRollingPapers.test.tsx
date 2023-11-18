@@ -3,7 +3,7 @@ import type {ReactNode} from "react"
 import AllReceivedRollingPapers from "@/components/my/AllReceivedRollingPapers"
 import {createAlertMock} from "@/__mocks__/window"
 import {ALL_RECEIVED_ROLLING_PAPERS} from "@/constants/query-string"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const getSearchParamsMock = jest
   .fn()

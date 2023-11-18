@@ -9,7 +9,7 @@ import useRequest from "@/hooks/use-request"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
 import {calculateRemainingDay} from "@/utils/formatter"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {OPEN, ALL_PROJECTS} from "@/constants/query-string"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {

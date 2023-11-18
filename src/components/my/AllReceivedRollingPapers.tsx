@@ -8,7 +8,7 @@ import Pagination from "../Pagination"
 import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
 import useRequest from "@/hooks/use-request"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {OPEN, ALL_RECEIVED_ROLLING_PAPERS} from "@/constants/query-string"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {

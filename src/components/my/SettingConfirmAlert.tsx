@@ -3,7 +3,7 @@ import {useRouter} from "next/navigation"
 import {Alert, SecretInput, Portal} from "@/components"
 import Store from "@/store/setting-auth"
 import useInput from "@/hooks/use-input"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 // TODO: useRequest <- 비밀번호 확인 API 호출
 // TODO: FlowAlert <- 비밀번호가 일치하지 않습니다.
 

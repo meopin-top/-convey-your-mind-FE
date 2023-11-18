@@ -7,7 +7,7 @@ import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
 import SignInStore from "@/store/sign-in"
 import {ROLLING_PAPER} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,

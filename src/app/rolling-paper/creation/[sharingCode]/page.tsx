@@ -3,7 +3,7 @@ import {redirect} from "next/navigation"
 import Anchor from "next/link"
 import {Link, Sharing} from "@/components/rolling-paper/creation/[sharingCode]"
 import {Header, Loading, NeedLoggedIn} from "@/components"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {ROLLING_PAPER} from "@/constants/response-code"
 
 type TProps = {

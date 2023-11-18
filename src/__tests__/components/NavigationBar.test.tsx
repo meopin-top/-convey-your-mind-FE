@@ -1,7 +1,7 @@
 import {render, screen, fireEvent} from "@testing-library/react"
 import type {HTMLAttributes} from "react"
 import NavigationBar from "@/components/NavigationBar"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import type {TProps as TUserInformationProps} from "@/components/my/UserInformation"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {createAlertMock, createLocalStorageMock} from "@/__mocks__/window"

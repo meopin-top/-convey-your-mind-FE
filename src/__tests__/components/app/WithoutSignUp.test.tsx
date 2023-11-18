@@ -6,7 +6,7 @@ import {ROLLING_PAPER} from "@/constants/response-code"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TFlowAlertProps} from "@/components/FlowAlert"
 import type {TRoute, TTab} from "@/@types/sign-in"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const setTabMock = jest.fn()
 const setRedirectToMock = jest.fn()

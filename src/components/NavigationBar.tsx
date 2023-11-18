@@ -24,7 +24,7 @@ import {
 } from "@/assets/icons"
 import SignInStore from "@/store/sign-in"
 import Storage from "@/store/local-storage"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const Portal = dynamic(() => import("./Portal"), {
   loading: () => <></>,

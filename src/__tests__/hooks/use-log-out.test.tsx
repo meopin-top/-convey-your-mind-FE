@@ -1,6 +1,6 @@
 import {render, screen, fireEvent} from "@testing-library/react"
 import useLogOut from "@/hooks/use-log-out"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {createLocalStorageMock, createFetchMock} from "@/__mocks__/window"
 
 const fetchMock = jest.fn()
