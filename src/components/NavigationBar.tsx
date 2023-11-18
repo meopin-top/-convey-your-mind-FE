@@ -36,7 +36,7 @@ const LoginAlert = dynamic(() => import("./FlowAlert"), {
 const NavigationBar = () => {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false)
   const [isLogOutCalled, setIsLogOutCalled] = useState(false)
-  const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [isAlerting, setIsAlerting] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [fullPath, setFullPath] = useState("")
   const {setTab} = useContext(SignInStore)
@@ -78,12 +78,12 @@ const NavigationBar = () => {
     if (!isLoggedIn) {
       event.stopPropagation()
 
-      setIsAlertOpen(true)
+      setIsAlerting(true)
     }
   }
 
   function closeAlert() {
-    setIsAlertOpen(false)
+    setIsAlerting(false)
   }
 
   function renderAuthorizedLink({
@@ -222,7 +222,7 @@ const NavigationBar = () => {
       <Portal
         render={() => (
           <LoginAlert
-            isAlerting={isAlertOpen}
+            isAlerting={isAlerting}
             content={
               <>
                 로그인 후 이용할 수 있는 메뉴입니다🥲
