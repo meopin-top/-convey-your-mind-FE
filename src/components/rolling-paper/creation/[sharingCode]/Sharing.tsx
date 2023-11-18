@@ -29,7 +29,7 @@ const Sharing = ({sharingCode}: TProps) => {
 
   const {copy} = useCopy()
 
-  const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
+  const SHARING_URL = `${DOMAIN}/${sharingCode}`
   const TIME_OUT = 3_000
   let timer: NodeJS.Timeout | null = null
 

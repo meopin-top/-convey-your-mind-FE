@@ -11,8 +11,8 @@ const Link = ({sharingCode}: TProps) => {
       <span className="mb-2">
         링크를 공유하여 롤링페이퍼를 함께 작성해 보세요!
       </span>
-      <Anchor href={encodeURI(sharingCode)}>
-        {DOMAIN}/{decodeURI(sharingCode)}
+      <Anchor href={sharingCode}>
+        {DOMAIN}/{sharingCode}
       </Anchor>
     </div>
   )
