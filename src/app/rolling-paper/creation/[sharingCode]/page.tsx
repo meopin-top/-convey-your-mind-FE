@@ -14,9 +14,9 @@ type TProps = {
 
 const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
   const data = await fetch(
-    `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/invite-code/${encodeURI(
-      sharingCode
-    )}`
+    `${
+      process.env.NEXT_PUBLIC_API_HOST
+    }/api/projects/invite-code/${encodeURIComponent(sharingCode)}`
   )
 
   const {code} = await data.json()
