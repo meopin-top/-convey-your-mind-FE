@@ -2,8 +2,7 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import type {ReactNode} from "react"
 import AllProjects from "@/components/my/AllProjects"
 import {createAlertMock} from "@/__mocks__/window"
-import {ALL_PROJECTS} from "@/constants/query-string"
-import {ROUTE} from "@/constants/service"
+import {ALL_PROJECTS, ROUTE} from "@/constants/service"
 
 const getSearchParamsMock = jest.fn().mockReturnValue(ALL_PROJECTS)
 const routerPushMock = jest.fn()

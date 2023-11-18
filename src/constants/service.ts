@@ -1,4 +1,8 @@
-import {OPEN, ALL_PROJECTS, ALL_RECEIVED_ROLLING_PAPERS} from "./query-string"
+export const OPEN = "open"
+
+export const ALL_PROJECTS = "all-projects"
+
+export const ALL_RECEIVED_ROLLING_PAPERS = "all-received-rolling-papers"
 
 export const ROUTE = {
   MAIN: "/",

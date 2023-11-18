@@ -2,8 +2,7 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import type {ReactNode} from "react"
 import AllReceivedRollingPapers from "@/components/my/AllReceivedRollingPapers"
 import {createAlertMock} from "@/__mocks__/window"
-import {ALL_RECEIVED_ROLLING_PAPERS} from "@/constants/query-string"
-import {ROUTE} from "@/constants/service"
+import {ALL_RECEIVED_ROLLING_PAPERS, ROUTE} from "@/constants/service"
 
 const getSearchParamsMock = jest
   .fn()
