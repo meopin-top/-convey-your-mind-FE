@@ -4,7 +4,6 @@ import ProjectsInProgressing from "./ProjectsInProgressing"
 import ReceivedRollingPapers from "./ReceivedRollingPapers"
 import RollingPaperParticipation from "./RollingPaperParticipation"
 import SettingConfirmAlert from "./SettingConfirmAlert"
-import UserInformation from "./UserInformation"
 
 export {
   AllProjects,
@@ -13,5 +12,4 @@ export {
   ReceivedRollingPapers,
   RollingPaperParticipation,
   SettingConfirmAlert,
-  UserInformation,
 }

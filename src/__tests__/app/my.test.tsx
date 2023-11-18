@@ -1,5 +1,5 @@
 import {render, screen, fireEvent} from "@testing-library/react"
-import type {TProps as TUserInformationProps} from "@/components/my/UserInformation"
+import type {TProps as TUserInformationProps} from "@/components/UserInformation"
 import MyPage from "@/app/my/page"
 
 const NEED_LOGGED_IN = "로그인 필요"
@@ -17,7 +17,7 @@ jest.mock("../../components/Header.tsx", () => ({
   __esModule: true,
   default: () => <div>{HEADER}</div>,
 }))
-jest.mock("../../components/my/UserInformation.tsx", () => ({
+jest.mock("../../components/UserInformation.tsx", () => ({
   __esModule: true,
   default: ({right}: TUserInformationProps) => <div>{right}</div>,
 }))

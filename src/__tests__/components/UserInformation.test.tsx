@@ -1,6 +1,6 @@
 import type {HTMLAttributes} from "react"
 import {render, screen} from "@testing-library/react"
-import UserInformation from "@/components/my/UserInformation"
+import UserInformation from "@/components/UserInformation"
 import Storage from "@/store/local-storage"
 import {createLocalStorageMock} from "@/__mocks__/window"
 
@@ -13,7 +13,7 @@ jest.mock("next/image", () => ({
     return <img alt="" {...newProps} />
   },
 }))
-jest.mock("../../../components/Loading.tsx", () => ({
+jest.mock("../../components/Loading.tsx", () => ({
   __esModule: true,
   default: () => <>loading</>,
 }))

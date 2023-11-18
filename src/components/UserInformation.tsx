@@ -3,7 +3,7 @@
 import {useState, useLayoutEffect, type ReactNode} from "react"
 import Image from "next/image"
 import Storage from "@/store/local-storage"
-import Loading from "../Loading"
+import Loading from "./Loading"
 
 export type TProps = {
   right: ReactNode

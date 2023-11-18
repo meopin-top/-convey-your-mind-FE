@@ -10,7 +10,7 @@ import {
 import Link from "next/link"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
-import {UserInformation} from "./my"
+import UserInformation from "./UserInformation"
 import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
 import useLogOut from "@/hooks/use-log-out"
 import {

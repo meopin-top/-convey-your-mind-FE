@@ -1,9 +1,8 @@
 "use client"
 
 import {useState} from "react"
-import {NeedLoggedIn, Header} from "@/components"
+import {NeedLoggedIn, Header, UserInformation} from "@/components"
 import {
-  UserInformation,
   RollingPaperParticipation,
   ProjectsInProgressing,
   ReceivedRollingPapers,

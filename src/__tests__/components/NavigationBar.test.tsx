@@ -2,7 +2,7 @@ import {render, screen, fireEvent} from "@testing-library/react"
 import type {HTMLAttributes} from "react"
 import NavigationBar from "@/components/NavigationBar"
 import {ROUTE} from "@/constants/service"
-import type {TProps as TUserInformationProps} from "@/components/my/UserInformation"
+import type {TProps as TUserInformationProps} from "@/components/UserInformation"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {createAlertMock, createLocalStorageMock} from "@/__mocks__/window"
 
@@ -26,7 +26,7 @@ jest.mock("../../hooks/use-log-out.ts", () => ({
   __esModule: true,
   default: () => logOutMock,
 }))
-jest.mock("../../components/my/UserInformation.tsx", () => ({
+jest.mock("../../components/UserInformation.tsx", () => ({
   __esModule: true,
   default: ({right}: TUserInformationProps) => (
     <>
