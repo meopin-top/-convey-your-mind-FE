@@ -1,8 +1,8 @@
-import {render, screen, fireEvent} from "@testing-library/react"
+import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import type {HTMLAttributes} from "react"
 import NavigationBar from "@/components/NavigationBar"
 import {ROUTE} from "@/constants/service"
-import type {TProps as TUserInformationProps} from "@/components/UserInformation"
+import type {TProps as TUserProps} from "@/components/User"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import {createAlertMock, createLocalStorageMock} from "@/__mocks__/window"
 
@@ -26,9 +26,9 @@ jest.mock("../../hooks/use-log-out.ts", () => ({
   __esModule: true,
   default: () => logOutMock,
 }))
-jest.mock("../../components/UserInformation.tsx", () => ({
+jest.mock("../../components/User.tsx", () => ({
   __esModule: true,
-  default: ({right}: TUserInformationProps) => (
+  default: ({right}: TUserProps) => (
     <>
       <div>프로필</div>
       <div>{right}</div>
@@ -86,9 +86,11 @@ describe("NavigationBar", () => {
     window.localStorage.clear()
   })
 
-  it("햄버거 메뉴와 네비게이션 바가 렌더링된다.", () => {
+  it("햄버거 메뉴와 네비게이션 바가 렌더링된다.", async () => {
     // given, when
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
     const navigationBar = screen.getByRole("navigation")
@@ -98,9 +100,11 @@ describe("NavigationBar", () => {
     expect(navigationBar).toBeInTheDocument()
   })
 
-  it("햄버거 메뉴를 누르면 네비게이션 바가 open된다.", () => {
+  it("햄버거 메뉴를 누르면 네비게이션 바가 open된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
     const navigationBar = screen.getByRole("navigation")
@@ -112,9 +116,11 @@ describe("NavigationBar", () => {
     expect(navigationBar.classList).toContain("open")
   })
 
-  it("네비게이션 바가 open되어 있을 때 background를 누르면 네비게이션 바가 close된다.", () => {
+  it("네비게이션 바가 open되어 있을 때 background를 누르면 네비게이션 바가 close된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
     const navigationBarAndBackground = screen.getByRole("navigation")
@@ -127,9 +133,11 @@ describe("NavigationBar", () => {
     expect(navigationBarAndBackground.classList).toContain("close")
   })
 
-  it("네비게이션 바가 open되어 있을 때 close 버튼을 누르면 네비게이션 바가 close된다.", () => {
+  it("네비게이션 바가 open되어 있을 때 close 버튼을 누르면 네비게이션 바가 close된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
     const navigationBar = screen.getByRole("navigation")
@@ -143,17 +151,21 @@ describe("NavigationBar", () => {
     expect(navigationBar.classList).toContain("close")
   })
 
-  it("초기에는 scroll이 unlock 상태이다.", () => {
+  it("초기에는 scroll이 unlock 상태이다.", async () => {
     // given, when
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     // then
     expect(unlockScrollMock).toHaveBeenCalledTimes(1)
   })
 
-  it("네비게이션 바가 open되면 scroll이 lock 상태이다.", () => {
+  it("네비게이션 바가 open되면 scroll이 lock 상태이다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
 
@@ -164,9 +176,11 @@ describe("NavigationBar", () => {
     expect(lockScrollMock).toHaveBeenCalledTimes(1)
   })
 
-  it("네비게이션 바가 close 되면 scroll이 unlock 상태이다.", () => {
+  it("네비게이션 바가 close 되면 scroll이 unlock 상태이다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const hamburger = screen.getByText("hamburger")
     const close = screen.getByText("close")
@@ -179,9 +193,11 @@ describe("NavigationBar", () => {
     expect(unlockScrollMock).toHaveBeenCalledTimes(2)
   })
 
-  it("로그인되지 않았을 때 회원가입과 로그인 버튼이 노출된다.", () => {
+  it("로그인되지 않았을 때 회원가입과 로그인 버튼이 노출된다.", async () => {
     // given, when
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const signUpButton = screen.getByRole("link", {
       name: "회원가입",
@@ -195,9 +211,11 @@ describe("NavigationBar", () => {
     expect(signInButton).toBeInTheDocument()
   })
 
-  it("회원가입 버튼을 누르면 메인 페이지로 이동한다.", () => {
+  it("회원가입 버튼을 누르면 메인 페이지로 이동한다.", async () => {
     // given, when
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const signUpButton = screen.getByRole("link", {
       name: "회원가입",
@@ -207,9 +225,11 @@ describe("NavigationBar", () => {
     expect(signUpButton.href).toContain(ROUTE.MAIN)
   })
 
-  it("로그인 버튼을 누르면 메인 페이지로 이동한다.", () => {
+  it("로그인 버튼을 누르면 메인 페이지로 이동한다.", async () => {
     // given, when
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const signInButton = screen.getByRole("link", {
       name: "로그인",
@@ -219,11 +239,13 @@ describe("NavigationBar", () => {
     expect(signInButton.href).toContain(ROUTE.MAIN)
   })
 
-  it("로그인되었을 때 회원 프로필과 로그아웃 버튼이 노출된다.", () => {
+  it("로그인되었을 때 회원 프로필과 로그아웃 버튼이 노출된다.", async () => {
     // given, when
     login()
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const profile = screen.getByText("프로필")
     const logOutButton = screen.getByRole("button", {
@@ -235,12 +257,14 @@ describe("NavigationBar", () => {
     expect(logOutButton).toBeInTheDocument()
   })
 
-  it("로그아웃 버튼을 한 번 누르면 로그아웃 버튼이 disabled 처리된다.", () => {
+  it("로그아웃 버튼을 한 번 누르면 로그아웃 버튼이 disabled 처리된다.", async () => {
     // given
     window.localStorage.setItem("nickName", "nickName")
     window.localStorage.setItem("profile", "profile")
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const logOutButton = screen.getByRole("button", {
       name: "로그아웃",
@@ -253,12 +277,14 @@ describe("NavigationBar", () => {
     expect(logOutButton).toBeDisabled()
   })
 
-  it("로그아웃 버튼을 누르면 로그아웃 API가 호출된다.", () => {
+  it("로그아웃 버튼을 누르면 로그아웃 API가 호출된다.", async () => {
     // given
     window.localStorage.setItem("nickName", "nickName")
     window.localStorage.setItem("profile", "profile")
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const logOutButton = screen.getByRole("button", {
       name: "로그아웃",
@@ -271,9 +297,11 @@ describe("NavigationBar", () => {
     expect(logOutMock).toHaveBeenCalledTimes(1)
   })
 
-  it("미로그인 시 마이페이지 링크를 누르면 LoginAlert가 open된다.", () => {
+  it("미로그인 시 마이페이지 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("button", {
       name: /마이페이지/,
@@ -288,11 +316,13 @@ describe("NavigationBar", () => {
     expect(loginAlert).toBeInTheDocument()
   })
 
-  it("로그인 시 마이페이지 링크를 누르면 마이페이지로 이동한다.", () => {
+  it("로그인 시 마이페이지 링크를 누르면 마이페이지로 이동한다.", async () => {
     // given, when
     login()
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("link", {
       name: /마이페이지/,
@@ -302,9 +332,11 @@ describe("NavigationBar", () => {
     expect(myPageButton.href).toContain(ROUTE.MY_PAGE)
   })
 
-  it("미로그인 시 참여 중인 프로젝트 링크를 누르면 LoginAlert가 open된다.", () => {
+  it("미로그인 시 참여 중인 프로젝트 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("button", {
       name: /참여 중인 프로젝트/,
@@ -319,11 +351,13 @@ describe("NavigationBar", () => {
     expect(loginAlert).toBeInTheDocument()
   })
 
-  it("로그인 시 참여 중인 프로젝트 링크를 누르면 참여 중인 프로젝트로 이동한다.", () => {
+  it("로그인 시 참여 중인 프로젝트 링크를 누르면 참여 중인 프로젝트로 이동한다.", async () => {
     // given, when
     login()
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("link", {
       name: /참여 중인 프로젝트/,
@@ -333,9 +367,11 @@ describe("NavigationBar", () => {
     expect(myPageButton.href).toContain(ROUTE.MY_PROJECTS)
   })
 
-  it("미로그인 시 내가 받은 롤링페이퍼 링크를 누르면 LoginAlert가 open된다.", () => {
+  it("미로그인 시 내가 받은 롤링페이퍼 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("button", {
       name: /내가 받은 롤링페이퍼/,
@@ -350,11 +386,13 @@ describe("NavigationBar", () => {
     expect(loginAlert).toBeInTheDocument()
   })
 
-  it("로그인 시 내가 받은 롤링페이퍼 링크를 누르면 내가 받은 롤링페이퍼로 이동한다.", () => {
+  it("로그인 시 내가 받은 롤링페이퍼 링크를 누르면 내가 받은 롤링페이퍼로 이동한다.", async () => {
     // given, when
     login()
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("link", {
       name: /내가 받은 롤링페이퍼/,
@@ -364,9 +402,11 @@ describe("NavigationBar", () => {
     expect(myPageButton.href).toContain(ROUTE.MY_ROLLING_PAPERS)
   })
 
-  it("미로그인 시 롤링페이퍼 만들기 링크를 누르면 LoginAlert가 open된다.", () => {
+  it("미로그인 시 롤링페이퍼 만들기 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("button", {
       name: /롤링페이퍼 만들기/,
@@ -381,11 +421,13 @@ describe("NavigationBar", () => {
     expect(loginAlert).toBeInTheDocument()
   })
 
-  it("로그인 시 롤링페이퍼 만들기 링크를 누르면 롤링페이퍼 만들기로 이동한다.", () => {
+  it("로그인 시 롤링페이퍼 만들기 링크를 누르면 롤링페이퍼 만들기로 이동한다.", async () => {
     // given, when
     login()
 
-    render(<NavigationBar />)
+    await waitFor(() => {
+      render(<NavigationBar />)
+    })
 
     const myPageButton = screen.getByRole("link", {
       name: /롤링페이퍼 만들기/,
