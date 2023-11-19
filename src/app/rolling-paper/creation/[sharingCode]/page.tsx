@@ -37,8 +37,8 @@ const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
           <h2>롤링페이퍼 만들기</h2>
           <h1>성공!</h1>
         </div>
-        <Link sharingCode={`edit/${sharingCode}`} />
-        <Sharing sharingCode={`edit/${sharingCode}`} />
+        <Link sharingCode={`rolling-paper/edit/${sharingCode}`} />
+        <Sharing sharingCode={`rolling-paper/edit/${sharingCode}`} />
         <button className="to-rolling-paper mt-4 radius-lg shadow-md">
           <Anchor href={"#"} className="f-center">
             롤링 페이퍼 쓰러 가기{/* TODO: href 변경 */}
