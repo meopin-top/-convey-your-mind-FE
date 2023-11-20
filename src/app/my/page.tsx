@@ -78,7 +78,6 @@ const MyPage = async () => {
       `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
     ),
   ]
-
   const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
     await Promise.all(fetchPromises).then(
       ([fetchedProjects, fetchedRollingPapers]) => [
@@ -86,7 +85,8 @@ const MyPage = async () => {
         fetchedRollingPapers.json(),
       ]
     )
-  let [
+
+  const [
     {
       data: {pageResult: projects},
     },
@@ -111,7 +111,7 @@ const MyPage = async () => {
               <AllProjects />
             </div>
 
-            {projects.length > 0 ? (
+            {projects?.length > 0 ? (
               <ul>
                 {projects.map((project) => (
                   <li key={project.id} className="project mb-2">
@@ -152,7 +152,7 @@ const MyPage = async () => {
               <AllReceivedRollingPapers />
             </div>
 
-            {rollingPapers.length > 0 ? (
+            {rollingPapers?.length > 0 ? (
               <ul className="rolling-paper">
                 {rollingPapers.map((rollingPaper) => (
                   <li key={rollingPaper.id} className="shadow-sm">
