@@ -101,20 +101,15 @@ const MyPage = async () => {
       const [a, b] = await Promise.all(jsonPromises)
 
       console.log(a, b)
-      // const [
-      //   {
-      //     data: {pageResult: projects},
-      //   },
-      //   {
-      //     data: {pageResult: rollingPapers},
-      //   },
-      // ] = await Promise.all(jsonPromises)
+      console.log(a.data.pageResult, b.data.pageResult)
       setProjects(a.data.pageResult)
       setRollingPapers(b.data.pageResult)
     }
 
     request()
   }, [])
+
+  console.warn(projects, rollingPapers)
 
   return (
     <Suspense fallback={<Loading isLoading />}>
