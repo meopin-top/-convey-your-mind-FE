@@ -47,9 +47,7 @@ export default function useRequest() {
       if (!data.ok) {
         if (data.status >= 500) {
           throw new Error("서버 측 오류")
-        } else if (data.status >= 400) {
-          throw new Error("클라이언트 측 오류")
-        } else {
+        } else if (data.status < 400) {
           throw new Error("데이터 fetch 오류")
         }
       }

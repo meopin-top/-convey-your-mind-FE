@@ -21,7 +21,7 @@ export default function useCopy(): TReturn {
   }
 
   async function copy(text: string): Promise<void> {
-    const isClipboardSupported = Boolean(navigator.clipboard?.writeText)
+    const isClipboardSupported = !!navigator.clipboard?.writeText
 
     isClipboardSupported
       ? await copyWithClipboard(text)

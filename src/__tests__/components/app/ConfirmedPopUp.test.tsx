@@ -1,4 +1,4 @@
-import {render, screen, fireEvent} from "@testing-library/react"
+import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import ConfirmedPopUp, {
   type TProps as TConfirmedPopUpProps,
 } from "@/components/app/ConfirmedPopUp"
@@ -34,7 +34,7 @@ function renderConfirmedPopUp({
   userId = TEST_USER_ID,
   password = TEST_PASSWORD,
   onClose = jest.fn(),
-  onSubmit = jest.fn(),
+  submit = jest.fn(),
 }: Partial<TConfirmedPopUpProps>) {
   render(
     <ConfirmedPopUp
@@ -43,15 +43,17 @@ function renderConfirmedPopUp({
       userId={userId}
       password={password}
       onClose={onClose}
-      onSubmit={onSubmit}
+      submit={submit}
     />
   )
 }
 
 describe("ConfirmedPopUp", () => {
-  it("유저 아이디는 변경이 불가능하다.", () => {
+  it("유저 아이디는 변경이 불가능하다.", async () => {
     // given, when
-    renderConfirmedPopUp({})
+    await waitFor(() => {
+      renderConfirmedPopUp({})
+    })
 
     const userIdInput = screen.getByDisplayValue(
       TEST_USER_ID
@@ -61,9 +63,11 @@ describe("ConfirmedPopUp", () => {
     expect(userIdInput.disabled).toBeTruthy()
   })
 
-  it("재확인용 비밀번호는 변경이 가능하다.", () => {
+  it("재확인용 비밀번호는 변경이 가능하다.", async () => {
     // given, when
-    renderConfirmedPopUp({})
+    await waitFor(() => {
+      renderConfirmedPopUp({})
+    })
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
@@ -73,9 +77,11 @@ describe("ConfirmedPopUp", () => {
     expect(confirmedPasswordInput.disabled).toBeFalsy()
   })
 
-  it("이메일은 변경이 가능하다.", () => {
+  it("이메일은 변경이 가능하다.", async () => {
     // given, when
-    renderConfirmedPopUp({})
+    await waitFor(() => {
+      renderConfirmedPopUp({})
+    })
 
     const emailInput = screen.getAllByDisplayValue("")[1] as HTMLInputElement
 
@@ -83,9 +89,11 @@ describe("ConfirmedPopUp", () => {
     expect(emailInput.disabled).toBeFalsy()
   })
 
-  it("취소와 가입하기 버튼이 렌더링된다.", () => {
+  it("취소와 가입하기 버튼이 렌더링된다.", async () => {
     // given, when
-    renderConfirmedPopUp({})
+    await waitFor(() => {
+      renderConfirmedPopUp({})
+    })
 
     const cancelButton = screen.getByRole("button", {
       name: "취소",
@@ -99,9 +107,11 @@ describe("ConfirmedPopUp", () => {
     expect(signUpButton).toBeInTheDocument()
   })
 
-  it("isLoading props가 false면 가입하기 버튼은 disabled 상태가 아니다.", () => {
+  it("isLoading props가 false면 가입하기 버튼은 disabled 상태가 아니다.", async () => {
     // given, when
-    renderConfirmedPopUp({onSubmit: jest.fn(), isLoading: false})
+    await waitFor(() => {
+      renderConfirmedPopUp({submit: jest.fn(), isLoading: false})
+    })
 
     const signUpButton = screen.getByRole("button", {
       name: "가입하기",
@@ -111,9 +121,11 @@ describe("ConfirmedPopUp", () => {
     expect(signUpButton).not.toBeDisabled()
   })
 
-  it("isLoading props가 true면 가입하기 버튼은 disabled 상태이다.", () => {
+  it("isLoading props가 true면 가입하기 버튼은 disabled 상태이다.", async () => {
     // given, when
-    renderConfirmedPopUp({onSubmit: jest.fn(), isLoading: true})
+    await waitFor(() => {
+      renderConfirmedPopUp({submit: jest.fn(), isLoading: true})
+    })
 
     const signUpButton = screen.getByRole("button", {
       name: "가입하기",
@@ -123,11 +135,13 @@ describe("ConfirmedPopUp", () => {
     expect(signUpButton).toBeDisabled()
   })
 
-  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 onSubmit를 호출하지 않고, ErrorAlert를 호출한다", () => {
+  it("기존에 입력한 비밀번호와 확인용 비밀번호가 다르면 submit를 호출하지 않고, ErrorAlert를 호출한다", async () => {
     // given
-    const onSubmit = jest.fn()
+    const submit = jest.fn()
 
-    renderConfirmedPopUp({onSubmit})
+    await waitFor(() => {
+      renderConfirmedPopUp({submit})
+    })
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
@@ -145,15 +159,17 @@ describe("ConfirmedPopUp", () => {
     const errorAlert = screen.getByText("ErrorAlert open")
 
     // then
-    expect(onSubmit).not.toHaveBeenCalled()
+    expect(submit).not.toHaveBeenCalled()
     expect(errorAlert).toBeInTheDocument()
   })
 
-  it("이메일 형식이 다르면 onSubmit를 호출하지 않고, ErrorAlert를 호출한다.", () => {
+  it("이메일 형식이 다르면 submit를 호출하지 않고, ErrorAlert를 호출한다.", async () => {
     // given
-    const onSubmit = jest.fn()
+    const submit = jest.fn()
 
-    renderConfirmedPopUp({onSubmit})
+    await waitFor(() => {
+      renderConfirmedPopUp({submit})
+    })
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
@@ -177,16 +193,18 @@ describe("ConfirmedPopUp", () => {
       const errorAlert = screen.getByText("ErrorAlert open")
 
       // then
-      expect(onSubmit).not.toHaveBeenCalled()
+      expect(submit).not.toHaveBeenCalled()
       expect(errorAlert).toBeInTheDocument()
     })
   })
 
-  it("기존에 입력한 비밀번호와 확인용 비밀번호가 같고 이메일 형식이 일치하면, onSubmit을 호출한다.", () => {
+  it("기존에 입력한 비밀번호와 확인용 비밀번호가 같고 이메일 형식이 일치하면, submit을 호출한다.", async () => {
     // given
-    const onSubmit = jest.fn()
+    const submit = jest.fn()
 
-    renderConfirmedPopUp({onSubmit})
+    await waitFor(() => {
+      renderConfirmedPopUp({submit})
+    })
 
     const confirmedPasswordInput = screen.getAllByDisplayValue(
       ""
@@ -208,15 +226,17 @@ describe("ConfirmedPopUp", () => {
       fireEvent.click(signUpButton)
 
       // then
-      expect(onSubmit).toHaveBeenCalled()
+      expect(submit).toHaveBeenCalled()
     })
   })
 
-  it("취소 버튼을 누르면 onClose가 호출된다.", () => {
+  it("취소 버튼을 누르면 onClose가 호출된다.", async () => {
     // given
     const onClose = jest.fn()
 
-    renderConfirmedPopUp({onClose})
+    await waitFor(() => {
+      renderConfirmedPopUp({onClose})
+    })
 
     const cancelButton = screen.getByRole("button", {
       name: "취소",

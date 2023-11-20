@@ -1,7 +1,7 @@
 import {render, screen} from "@testing-library/react"
 import CreationSuccess from "@/app/rolling-paper/creation/[sharingCode]/page"
 import {redirect} from "next/navigation"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import {createFetchMock, deleteFetchMock} from "@/__mocks__/window"
 import {ROLLING_PAPER} from "@/constants/response-code"
 
@@ -22,10 +22,13 @@ jest.mock("../../../../components/Header.tsx", () => ({
   __esModule: true,
   default: () => <>{HEADER}</>,
 }))
-jest.mock("../../../../components/rolling-paper/creation/[sharingCode]/Link.tsx", () => ({
-  __esModule: true,
-  default: () => <>{LINK}</>,
-}))
+jest.mock(
+  "../../../../components/rolling-paper/creation/[sharingCode]/Link.tsx",
+  () => ({
+    __esModule: true,
+    default: () => <>{LINK}</>,
+  })
+)
 jest.mock(
   "../../../../components/rolling-paper/creation/[sharingCode]/Sharing.tsx",
   () => ({
@@ -42,9 +45,12 @@ describe("CreationSuccess", () => {
 
   it("공유 코드가 존재하지 않으면 마이 페이지로 이동한다.", async () => {
     // given, when
-    createFetchMock(jest.fn().mockResolvedValueOnce({
-      json: () => Promise.resolve({code: ROLLING_PAPER.INVITE_CODE.QUERY_FAILURE})
-    }))
+    createFetchMock(
+      jest.fn().mockResolvedValueOnce({
+        json: () =>
+          Promise.resolve({code: ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE}),
+      })
+    )
 
     render(await CreationSuccess({params: {sharingCode: "test"}}))
 
@@ -54,9 +60,12 @@ describe("CreationSuccess", () => {
 
   it("공유 코드가 존재하면 올바르게 렌더링한다.", async () => {
     // given, when
-    createFetchMock(jest.fn().mockResolvedValueOnce({
-      json: () => Promise.resolve({code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS})
-    }))
+    createFetchMock(
+      jest.fn().mockResolvedValueOnce({
+        json: () =>
+          Promise.resolve({code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS}),
+      })
+    )
 
     render(await CreationSuccess({params: {sharingCode: "test"}}))
 
@@ -82,9 +91,12 @@ describe("CreationSuccess", () => {
 
   it("'롤링 페이퍼 쓰러 가기' 버튼을 누르면 로그인 페이지로 이동한다.", async () => {
     // given, when
-    createFetchMock(jest.fn().mockResolvedValueOnce({
-      json: () => Promise.resolve({code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS})
-    }))
+    createFetchMock(
+      jest.fn().mockResolvedValueOnce({
+        json: () =>
+          Promise.resolve({code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS}),
+      })
+    )
 
     render(await CreationSuccess({params: {sharingCode: "test"}}))
 
@@ -101,9 +113,12 @@ describe("CreationSuccess", () => {
   it("'마이 페이지' 버튼을 누르면 로그인 페이지로 이동한다.", async () => {
     // given, when
     // given, when
-    createFetchMock(jest.fn().mockResolvedValueOnce({
-      json: () => Promise.resolve({code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS})
-    }))
+    createFetchMock(
+      jest.fn().mockResolvedValueOnce({
+        json: () =>
+          Promise.resolve({code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS}),
+      })
+    )
 
     render(await CreationSuccess({params: {sharingCode: "test"}}))
 

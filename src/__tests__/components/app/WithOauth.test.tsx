@@ -1,7 +1,7 @@
 import {fireEvent, render, screen} from "@testing-library/react"
 import {useRouter} from "next/navigation"
 import WithOauth from "@/components/app/WithOauth"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),

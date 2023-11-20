@@ -1,6 +1,6 @@
 import {useRouter} from "next/navigation"
 import Storage from "@/store/local-storage"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 export default function useLogOut() {
   const router = useRouter()

@@ -10,7 +10,7 @@ import {
 import Link from "next/link"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
-import {UserInformation} from "./my"
+import User from "./User"
 import useBodyScrollLock from "@/hooks/use-body-scroll-lock"
 import useLogOut from "@/hooks/use-log-out"
 import {
@@ -24,7 +24,7 @@ import {
 } from "@/assets/icons"
 import SignInStore from "@/store/sign-in"
 import Storage from "@/store/local-storage"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const Portal = dynamic(() => import("./Portal"), {
   loading: () => <></>,
@@ -36,7 +36,7 @@ const LoginAlert = dynamic(() => import("./FlowAlert"), {
 const NavigationBar = () => {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false)
   const [isLogOutCalled, setIsLogOutCalled] = useState(false)
-  const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [isAlerting, setIsAlerting] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [fullPath, setFullPath] = useState("")
   const {setTab} = useContext(SignInStore)
@@ -48,7 +48,7 @@ const NavigationBar = () => {
   const logOut = useLogOut()
 
   useEffect(() => {
-    setIsLoggedIn(Boolean(Storage.get("nickName")))
+    setIsLoggedIn(!!Storage.get("nickName"))
   }, [])
 
   useEffect(() => {
@@ -78,12 +78,12 @@ const NavigationBar = () => {
     if (!isLoggedIn) {
       event.stopPropagation()
 
-      setIsAlertOpen(true)
+      setIsAlerting(true)
     }
   }
 
   function closeAlert() {
-    setIsAlertOpen(false)
+    setIsAlerting(false)
   }
 
   function renderAuthorizedLink({
@@ -135,7 +135,7 @@ const NavigationBar = () => {
           </div>
           <div className="content">
             {isLoggedIn ? (
-              <UserInformation
+              <User
                 right={
                   <button
                     onClick={handleLogOut}
@@ -219,10 +219,11 @@ const NavigationBar = () => {
           </div>
         </div>
       </nav>
+
       <Portal
         render={() => (
           <LoginAlert
-            isAlerting={isAlertOpen}
+            isAlerting={isAlerting}
             content={
               <>
                 로그인 후 이용할 수 있는 메뉴입니다🥲

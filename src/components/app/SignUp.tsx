@@ -9,7 +9,7 @@ import useFocus from "@/hooks/use-focus"
 import useRequest from "@/hooks/use-request"
 import {SIGN_UP} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import Storage from "@/store/local-storage"
 
 const Portal = dynamic(() => import("../Portal"), {
@@ -64,7 +64,7 @@ const SignUp = () => {
       return
     }
 
-    if (!VALIDATOR.PASSWORD._.test(password)) {
+    if (!VALIDATOR.PASSWORD.test(password)) {
       setAlertMessage(
         "안전을 위해 영문, 숫자, 특수문자를 혼합해서 설정해 주세요."
       )
@@ -79,15 +79,23 @@ const SignUp = () => {
     setIsPopUpOpened(!isPopUpOpened)
   }
 
-  async function signUp(confirmedPassword: string) {
+  async function signUp(confirmedPassword: string, email: string) {
     const {message, code, data} = await request({
       path: "/users/sign-up",
       method: "post",
-      body: {
-        userId,
-        password,
-        passwordCheck: confirmedPassword,
-      },
+      body:
+        email.length === 0
+          ? {
+              userId,
+              password,
+              passwordCheck: confirmedPassword,
+            }
+          : {
+              userId,
+              password,
+              passwordCheck: confirmedPassword,
+              email,
+            },
     })
 
     if (code === SIGN_UP.SUCCESS) {
@@ -128,23 +136,21 @@ const SignUp = () => {
       <section className="validity mb-1">
         <div
           className={`${
-            VALIDATOR.PASSWORD.ENGLISH.test(password) ? "valid" : "invalid"
+            VALIDATOR.ENGLISH.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
         <span>영문</span>
         <div
           className={`${
-            VALIDATOR.PASSWORD.NUMBER.test(password) ? "valid" : "invalid"
+            VALIDATOR.NUMBER.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
         <span>숫자</span>
         <div
           className={`${
-            VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)
-              ? "valid"
-              : "invalid"
+            VALIDATOR.SPECIAL_CHARACTER.test(password) ? "valid" : "invalid"
           }-light`}
           role="status"
         />
@@ -181,7 +187,7 @@ const SignUp = () => {
               userId={userId}
               password={password}
               onClose={handlePopUp}
-              onSubmit={signUp}
+              submit={signUp}
             />
             <Loading isLoading={isLoading} />
             <ErrorAlert
