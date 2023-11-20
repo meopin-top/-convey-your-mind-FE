@@ -1,8 +1,11 @@
-import {render, screen, fireEvent} from "@testing-library/react"
+import {render, screen, fireEvent, waitFor} from "@testing-library/react"
+import {useRouter} from "next/navigation"
 import Component from "@/components/my/UserInformation"
 import Store from "@/store/setting-auth"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
+import {SIGN_UP} from "@/constants/response-code"
+import {ROUTE} from "@/constants/service"
 
 const UserInformation = ({
   setChecked = jest.fn(),
@@ -16,11 +19,17 @@ const UserInformation = ({
   )
 }
 
-const routerPushMock = jest.fn()
+const requestMock = jest.fn()
+
 jest.mock("next/navigation", () => ({
   __esModule: true,
-  useRouter: () => ({
-    push: routerPushMock,
+  useRouter: jest.fn(),
+}))
+jest.mock("../../../hooks/use-request.ts", () => ({
+  __esModule: true,
+  default: () => ({
+    request: requestMock,
+    isLoading: false,
   }),
 }))
 jest.mock("../../../components/Portal.tsx", () => ({
@@ -39,9 +48,11 @@ jest.mock("../../../components/Loading.tsx", () => ({
 }))
 
 describe("UserInformation", () => {
-  it("설정 버튼을 올바르게 렌더링한다.", () => {
+  it("설정 버튼을 올바르게 렌더링한다.", async () => {
     // given, when
-    render(<UserInformation />)
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
 
     const settingButton = screen.getByRole("button", {name: /설정/})
 
@@ -51,7 +62,9 @@ describe("UserInformation", () => {
 
   it("설정 버튼을 클릭하면 내 설정 접근을 확인하는 Alert을 렌더링한다.", async () => {
     // given
-    render(<UserInformation />)
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
 
     const settingButton = screen.getByRole("button", {name: /설정/})
 
@@ -72,22 +85,63 @@ describe("UserInformation", () => {
     expect(confirmButton).toBeInTheDocument()
   })
 
-  // TODO: change
-  it("확인하기 버튼을 누르면 인증 확인 Context가 true로 변경된다.", async () => {
+  it("올바르지 않은 패스워드를 입력한 뒤 '확인하기' 버튼을 누르면 API 응답의 message가 ErrorAlert에 렌더링된다.", async () => {
     // given
-    const setCheckedMock = jest.fn()
+    const message = "유효하지 않은 패스워드"
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({
+      code: SIGN_UP.DIFFERENT_PASSWORDS,
+      message,
+    })
 
-    render(<UserInformation setChecked={setCheckedMock} />)
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
 
     const settingButton = screen.getByRole("button", {name: /설정/})
     fireEvent.click(settingButton)
 
-    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+    const passwordInput = await screen.findByPlaceholderText(
+      "비밀번호를 입력해 주세요"
+    )
+    fireEvent.change(passwordInput, {target: {value: "invalid password"}})
 
     // when
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
     fireEvent.click(confirmButton)
 
     // then
-    expect(setCheckedMock).toHaveBeenCalledWith(true)
+    const alertContent = await screen.findByText(message)
+
+    expect(alertContent).toBeInTheDocument()
+  })
+
+  it("올바른 패스워드를 입력한 뒤 '확인하기' 버튼을 누르면 인증 확인 Context가 true로 변경되고 내 설정 페이지로 이동한다.", async () => {
+    // given
+    const routerPushMock = jest.fn()
+    ;(useRouter as jest.Mock).mockReturnValue({
+      push: routerPushMock,
+    })
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({})
+
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
+
+    const settingButton = screen.getByRole("button", {name: /설정/})
+    fireEvent.click(settingButton)
+
+    const passwordInput = await screen.findByPlaceholderText(
+      "비밀번호를 입력해 주세요"
+    )
+    fireEvent.change(passwordInput, {target: {value: "valid password"}})
+
+    // when
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+    fireEvent.click(confirmButton)
+
+    // then
+    await waitFor(() => {
+      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MY_SETTING)
+    })
   })
 })
