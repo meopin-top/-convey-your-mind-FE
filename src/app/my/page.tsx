@@ -98,12 +98,19 @@ const MyPage = async () => {
 
       console.log(jsonPromises)
 
-      const [a, b] = await Promise.all(jsonPromises)
+      const [
+        {
+          data: {pageResult: projects},
+        },
+        {
+          data: {pageResult: rollingPapers},
+        },
+      ] = await Promise.all(jsonPromises)
 
-      console.log(a, b)
-      console.log(a.data.pageResult, b.data.pageResult)
-      setProjects(a.data.pageResult)
-      setRollingPapers(b.data.pageResult)
+      console.log(projects)
+      console.log(rollingPapers)
+      setProjects(projects)
+      setRollingPapers(rollingPapers)
     }
 
     request()
@@ -126,6 +133,9 @@ const MyPage = async () => {
               <h5 className="title"># 참여 중인 프로젝트</h5>
               <AllProjects />
             </div>
+
+            {projects?.length}
+            {rollingPapers?.length}
 
             {projects?.length > 0 ? (
               <ul>
