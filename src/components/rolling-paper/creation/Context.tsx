@@ -7,6 +7,7 @@ import type {
   TDoneStep,
   TRollingPaperType,
 } from "@/@types/rolling-paper"
+import {VALIDATOR} from "@/constants/input"
 
 type TProps = {
   children: ReactNode
@@ -171,12 +172,17 @@ const SharingCodeStore = createContext<{
 
 const SharingCodeProvider = ({children}: TProps) => {
   const {handleDoneStep} = useContext(Store)
-  const [sharingCode, handleSharingCode] = useInput(
-    "",
-    (event: TInputChangeEvent) => {
-      handleDoneStep(event.target.value.length !== 0, "SHARING_CODE")
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [sharingCode, _, setSharingCode] = useInput("")
+
+  const handleSharingCode = (event: TInputChangeEvent) => {
+    if (VALIDATOR.SPECIAL_CHARACTER.test(event.target.value)) {
+      return
     }
-  )
+
+    setSharingCode(event.target.value)
+    handleDoneStep(event.target.value.length !== 0, "SHARING_CODE")
+  }
 
   return (
     <SharingCodeStore.Provider value={{sharingCode, handleSharingCode}}>

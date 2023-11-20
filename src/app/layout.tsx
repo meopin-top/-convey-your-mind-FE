@@ -1,4 +1,6 @@
+import {Reducer} from "@/components"
 import {Provider as SignInProvider} from "@/store/sign-in"
+import {Provider as SettingAuthProvider} from "@/store/setting-auth"
 import "@/assets/styles/index.scss"
 
 export const metadata = {
@@ -6,11 +8,16 @@ export const metadata = {
   description: "by meopin top",
 }
 
-const RootLayout = ({children}: {children: React.ReactNode}) => {
+const RootLayout = ({children}: {children: JSX.Element}) => {
   return (
     <html lang="ko">
       <body>
-        <SignInProvider>{children}</SignInProvider>
+        <Reducer components={[
+          SignInProvider,
+          SettingAuthProvider,
+        ]}>
+          {children}
+        </Reducer>
         <div id="portal" />
       </body>
     </html>

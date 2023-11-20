@@ -1,14 +1,13 @@
 "use client"
 
-// TODO: flow I 수정
-
+import {useState, type ReactNode, type KeyboardEvent} from "react"
 import {useRouter} from "next/navigation"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
 import {ROLLING_PAPER} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -16,26 +15,69 @@ const Portal = dynamic(() => import("../Portal"), {
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
 })
+const FlowAlert = dynamic(() => import("../FlowAlert"), {
+  loading: () => <></>,
+})
 
 const RollingPaperParticipation = () => {
+  const [alertMessage, setAlertMessage] = useState<ReactNode | null>(null)
+
   const router = useRouter()
 
-  const [sharedCode, handleSharedCode] = useInput()
+  const [sharedText, handleSharedText] = useInput()
 
   const {isLoading, request} = useRequest()
 
-  async function writeRollingPaper() {
-    const {code} = await request({
-      path: `/projects/invite-code/${encodeURIComponent(sharedCode)}`,
+  function handleSubmission(event: KeyboardEvent<HTMLInputElement>) {
+    const isEnterKeyDowned = event.key === "Enter"
+    if (isEnterKeyDowned) {
+      writeOrReceiveMine()
+    }
+  }
+
+  async function writeOrReceiveMine() {
+    const {code, message, data} = await request({
+      path: "/projects/register",
+      method: "post",
+      body: {
+        code: sharedText,
+      },
     })
 
-    if (code === ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS) {
-      router.push(ROUTE.MY_PAGE) // TODO: route 변경
-
-      return
+    if (
+      code === ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE ||
+      code === ROLLING_PAPER.INVITATION_OR_RECEIPT_CODE.INVALID_SHARING_CODE
+    ) {
+      setAlertMessage(message)
+    } else if (
+      code === ROLLING_PAPER.INVITATION_OR_RECEIPT_CODE.SUCCESS &&
+      data?.status === ROLLING_PAPER.INVITATION_SUCCESS_STATUS
+    ) {
+      const sharingCode = sharedText.split("/")
+      router.push(`${ROUTE.ROLLING_PAPER_EDIT}/${sharingCode}`)
+    } else if (
+      code === ROLLING_PAPER.INVITATION_OR_RECEIPT_CODE.SUCCESS &&
+      data?.status === ROLLING_PAPER.RECEIPT_SUCCESS_STATUS
+    ) {
+      setAlertMessage(
+        <>
+          롤링페이퍼 등록 성공🥳
+          <br />
+          따뜻한 마음을 확인하러 갈까요?
+        </>
+      )
+    } else {
+      console.error("잘못된 API 처리")
     }
+  }
 
-    alert("참여 가능한 공유 코드가 아닙니다.")
+  function closeAlert() {
+    setAlertMessage(null)
+  }
+
+  function viewRollingPaper() {
+    const sharingCode = sharedText.split("/")
+    router.push(`${ROUTE.ROLLING_PAPER_VIEW}/${sharingCode}`)
   }
 
   return (
@@ -53,18 +95,38 @@ const RollingPaperParticipation = () => {
         <input
           className="radius-sm"
           placeholder="공유코드 or URL을 입력해 주세요"
-          value={sharedCode}
-          onChange={handleSharedCode}
+          value={sharedText}
+          onChange={handleSharedText}
+          onKeyDown={handleSubmission}
         />
         <button
           className="radius-sm"
-          onClick={writeRollingPaper}
-          disabled={isLoading}
+          onClick={writeOrReceiveMine}
+          disabled={sharedText.length === 0 || isLoading}
         >
           참여하기
         </button>
       </div>
-      <Portal render={() => <Loading isLoading={isLoading} />} />
+
+      <Portal
+        render={() => (
+          <>
+            <Loading isLoading={isLoading} />
+            <FlowAlert
+              isAlerting={!!alertMessage}
+              onClose={closeAlert}
+              content={alertMessage}
+              defaultButton={typeof alertMessage === "string" ? "확인" : "취소"}
+              additionalButton={
+                typeof alertMessage === "string" ? undefined : "확인"
+              }
+              onClick={
+                typeof alertMessage === "string" ? undefined : viewRollingPaper
+              }
+            />
+          </>
+        )}
+      />
     </>
   )
 }

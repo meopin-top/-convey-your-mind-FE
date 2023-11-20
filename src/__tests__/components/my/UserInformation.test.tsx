@@ -1,67 +1,147 @@
-import type {HTMLAttributes} from "react"
-import {render, screen} from "@testing-library/react"
-import UserInformation from "@/components/my/UserInformation"
-import Storage from "@/store/local-storage"
-import {createLocalStorageMock} from "@/__mocks__/window"
+import {render, screen, fireEvent, waitFor} from "@testing-library/react"
+import {useRouter} from "next/navigation"
+import Component from "@/components/my/UserInformation"
+import Store from "@/store/setting-auth"
+import type {TProps as TPortalProps} from "@/components/Portal"
+import type {TProps as TSecretInputProps} from "@/components/SecretInput"
+import {SIGN_UP} from "@/constants/response-code"
+import {ROUTE} from "@/constants/service"
 
-jest.mock("next/image", () => ({
+const UserInformation = ({
+  setChecked = jest.fn(),
+}: {
+  setChecked?: () => void
+}) => {
+  return (
+    <Store.Provider value={{checked: false, setChecked}}>
+      <Component />
+    </Store.Provider>
+  )
+}
+
+const requestMock = jest.fn()
+
+jest.mock("next/navigation", () => ({
   __esModule: true,
-  default: ({...props}: HTMLAttributes<HTMLImageElement> & {fill: boolean}) => {
-    const newProps = {...props}
-    delete (newProps as any).fill
-
-    return <img alt="" {...newProps} />
-  },
+  useRouter: jest.fn(),
+}))
+jest.mock("../../../hooks/use-request.ts", () => ({
+  __esModule: true,
+  default: () => ({
+    request: requestMock,
+    isLoading: false,
+  }),
+}))
+jest.mock("../../../components/Portal.tsx", () => ({
+  __esModule: true,
+  default: ({render}: TPortalProps) => <>{render()}</>,
+}))
+jest.mock("../../../components/SecretInput.tsx", () => ({
+  __esModule: true,
+  default: ({...props}: Omit<TSecretInputProps, "size">) => (
+    <input className="password" {...props} />
+  ),
 }))
 jest.mock("../../../components/Loading.tsx", () => ({
   __esModule: true,
-  default: () => <>loading</>,
+  default: () => <div>loading...</div>,
 }))
 
 describe("UserInformation", () => {
-  beforeAll(() => {
-    createLocalStorageMock()
-  })
-
-  afterAll(() => {
-    window.localStorage.clear()
-  })
-
-  it("profile 이미지를 올바르게 렌더링한다.", () => {
+  it("설정 버튼을 올바르게 렌더링한다.", async () => {
     // given, when
-    const PROFILE = "https://profile/"
-    Storage.set("profile", PROFILE)
-
-    render(<UserInformation right={<></>} />)
-
-    const image = screen.getByAltText("프로필 이미지") as HTMLImageElement
-
-    // then
-    expect(image).toBeInTheDocument()
-    expect(image.src).toEqual(PROFILE)
-  })
-
-  it("nickName을 올바르게 렌더링한다.", () => {
-    // given, when
-    Storage.set("nickName", "nickName")
-
-    render(<UserInformation right={<></>} />)
-
-    const image = screen.getByText(/nickName/)
-
-    // then
-    expect(image).toBeInTheDocument()
-  })
-
-  it("right props을 올바르게 렌더링한다.", () => {
-    // given, when
-    render(<UserInformation right={<button>프로필 편집</button>} />)
-
-    const profileEditButton = screen.getByRole("button", {
-      name: "프로필 편집",
+    await waitFor(() => {
+      render(<UserInformation />)
     })
 
+    const settingButton = screen.getByRole("button", {name: /설정/})
+
     // then
-    expect(profileEditButton).toBeInTheDocument()
+    expect(settingButton).toBeInTheDocument()
+  })
+
+  it("설정 버튼을 클릭하면 내 설정 접근을 확인하는 Alert을 렌더링한다.", async () => {
+    // given
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
+
+    const settingButton = screen.getByRole("button", {name: /설정/})
+
+    // when
+    fireEvent.click(settingButton)
+
+    // then
+    const title = await screen.findByText(/내 설정 접근/)
+    const content = await screen.findByText(
+      /보안을 위해 현재 비밀번호를 입력해 주세요/
+    )
+    const cancelButton = await screen.findByRole("button", {name: "취소"})
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+
+    expect(title).toBeInTheDocument()
+    expect(content).toBeInTheDocument()
+    expect(cancelButton).toBeInTheDocument()
+    expect(confirmButton).toBeInTheDocument()
+  })
+
+  it("올바르지 않은 패스워드를 입력한 뒤 '확인하기' 버튼을 누르면 API 응답의 message가 ErrorAlert에 렌더링된다.", async () => {
+    // given
+    const message = "유효하지 않은 패스워드"
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({
+      code: SIGN_UP.DIFFERENT_PASSWORDS,
+      message,
+    })
+
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
+
+    const settingButton = screen.getByRole("button", {name: /설정/})
+    fireEvent.click(settingButton)
+
+    const passwordInput = await screen.findByPlaceholderText(
+      "비밀번호를 입력해 주세요"
+    )
+    fireEvent.change(passwordInput, {target: {value: "invalid password"}})
+
+    // when
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+    fireEvent.click(confirmButton)
+
+    // then
+    const alertContent = await screen.findByText(message)
+
+    expect(alertContent).toBeInTheDocument()
+  })
+
+  it("올바른 패스워드를 입력한 뒤 '확인하기' 버튼을 누르면 인증 확인 Context가 true로 변경되고 내 설정 페이지로 이동한다.", async () => {
+    // given
+    const routerPushMock = jest.fn()
+    ;(useRouter as jest.Mock).mockReturnValue({
+      push: routerPushMock,
+    })
+    ;(requestMock as jest.Mock).mockResolvedValueOnce({})
+
+    await waitFor(() => {
+      render(<UserInformation />)
+    })
+
+    const settingButton = screen.getByRole("button", {name: /설정/})
+    fireEvent.click(settingButton)
+
+    const passwordInput = await screen.findByPlaceholderText(
+      "비밀번호를 입력해 주세요"
+    )
+    fireEvent.change(passwordInput, {target: {value: "valid password"}})
+
+    // when
+    const confirmButton = await screen.findByRole("button", {name: "확인하기"})
+    fireEvent.click(confirmButton)
+
+    // then
+    await waitFor(() => {
+      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.MY_SETTING)
+    })
   })
 })

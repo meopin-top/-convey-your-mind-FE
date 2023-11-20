@@ -37,7 +37,7 @@ describe("VALIDATOR", () => {
 
     INVALID_PASSWORDS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD._.test(password)).toBeFalsy()
+      expect(VALIDATOR.PASSWORD.test(password)).toBeFalsy()
     })
   })
 
@@ -46,7 +46,7 @@ describe("VALIDATOR", () => {
 
     VALID_PASSWORDS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD._.test(password)).toBeTruthy()
+      expect(VALIDATOR.PASSWORD.test(password)).toBeTruthy()
     })
   })
 
@@ -55,7 +55,7 @@ describe("VALIDATOR", () => {
 
     WITHOUT_ENGLISHES.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.ENGLISH.test(password)).toBeFalsy()
+      expect(VALIDATOR.ENGLISH.test(password)).toBeFalsy()
     })
   })
 
@@ -64,7 +64,7 @@ describe("VALIDATOR", () => {
 
     WITH_ENGLISHES.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.ENGLISH.test(password)).toBeTruthy()
+      expect(VALIDATOR.ENGLISH.test(password)).toBeTruthy()
     })
   })
 
@@ -73,7 +73,7 @@ describe("VALIDATOR", () => {
 
     WITHOUT_NUMBERS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.NUMBER.test(password)).toBeFalsy()
+      expect(VALIDATOR.NUMBER.test(password)).toBeFalsy()
     })
   })
 
@@ -82,7 +82,7 @@ describe("VALIDATOR", () => {
 
     WITH_NUMBERS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.NUMBER.test(password)).toBeTruthy()
+      expect(VALIDATOR.NUMBER.test(password)).toBeTruthy()
     })
   })
 
@@ -91,7 +91,7 @@ describe("VALIDATOR", () => {
 
     WITHOUT_SPECIAL_CHARACTERS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)).toBeFalsy()
+      expect(VALIDATOR.SPECIAL_CHARACTER.test(password)).toBeFalsy()
     })
   })
 
@@ -100,7 +100,7 @@ describe("VALIDATOR", () => {
 
     WITH_SPECIAL_CHARACTERS.forEach((password) => {
       // then
-      expect(VALIDATOR.PASSWORD.SPECIAL_CHARACTER.test(password)).toBeTruthy()
+      expect(VALIDATOR.SPECIAL_CHARACTER.test(password)).toBeTruthy()
     })
   })
 

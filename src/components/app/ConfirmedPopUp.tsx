@@ -1,11 +1,6 @@
 "use client"
 
-import {
-  useState,
-  type ChangeEvent,
-  type KeyboardEvent,
-  type ReactNode,
-} from "react"
+import {useState, type KeyboardEvent, type ReactNode} from "react"
 import dynamic from "next/dynamic"
 import {Alert, SecretInput} from "../"
 import useInput from "@/hooks/use-input"
@@ -21,7 +16,7 @@ export type TProps = {
   userId: string
   password: string
   onClose: () => void
-  onSubmit: (confirmedPassword: string) => void
+  submit: (confirmedPassword: string, email: string) => void
 }
 
 const ConfirmedPopUp = ({
@@ -30,11 +25,11 @@ const ConfirmedPopUp = ({
   userId,
   password,
   onClose,
-  onSubmit,
+  submit,
 }: TProps) => {
   const [alertMessage, setAlertMessage] = useState<ReactNode | null>(null)
-  const [email, setEmail] = useState("")
 
+  const [email, handleEmail] = useInput("")
   const [confirmedPassword, setConfirmedPassword] = useInput("")
 
   function handleSubmission(event: KeyboardEvent<HTMLInputElement>) {
@@ -42,10 +37,6 @@ const ConfirmedPopUp = ({
     if (isEnterKeyDowned) {
       checkValidation()
     }
-  }
-
-  function handleEmail(event: ChangeEvent<HTMLInputElement>) {
-    setEmail(event.target.value)
   }
 
   function checkValidation() {
@@ -73,7 +64,7 @@ const ConfirmedPopUp = ({
       return
     }
 
-    onSubmit(confirmedPassword)
+    submit(confirmedPassword, email)
   }
 
   function closeAlert() {
@@ -109,6 +100,7 @@ const ConfirmedPopUp = ({
               className="radius-sm"
               style={{padding: "4px 8px", color: "#1a237e"}}
               value={userId}
+              type="text"
               disabled
             />
             <span className="f-center" style={{fontWeight: "500"}}>
@@ -143,6 +135,7 @@ const ConfirmedPopUp = ({
                 height: "38px",
                 fontSize: "10px",
               }}
+              type="email"
               placeholder="(선택) 이메일을 입력해주세요."
               value={email}
               maxLength={100}

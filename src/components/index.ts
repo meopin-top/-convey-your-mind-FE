@@ -11,6 +11,7 @@ import Redirecting from "./Redirecting"
 import Reducer from "./Reducer"
 import SecretInput from "./SecretInput"
 import Toast from "./Toast"
+import User from "./User"
 
 export {
   Alert,
@@ -27,4 +28,5 @@ export {
   Reducer,
   SecretInput,
   Toast,
+  User,
 }

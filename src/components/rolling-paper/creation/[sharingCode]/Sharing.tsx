@@ -29,7 +29,7 @@ const Sharing = ({sharingCode}: TProps) => {
 
   const {copy} = useCopy()
 
-  const SHARING_URL = `${DOMAIN}/${encodeURI(sharingCode)}`
+  const SHARING_URL = `${DOMAIN}/${sharingCode}`
   const TIME_OUT = 3_000
   let timer: NodeJS.Timeout | null = null
 
@@ -90,17 +90,24 @@ const Sharing = ({sharingCode}: TProps) => {
     }
 
     window.Kakao.Share.sendDefault({
-      objectType: "text",
-      text: "기본 템플릿으로 제공되는 텍스트 템플릿은 텍스트를 최대 200자까지 표시할 수 있습니다. 텍스트 템플릿은 텍스트 영역과 하나의 기본 버튼을 가집니다. 임의의 버튼을 설정할 수도 있습니다. 여러 장의 이미지, 프로필 정보 등 보다 확장된 형태의 카카오톡 공유는 다른 템플릿을 이용해 보낼 수 있습니다.",
-      link: {
-        mobileWebUrl: SHARING_URL,
-        webUrl: SHARING_URL,
+      objectType: "feed",
+      content: {
+        title: "[Letterszip] 온라인에서 만나는 롤링페이퍼",
+        description:
+          "종이 편지에 담았던 진심과 정성을 그대로, 온라인에서 만나보세요!",
+        imageUrl:
+          "https://mud-kage.kakao.com/dn/NTmhS/btqfEUdFAUf/FjKzkZsnoeE4o19klTOVI1/openlink_640x640s.jpg", // TODO: 이미지 나오면 변경
+        link: {
+          mobileWebUrl: SHARING_URL,
+          webUrl: SHARING_URL,
+        },
       },
+      buttonTitle: "편지 쓰러 가기",
     })
   }
 
   async function shareOverOs() {
-    const isShareSupported = Boolean(navigator?.share)
+    const isShareSupported = !!navigator?.share
 
     setIsOsShareLoading(true)
 

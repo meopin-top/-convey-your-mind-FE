@@ -3,6 +3,7 @@
 import {useContext, type MouseEvent} from "react"
 import {Type} from "@/components/rolling-paper/creation"
 import {TypeStore} from "@/components/rolling-paper/creation/Context"
+import {ROLLING_PAPER_TYPE} from "@/constants/request"
 
 type TProps = {}
 
@@ -24,7 +25,7 @@ const Types = ({}: TProps) => {
 
     handleType({
       template,
-      text
+      text,
     })
   }
 
@@ -34,8 +35,8 @@ const Types = ({}: TProps) => {
       <div className="type-wrapper mt-4" onClick={setType}>
         <Type
           recommendationText="n명 이하 추천"
-          type="D"
-          isSelected={type?.template === "D"}
+          type={ROLLING_PAPER_TYPE.FREELY}
+          isSelected={type?.template === ROLLING_PAPER_TYPE.FREELY}
         >
           큰 종이에
           <br />

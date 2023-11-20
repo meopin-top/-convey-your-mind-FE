@@ -7,7 +7,7 @@ import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
 import SignInStore from "@/store/sign-in"
 import {ROLLING_PAPER} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -42,7 +42,7 @@ const WithoutSignUp = () => {
       path: `/projects/invite-code/${encodeURIComponent(sharedCode)}`,
     })
 
-    if (code !== ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS) {
+    if (code !== ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS) {
       setAlertMessage(
         <>
           유효하지 않은 공유코드/URL입니다.
@@ -77,13 +77,13 @@ const WithoutSignUp = () => {
 
   function startWithSignIn() {
     setTab("signIn")
-    setRedirectTo(ROUTE.ROLLING_PAPER_WRITE)
+    setRedirectTo(ROUTE.ROLLING_PAPER_EDIT)
 
     closeAlert()
   }
 
   function startWithoutSignIn() {
-    router.push(ROUTE.ROLLING_PAPER_WRITE)
+    router.push(ROUTE.ROLLING_PAPER_EDIT)
     // router.push(sharedCode) // TODO: 롤링페이퍼 작성 화면 생성 후 수정
   }
 
@@ -112,13 +112,13 @@ const WithoutSignUp = () => {
             <Loading isLoading={isLoading} />
             {isInvalidAlert ? (
               <FlowAlert
-                isAlerting={Boolean(alertMessage)}
+                isAlerting={!!alertMessage}
                 onClose={closeAlert}
                 content={alertMessage}
               />
             ) : (
               <FlowAlert
-                isAlerting={Boolean(alertMessage)}
+                isAlerting={!!alertMessage}
                 content={alertMessage}
                 defaultButton="로그인"
                 onClose={startWithSignIn}

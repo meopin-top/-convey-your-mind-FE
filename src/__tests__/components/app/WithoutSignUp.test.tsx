@@ -6,7 +6,7 @@ import {ROLLING_PAPER} from "@/constants/response-code"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TFlowAlertProps} from "@/components/FlowAlert"
 import type {TRoute, TTab} from "@/@types/sign-in"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const setTabMock = jest.fn()
 const setRedirectToMock = jest.fn()
@@ -147,7 +147,7 @@ describe("WithoutSignUp", () => {
   it("입력 버튼 클릭 시 참여 가능하지 않은 프로젝트의 공유 코드라면 '유효하지 않은 공유코드/URL입니다'라는 문구가 포함된 FlowAlert 노출된다.", async () => {
     // then
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: ROLLING_PAPER.INVITE_CODE.QUERY_FAILURE,
+      code: ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE,
     })
 
     render(<WithoutSignUp />)
@@ -174,7 +174,7 @@ describe("WithoutSignUp", () => {
   it("입력 버튼 클릭 시 참여 가능한 프로젝트의 공유 코드라면 '로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
     // given
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS,
+      code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
     render(<WithoutSignUp />)
@@ -202,7 +202,7 @@ describe("WithoutSignUp", () => {
   it("'로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출되면 '로그인' 버튼과 '계속' 버튼도 렌더링된다.", async () => {
     // given
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS,
+      code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
     render(<WithoutSignUp />)
@@ -234,7 +234,7 @@ describe("WithoutSignUp", () => {
   it("FlowAlert의 '로그인' 버튼을 누르면 context의 tab을 로그인으로, 로그인 시 redirection 링크를 롤링페이퍼 쓰기로 변경하고 FlowAlert를 종료한다.", async () => {
     // given
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS,
+      code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
     render(<WithoutSignUp />)
@@ -263,7 +263,7 @@ describe("WithoutSignUp", () => {
       expect(setTabMock).toHaveBeenCalledTimes(1)
       expect(setTabMock).toHaveBeenCalledWith("signIn")
       expect(setRedirectToMock).toHaveBeenCalledTimes(1)
-      expect(setRedirectToMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_WRITE)
+      expect(setRedirectToMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
     })
   })
 
@@ -274,7 +274,7 @@ describe("WithoutSignUp", () => {
       push: routerPushMock,
     })
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: ROLLING_PAPER.INVITE_CODE.QUERY_SUCCESS,
+      code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
     render(<WithoutSignUp />)
@@ -299,7 +299,7 @@ describe("WithoutSignUp", () => {
 
     // then
     await waitFor(() => {
-      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_WRITE)
+      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
     })
   })
 })

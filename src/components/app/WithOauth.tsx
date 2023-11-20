@@ -3,7 +3,7 @@
 import {useRouter} from "next/navigation"
 import Image from "next/image"
 import {kakaoLogo, naverLogo} from "@/assets/images"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const WithOauth = () => {
   const router = useRouter()

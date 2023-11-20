@@ -12,7 +12,7 @@ import useInput from "@/hooks/use-input"
 import {formatDateTime} from "@/utils/formatter"
 import {calculateDateOffset} from "@/utils/date"
 import {ROLLING_PAPER} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import type {TRollingPaperType} from "@/@types/rolling-paper"
 
 type TProps = {

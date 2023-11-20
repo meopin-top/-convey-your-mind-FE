@@ -1,7 +1,7 @@
 "use client"
 
 import {useState, createContext, type ReactNode} from "react"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 import type {TStore, TTab, TRoute} from "@/@types/sign-in"
 
 const Store = createContext<TStore>({

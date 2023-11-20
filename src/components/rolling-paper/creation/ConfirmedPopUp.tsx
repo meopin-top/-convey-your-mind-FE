@@ -15,7 +15,7 @@ import {
 import {formatDateTime} from "@/utils/formatter"
 import {calculateDateOffset} from "@/utils/date"
 import {ROLLING_PAPER} from "@/constants/response-code"
-import ROUTE from "@/constants/route"
+import {ROUTE} from "@/constants/service"
 
 const ErrorAlert = dynamic(() => import("../../FlowAlert"), {
   loading: () => <></>,

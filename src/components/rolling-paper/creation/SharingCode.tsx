@@ -16,11 +16,11 @@ const SharingCode = ({}: TProps) => {
   useEffect(() => {
     async function getInviteCode() {
       const {data} = await request({
-        path: "/projects/invite-code"
+        path: "/projects/invite-code",
       })
 
       handleSharingCode({
-        target: {value: data ?? ""}
+        target: {value: data ?? ""},
       } as TInputChangeEvent)
     }
 
@@ -43,6 +43,7 @@ const SharingCode = ({}: TProps) => {
           type="text"
           placeholder="공유 코드를 입력해주세요"
           value={sharingCode}
+          maxLength={20}
           onChange={handleSharingCode}
         />
       </div>

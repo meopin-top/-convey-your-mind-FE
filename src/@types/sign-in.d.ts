@@ -1,6 +1,6 @@
 export type TTab = "signIn" | "signUp"
 
-export type TRoute = "/my" | "/rolling-paper/write"
+export type TRoute = "/my" | "/rolling-paper/edit"
 
 export type TStore = {
   tab: TTab
