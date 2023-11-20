@@ -74,7 +74,7 @@ type TResponse = {
 //   },
 // ]
 
-const MyPage = async () => {
+const MyPage = () => {
   const [projects, setProjects] = useState<TResponse[]>([])
   const [rollingPapers, setRollingPapers] = useState<TResponse[]>([])
 
@@ -109,8 +109,8 @@ const MyPage = async () => {
 
       console.log(projects)
       console.log(rollingPapers)
-      setProjects(projects)
-      setRollingPapers(rollingPapers)
+      setProjects([...projects])
+      setRollingPapers([...rollingPapers])
     }
 
     request()
