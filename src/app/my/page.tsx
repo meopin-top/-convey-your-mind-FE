@@ -1,6 +1,4 @@
-"use client"
-
-import {Suspense, useState, useEffect} from "react"
+import {Suspense} from "react"
 import Link from "next/link"
 import {calculateRemainingDay} from "@/utils/formatter"
 import {PROJECT_TYPE} from "@/constants/request"
@@ -75,48 +73,33 @@ type TResponse = {
 // ]
 
 const MyPage = async () => {
-  const [projects, setProjects] = useState<TResponse[]>([])
-  const [rollingPapers, setRollingPapers] = useState<TResponse[]>([])
-
-  useEffect(() => {
-    async function request() {
-      const fetchPromises = [
-        fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`
-        ),
-        fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
-        ),
+  const fetchPromises = [
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`
+    ),
+    fetch(
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
+    ),
+  ]
+  const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
+    await Promise.all(fetchPromises).then(
+      ([fetchedProjects, fetchedRollingPapers]) => [
+        fetchedProjects.json(),
+        fetchedRollingPapers.json(),
       ]
-      const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
-        await Promise.all(fetchPromises).then(
-          ([fetchedProjects, fetchedRollingPapers]) => [
-            fetchedProjects.json(),
-            fetchedRollingPapers.json(),
-          ]
-        )
+    )
 
-      console.log(jsonPromises)
+  const [
+    {
+      data: {pageResult: projects},
+    },
+    {
+      data: {pageResult: rollingPapers},
+    },
+  ] = await Promise.all(jsonPromises)
 
-      const [
-        {
-          data: {pageResult: projects},
-        },
-        {
-          data: {pageResult: rollingPapers},
-        },
-      ] = await Promise.all(jsonPromises)
-
-      console.log(projects)
-      console.log(rollingPapers)
-      setProjects([...projects])
-      setRollingPapers([...rollingPapers])
-    }
-
-    request()
-  }, [])
-
-  console.warn(projects, rollingPapers)
+  console.log(projects)
+  console.warn(rollingPapers)
 
   return (
     <Suspense fallback={<Loading isLoading />}>
@@ -133,9 +116,6 @@ const MyPage = async () => {
               <h5 className="title"># 참여 중인 프로젝트</h5>
               <AllProjects />
             </div>
-
-            {projects?.length}
-            {rollingPapers?.length}
 
             {projects?.length > 0 ? (
               <ul>
