@@ -10,7 +10,8 @@ import {
   AllReceivedRollingPapers,
 } from "@/components/my"
 
-// TODO: 클라이언트 컴포넌트로 바꾸고 잘 동작하는지 보자
+// TODO: 왜 빌드할 때 서버 컴포넌트가 실행되고, start할 때는 실행이 안 되냐
+// static? fetch? 뭐하고 관련된 걸까
 
 // TODO: API 명세 작성되면 각각 알파벳 매핑 변경
 // TODO: API 연동 어떻게 되는건지 DB 확인 필요
@@ -72,13 +73,23 @@ type TResponse = {
 //   },
 // ]
 
-const MyPage = async () => {
+async function getMyProjects() {
   const fetchPromises = [
     fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`,
+      {
+        next: {
+          revalidate: 10,
+        },
+      }
     ),
     fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
+      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`,
+      {
+        next: {
+          revalidate: 10,
+        },
+      }
     ),
   ]
   const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
@@ -98,8 +109,16 @@ const MyPage = async () => {
     },
   ] = await Promise.all(jsonPromises)
 
-  console.log(projects)
-  console.warn(rollingPapers)
+  return {
+    projects,
+    rollingPapers,
+  }
+}
+
+const MyPage = async () => {
+  const {projects, rollingPapers} = await getMyProjects()
+
+  console.log(projects, rollingPapers)
 
   return (
     <Suspense fallback={<Loading isLoading />}>
