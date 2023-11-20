@@ -74,7 +74,7 @@ type TResponse = {
 //   },
 // ]
 
-const MyPage = () => {
+const MyPage = async () => {
   const [projects, setProjects] = useState<TResponse[]>([])
   const [rollingPapers, setRollingPapers] = useState<TResponse[]>([])
 
