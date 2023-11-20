@@ -1,4 +1,6 @@
-import {Suspense} from "react"
+"use client"
+
+import {Suspense, useState, useEffect} from "react"
 import Link from "next/link"
 import {calculateRemainingDay} from "@/utils/formatter"
 import {PROJECT_TYPE} from "@/constants/request"
@@ -10,7 +12,10 @@ import {
   AllReceivedRollingPapers,
 } from "@/components/my"
 
+// TODO: 클라이언트 컴포넌트로 바꾸고 잘 동작하는지 보자
+
 // TODO: API 명세 작성되면 각각 알파벳 매핑 변경
+// TODO: API 연동 어떻게 되는건지 DB 확인 필요
 const statusMapper = {
   D: "참여 완료",
   E: "작성 전",
@@ -70,30 +75,46 @@ type TResponse = {
 // ]
 
 const MyPage = async () => {
-  const fetchPromises = [
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`
-    ),
-    fetch(
-      `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
-    ),
-  ]
-  const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
-    await Promise.all(fetchPromises).then(
-      ([fetchedProjects, fetchedRollingPapers]) => [
-        fetchedProjects.json(),
-        fetchedRollingPapers.json(),
-      ]
-    )
+  const [projects, setProjects] = useState<TResponse[]>([])
+  const [rollingPapers, setRollingPapers] = useState<TResponse[]>([])
 
-  const [
-    {
-      data: {pageResult: projects},
-    },
-    {
-      data: {pageResult: rollingPapers},
-    },
-  ] = await Promise.all(jsonPromises)
+  useEffect(() => {
+    async function request() {
+      const fetchPromises = [
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=3&pageNum=1&type=${PROJECT_TYPE.PARTICIPANT}`
+        ),
+        fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/api/projects/page?pageSize=4&pageNum=1&type=${PROJECT_TYPE.RECEIVER}`
+        ),
+      ]
+      const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
+        await Promise.all(fetchPromises).then(
+          ([fetchedProjects, fetchedRollingPapers]) => [
+            fetchedProjects.json(),
+            fetchedRollingPapers.json(),
+          ]
+        )
+
+      console.log(jsonPromises)
+
+      const [a, b] = await Promise.all(jsonPromises)
+
+      console.log(a, b)
+      // const [
+      //   {
+      //     data: {pageResult: projects},
+      //   },
+      //   {
+      //     data: {pageResult: rollingPapers},
+      //   },
+      // ] = await Promise.all(jsonPromises)
+      setProjects(a.data.pageResult)
+      setRollingPapers(b.data.pageResult)
+    }
+
+    request()
+  }, [])
 
   return (
     <Suspense fallback={<Loading isLoading />}>
