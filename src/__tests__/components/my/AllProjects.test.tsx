@@ -1,7 +1,8 @@
-import {render, screen, fireEvent} from "@testing-library/react"
+import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import type {ReactNode} from "react"
 import AllProjects from "@/components/my/AllProjects"
-import {createAlertMock} from "@/__mocks__/window"
+import {calculateRemainingDay} from "@/utils/formatter"
+import {ROLLING_PAPER_STATUS} from "@/constants/request"
 import {ALL_PROJECTS, ROUTE} from "@/constants/service"
 
 const getSearchParamsMock = jest.fn().mockReturnValue(ALL_PROJECTS)
@@ -25,19 +26,25 @@ jest.mock("../../../components/BottomSheet.tsx", () => ({
     </>
   ),
 }))
-jest.mock("../../../hooks/use-log-out.ts")
+
+const requestMock = jest.fn()
+jest.mock("../../../hooks/use-request.ts", () => ({
+  __esModule: true,
+  default: () => ({
+    request: requestMock,
+    isLoading: false,
+  }),
+}))
 
 describe("AllProjects", () => {
-  beforeAll(() => {
-    createAlertMock()
-  })
-
-  afterEach(() => {
+  afterAll(() => {
     jest.clearAllMocks()
   })
 
-  function renderBottomSheet() {
-    render(<AllProjects />)
+  async function renderBottomSheet() {
+    await waitFor(() => {
+      render(<AllProjects />)
+    })
 
     const viewAllButton = screen.getByRole("button", {
       name: "> 전체 보기",
@@ -46,9 +53,18 @@ describe("AllProjects", () => {
     fireEvent.click(viewAllButton)
   }
 
-  it("전체 보기 버튼을 렌더링한다.", () => {
+  it("전체 보기 버튼을 렌더링한다.", async () => {
     // given, when
-    render(<AllProjects />)
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 0,
+        pageResult: [],
+      },
+    })
+
+    await waitFor(() => {
+      render(<AllProjects />)
+    })
 
     const viewAllButton = screen.getByRole("button", {
       name: "> 전체 보기",
@@ -58,8 +74,18 @@ describe("AllProjects", () => {
     expect(viewAllButton).toBeInTheDocument()
   })
 
-  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이면 바텀 시트에 isOpen props로 true를 전달한다.", () => {
-    render(<AllProjects />)
+  it("렌더링될 때 바텀 시트를 열라는 쿼리 스트링이 포함된 URL이면 바텀 시트에 isOpen props로 true를 전달한다.", async () => {
+    // given, when
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 0,
+        pageResult: [],
+      },
+    })
+
+    await waitFor(() => {
+      render(<AllProjects />)
+    })
 
     const bottomSheet = screen.getByText("isOpen: 열림")
 
@@ -67,11 +93,13 @@ describe("AllProjects", () => {
     expect(bottomSheet).toBeInTheDocument()
   })
 
-  it("렌더링될 때 바텀 시트가 열라는 쿼리 스트링이 포함된 URL이 아니면 바텀 시트에 isOpen props로 false를 전달한다.", () => {
+  it("렌더링될 때 바텀 시트를 열라는 쿼리 스트링이 포함된 URL이 아니면 바텀 시트에 isOpen props로 false를 전달한다.", async () => {
     // given, when
     getSearchParamsMock.mockImplementationOnce(() => "close")
 
-    render(<AllProjects />)
+    await waitFor(() => {
+      render(<AllProjects />)
+    })
 
     const bottomSheet = screen.getByText("isOpen: 닫힘")
 
@@ -79,9 +107,16 @@ describe("AllProjects", () => {
     expect(bottomSheet).toBeInTheDocument()
   })
 
-  it("전체 보기 버튼을 클릭하면 URL을 변경하며 바텀 시트에 isOpen props로 true를 전달한다.", () => {
+  it("전체 보기 버튼을 클릭하면 URL을 변경하며 바텀 시트에 isOpen props로 true를 전달한다.", async () => {
     // given, when
-    renderBottomSheet()
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 0,
+        pageResult: [],
+      },
+    })
+
+    await renderBottomSheet()
 
     const bottomSheet = screen.getByText("isOpen: 열림")
 
@@ -90,9 +125,16 @@ describe("AllProjects", () => {
     expect(bottomSheet).toBeInTheDocument()
   })
 
-  it("페이지네이션 input 0이하일 경우 1페이지로 이동한다.", () => {
+  it("페이지네이션 input 0이하일 경우 1페이지로 이동한다.", async () => {
     // given
-    renderBottomSheet()
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 1,
+        pageResult: [],
+      },
+    })
+
+    await renderBottomSheet()
 
     const paginationInput = screen.getByDisplayValue("1") as HTMLInputElement
 
@@ -119,9 +161,17 @@ describe("AllProjects", () => {
     expect(paginationInput.value).toEqual("1")
   })
 
-  it("페이지네이션 input 마지막 페이지보다 클 경우 마지막 페이지로 이동한다.", () => {
+  it("페이지네이션 input 마지막 페이지보다 클 경우 마지막 페이지로 이동한다.", async () => {
     // given
-    renderBottomSheet()
+    const TOTAL_LENGTH = 20
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: TOTAL_LENGTH,
+        pageResult: [],
+      },
+    })
+
+    await renderBottomSheet()
 
     const paginationInput = screen.getByDisplayValue("1") as HTMLInputElement
 
@@ -134,43 +184,76 @@ describe("AllProjects", () => {
     })
 
     // then
-    expect(paginationInput.value).toEqual("10") // TODO: 모킹한 후 수정
+    expect(paginationInput.value).toEqual(
+      Math.ceil(TOTAL_LENGTH / 5).toString() // 5: 페이지 사이즈
+    )
   })
 
-  it("페이지네이션 input에 유효한 페이지 범위의 숫자를 입력할 경우 alert이 호출된다.", () => {
-    // TODO: API 호출로 바뀌어야 함
+  it("페이지네이션 input에 유효한 페이지 범위의 숫자를 입력할 경우 해당 페이지로 이동한다.", async () => {
     // given
-    renderBottomSheet()
+    const VALID_PAGE = "2"
+
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 20,
+        pageResult: [],
+      },
+    })
+
+    await renderBottomSheet()
 
     const paginationInput = screen.getByDisplayValue("1") as HTMLInputElement
 
     // when
     fireEvent.change(paginationInput, {
-      target: {value: "1"},
+      target: {value: VALID_PAGE},
     })
     fireEvent.keyDown(paginationInput, {
       key: "Enter",
     })
 
     // then
-    expect(window.alert).toHaveBeenCalledWith("API 연동")
+    expect(paginationInput.value).toEqual(VALID_PAGE)
   })
 
-  // TODO: API 연동
-  // TODO: 페이지네이션 API 테스트
-  // it("해당 프로젝트 생성자일 경우 왕관이 렌더링된다.", () => {
+  it("참여 중인 프로젝트 정보를 올바르게 렌더링한다.", async () => {
+    // given, when
+    const DESTINATION = "someone"
+    const EXPIRED_DATETIME = "2024-03-04T15:00:00"
+    const STATUS = "R"
+    const INVITE_CODE = "abcdefu"
 
-  // })
+    requestMock.mockResolvedValue({
+      data: {
+        totalLength: 1,
+        pageResult: [
+          {
+            id: 12,
+            inviteCode: INVITE_CODE,
+            maxInviteNum: 10,
+            destination: DESTINATION,
+            type: "D",
+            status: STATUS,
+            createdDatetime: "2023-11-26T05:54:56.602386",
+            updatedDatetime: "2023-11-26T05:54:56.602386",
+            expiredDatetime: EXPIRED_DATETIME,
+            owner: true,
+          },
+        ],
+      },
+    })
 
-  // it("프로젝트 제목이 렌더링된다.", () => {
+    await renderBottomSheet()
 
-  // })
+    // then
+    const destination = screen.getByText(DESTINATION)
+    const dDay = screen.getByText(
+      `D-${Math.max(Math.min(calculateRemainingDay(EXPIRED_DATETIME), 999), 0)}`
+    )
+    const status = screen.getByText(ROLLING_PAPER_STATUS[STATUS])
 
-  // it("완성되지 않은 프로젝트의 경우 D-day가 렌더링된다.", () => {
-
-  // })
-
-  // it("프로젝트 상태에 따른 버튼이 렌더링된다.", () => {
-
-  // })
+    expect(destination).toBeInTheDocument()
+    expect(dDay).toBeInTheDocument()
+    expect(status).toBeInTheDocument()
+  })
 })
