@@ -102,8 +102,6 @@ describe("MyPage", () => {
               pageResult: [
                 {
                   id: 12,
-                  title: null,
-                  description: null,
                   inviteCode: INVITE_CODE,
                   maxInviteNum: 10,
                   destination: DESTINATION,
@@ -165,8 +163,6 @@ describe("MyPage", () => {
               pageResult: [
                 {
                   id: 12,
-                  title: null,
-                  description: null,
                   inviteCode: INVITE_CODE,
                   maxInviteNum: 10,
                   destination: DESTINATION,

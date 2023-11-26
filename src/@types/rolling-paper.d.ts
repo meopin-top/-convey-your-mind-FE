@@ -27,8 +27,6 @@ export type TStore = {
 
 export type TRollingPaperInformation = {
   id: number
-  title: string
-  description: string
   inviteCode: string
   maxInviteNum: number
   destination: string
