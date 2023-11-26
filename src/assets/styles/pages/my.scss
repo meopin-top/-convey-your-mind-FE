@@ -202,6 +202,7 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 10px 20px;
+        width: 100%;
 
         li {
           height: 86px;
