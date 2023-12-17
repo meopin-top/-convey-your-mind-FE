@@ -17,4 +17,4 @@ export const ROUTE = {
   ROLLING_PAPER_VIEW: "/rolling-paper/view",
 } as const
 
-export const DOMAIN = "http://34.64.92.123" // TODO: 도메인 구입 후 변경
+export const DOMAIN = "http://letterszip.online" // TODO: ssl 적용하면 변경
