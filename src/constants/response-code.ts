@@ -12,6 +12,11 @@ export const AUTH = {
     NONEXISTENT_ID: 1111,
     INVALID_PASSWORD: 1112,
   },
+  USER: {
+    GET_DATA_SUCCESS: 1304,
+    GET_RANDOM_NICKNAME_SUCCESS: 1302,
+    SEND_EMAIL_SUCCESS: 1303,
+  },
 } as const
 
 export const ROLLING_PAPER = {
