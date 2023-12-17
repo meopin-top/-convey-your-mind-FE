@@ -4,7 +4,7 @@ import Component from "@/components/my/UserInformation"
 import Store from "@/store/setting-auth"
 import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
-import {SIGN_UP} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 
 const UserInformation = ({
@@ -89,7 +89,7 @@ describe("UserInformation", () => {
     // given
     const message = "유효하지 않은 패스워드"
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
-      code: SIGN_UP.DIFFERENT_PASSWORDS,
+      code: AUTH.SIGN_UP.DIFFERENT_PASSWORDS,
       message,
     })
 

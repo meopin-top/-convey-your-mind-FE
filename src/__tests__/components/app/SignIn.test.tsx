@@ -4,7 +4,7 @@ import Component from "@/components/app/SignIn"
 import type {TProps as TSecretInputProps} from "@/components/SecretInput"
 import Context from "@/store/sign-in"
 import type {TProps as TPortalProps} from "@/components/Portal"
-import {SIGN_IN} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 import {createLocalStorageMock} from "@/__mocks__/window"
 import type {TRoute, TTab} from "@/@types/sign-in"
@@ -224,7 +224,7 @@ describe("SignIn", () => {
     const password = "password"
 
     requestMock.mockResolvedValueOnce({
-      code: SIGN_IN.SUCCESS,
+      code: AUTH.SIGN_IN.SUCCESS,
       message: "로그인 성공",
       data: {
         nickName,
@@ -274,7 +274,7 @@ describe("SignIn", () => {
     const password = "password"
 
     requestMock.mockResolvedValueOnce({
-      code: SIGN_IN.SUCCESS,
+      code: AUTH.SIGN_IN.SUCCESS,
       message: "로그인 성공",
       data: {
         nickName,

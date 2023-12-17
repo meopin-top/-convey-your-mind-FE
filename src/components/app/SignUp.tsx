@@ -7,7 +7,7 @@ import {SecretInput} from "../"
 import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import useRequest from "@/hooks/use-request"
-import {SIGN_UP} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import {VALIDATOR} from "@/constants/input"
 import {ROUTE} from "@/constants/service"
 import Storage from "@/store/local-storage"
@@ -98,7 +98,7 @@ const SignUp = () => {
             },
     })
 
-    if (code === SIGN_UP.SUCCESS) {
+    if (code === AUTH.SIGN_UP.SUCCESS) {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
       router.push(ROUTE.MY_PAGE)

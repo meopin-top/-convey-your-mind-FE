@@ -7,7 +7,7 @@ import {Redirecting} from "@/components"
 import useRequest from "@/hooks/use-request"
 import Storage from "@/store/local-storage"
 import {ROUTE} from "@/constants/service"
-import {SIGN_IN} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import type {TSignInResponse} from "@/@types/auth"
 
 const Portal = dynamic(() => import("../../components/Portal"), {
@@ -42,7 +42,7 @@ const OauthMiddleware = () => {
         path: `${path}?code=${searchParams.get("code")}`,
       })
 
-      if (code === SIGN_IN.SUCCESS) {
+      if (code === AUTH.SIGN_IN.SUCCESS) {
         Storage.set("nickName", data.nickName)
         Storage.set("profile", data.profile)
 

@@ -15,7 +15,7 @@ import useInput from "@/hooks/use-input"
 import useFocus from "@/hooks/use-focus"
 import Storage from "@/store/local-storage"
 import SignInStore from "@/store/sign-in"
-import {SIGN_IN} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 import type {TSignInResponse} from "@/@types/auth"
 
@@ -60,7 +60,7 @@ const SignIn = () => {
       },
     })
 
-    if (code === SIGN_IN.SUCCESS) {
+    if (code === AUTH.SIGN_IN.SUCCESS) {
       Storage.set("nickName", data.nickName)
       Storage.set("profile", data.profile)
 
