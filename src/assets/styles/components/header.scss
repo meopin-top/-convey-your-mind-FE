@@ -20,7 +20,7 @@
       background-color: rgba(#000, 0.3);
       transform: translateX(0);
       transition: transform $MOVING_TIME ease-in-out,
-      background-color 0.2s $MOVING_TIME linear;
+        background-color 0.2s $MOVING_TIME linear;
     }
 
     &.close {
