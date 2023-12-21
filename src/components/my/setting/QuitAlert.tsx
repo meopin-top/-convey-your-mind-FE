@@ -38,29 +38,35 @@ const QuitAlert = () => {
   }
 
   return (
-    <Portal
-      render={() => (
-        <FlowAlert
-          isAlerting={isAlerting}
-          onClose={closeIsAlerting}
-          content={
-            <>
-              변경을 취소할까요?
-              <br />
-              <span style={{fontSize: "10px"}}>
-                * 현재 창을 벗어날 경우{" "}
-                <b style={{textDecoration: "underline"}}>
-                  변경사항이 저장되지 않습니다.
-                </b>
-              </span>
-            </>
-          }
-          defaultButton="취소"
-          additionalButton="확인"
-          onClick={quit}
-        />
-      )}
-    />
+    <>
+      <span className="back" onClick={openIsAlerting}>
+        《
+      </span>
+
+      <Portal
+        render={() => (
+          <FlowAlert
+            isAlerting={isAlerting}
+            onClose={closeIsAlerting}
+            content={
+              <>
+                변경을 취소할까요?
+                <br />
+                <span style={{fontSize: "10px"}}>
+                  * 현재 창을 벗어날 경우{" "}
+                  <b style={{textDecoration: "underline"}}>
+                    변경사항이 저장되지 않습니다.
+                  </b>
+                </span>
+              </>
+            }
+            defaultButton="취소"
+            additionalButton="확인"
+            onClick={quit}
+          />
+        )}
+      />
+    </>
   )
 }
 
