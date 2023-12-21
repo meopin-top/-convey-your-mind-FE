@@ -72,7 +72,7 @@ const Email = () => {
         <span className="input-name">예비 이메일</span>
         <input
           type="email"
-          placeholder="이메일을 입력해주세요."
+          placeholder="이메일을 입력해주세요"
           className="input radius-sm mr-1"
           required
           value={email}

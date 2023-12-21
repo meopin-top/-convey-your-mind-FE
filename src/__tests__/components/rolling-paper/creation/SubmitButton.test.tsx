@@ -7,6 +7,16 @@ import {
 import {isBefore} from "@/utils/date"
 import type {TProps} from "@/components/Portal"
 
+const SubmitButton = ({totalStep = 5}: {totalStep?: number}) => {
+  return (
+    <Provider>
+      <DDayProvider>
+        <Component totalStep={totalStep} />
+      </DDayProvider>
+    </Provider>
+  )
+}
+
 jest.mock("../../../../components/Portal.tsx", () => ({
   __esModule: true,
   default: ({render}: TProps) => render(),
@@ -31,16 +41,6 @@ jest.mock("../../../../utils/date.ts", () => ({
   ...jest.requireActual("../../../../utils/date.ts"),
   isBefore: jest.fn(),
 }))
-
-const SubmitButton = ({totalStep = 5}: {totalStep?: number}) => {
-  return (
-    <Provider>
-      <DDayProvider>
-        <Component totalStep={totalStep} />
-      </DDayProvider>
-    </Provider>
-  )
-}
 
 describe("SubmitButton", () => {
   it("올바르게 컴포넌트를 렌더링한다.", async () => {

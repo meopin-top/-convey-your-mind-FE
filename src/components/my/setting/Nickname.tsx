@@ -9,8 +9,6 @@ import {AUTH} from "@/constants/response-code"
 const Nickname = () => {
   const {nickname, handleNickname, setNickname} = useContext(NicknameStore)
 
-  console.warn(nickname)
-
   const {request, isLoading} = useRequest()
 
   async function regenerator() {

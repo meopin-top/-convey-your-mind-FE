@@ -27,7 +27,7 @@ const QuitAlert = () => {
     setIsAlerting(true)
   }
 
-  function closeIsAlerting() {
+  function closeAlert() {
     history.pushState(null, "", location.href)
     setIsAlerting(!isAlerting)
   }
@@ -39,15 +39,15 @@ const QuitAlert = () => {
 
   return (
     <>
-      <span className="back" onClick={openIsAlerting}>
+      <button className="back" onClick={openIsAlerting}>
         《
-      </span>
+      </button>
 
       <Portal
         render={() => (
           <FlowAlert
             isAlerting={isAlerting}
-            onClose={closeIsAlerting}
+            onClose={closeAlert}
             content={
               <>
                 변경을 취소할까요?
