@@ -37,6 +37,7 @@ const Nickname = () => {
         required
         value={isLoading ? "..." : nickname}
         onChange={handleNickname}
+        disabled={isLoading}
       />
       <ArrowCycle className="nickname-regenerator md" onClick={regenerator} />
     </div>
