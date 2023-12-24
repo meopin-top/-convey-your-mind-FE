@@ -16,7 +16,10 @@ const MySetting = ({headers}: {headers: jest.Mock}) => {
     return <></>
   }
 
-  const isNotFromMyPage = !(referer as string).endsWith(ROUTE.MY_PAGE)
+  const isNotFromMyPage =
+    !(referer as string).endsWith(ROUTE.MY_PAGE) &&
+    !(referer as string).endsWith(ROUTE.MY_SETTING) &&
+    !(referer as string).endsWith(ROUTE.MY_SETTING_PROFILE)
   if (isNotFromMyPage) {
     redirect(ROUTE.MY_PAGE)
 
@@ -28,7 +31,7 @@ const MySetting = ({headers}: {headers: jest.Mock}) => {
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
-  redirect: jest.fn()
+  redirect: jest.fn(),
 }))
 
 describe("MySetting", () => {
@@ -39,19 +42,19 @@ describe("MySetting", () => {
   it("referer이 없으면 마이 페이지로 리다이렉트된다.", () => {
     // given, when
     const headers = jest.fn().mockReturnValueOnce({
-      get: jest.fn().mockReturnValueOnce(null)
+      get: jest.fn().mockReturnValueOnce(null),
     })
 
     render(<MySetting headers={headers} />)
 
-    const component = screen.queryByText(("MySetting"))
+    const component = screen.queryByText("MySetting")
 
     // then
     expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
     expect(component).not.toBeInTheDocument()
   })
 
-  it("referer이 마이 페이지가 아니라면 마이 페이지로 리다이렉트된다.", () => {
+  it("referer이 마이 페이지나 세팅 페이지, 프로필 이미지 조정 페이지가 아니라면 마이 페이지로 리다이렉트된다.", () => {
     // given, when
     const headers = jest.fn().mockReturnValueOnce({
       get: jest.fn().mockReturnValueOnce("https://www.testdomain.com/"),
@@ -59,7 +62,7 @@ describe("MySetting", () => {
 
     render(<MySetting headers={headers} />)
 
-    const component = screen.queryByText(("MySetting"))
+    const component = screen.queryByText("MySetting")
 
     // then
     expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
@@ -69,7 +72,9 @@ describe("MySetting", () => {
   it("referer이 올바르면 컴포넌트를 렌더링한다.", () => {
     // given, when
     const headers = jest.fn().mockReturnValueOnce({
-      get: jest.fn().mockReturnValueOnce(`https://www.testdomain.com/${ROUTE.MY_PAGE}`),
+      get: jest
+        .fn()
+        .mockReturnValueOnce(`https://www.testdomain.com/${ROUTE.MY_PAGE}`),
     })
 
     render(<MySetting headers={headers} />)

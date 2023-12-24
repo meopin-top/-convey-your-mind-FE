@@ -21,7 +21,10 @@ const MySetting = () => {
       redirect(ROUTE.MY_PAGE)
     }
 
-    const isNotFromMyPage = !(referer as string).endsWith(ROUTE.MY_PAGE)
+    const isNotFromMyPage =
+      !(referer as string).endsWith(ROUTE.MY_PAGE) &&
+      !(referer as string).endsWith(ROUTE.MY_SETTING) &&
+      !(referer as string).endsWith(ROUTE.MY_SETTING_PROFILE)
     if (isNotFromMyPage) {
       redirect(ROUTE.MY_PAGE)
     }

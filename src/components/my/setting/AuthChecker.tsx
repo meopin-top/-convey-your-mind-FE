@@ -24,9 +24,7 @@ const AuthChecker = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  return (
-    <Redirecting isRedirecting={isRedirecting} />
-  )
+  return <Redirecting isRedirecting={isRedirecting} />
 }
 
 export default AuthChecker
