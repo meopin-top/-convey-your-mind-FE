@@ -103,10 +103,46 @@
       }
 
       .upload-profile {
+        position: relative;
+
+        min-width: 70px;
+
         color: #fff;
         font-size: 8px;
 
         background-color: #000;
+
+        &.uploading {
+          background-color: #fff;
+        }
+
+        label {
+          width: 100%;
+          height: 100%;
+        }
+
+        input[type="file"] {
+          position: absolute;
+
+          opacity: 0;
+          z-index: -1;
+        }
+      }
+
+      #bottom-sheet {
+        // TODO: 스타일 추가되어야 함
+
+        .content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .confirm {
+            color: #fff;
+
+            background-color: #000;
+          }
+        }
       }
 
       .default-profiles {

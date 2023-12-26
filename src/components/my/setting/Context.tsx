@@ -7,7 +7,7 @@ type TProps = {
   children: ReactNode
 }
 
-type TProfile = Blob | string
+type TProfile = File | string
 
 const UserIdStore = createContext<{
   userId: string
