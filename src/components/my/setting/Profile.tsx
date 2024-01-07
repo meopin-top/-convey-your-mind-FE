@@ -1,26 +1,14 @@
 "use client"
 
-import {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  type ChangeEvent,
-  type SyntheticEvent,
-} from "react"
+import {useState, useEffect, useContext, type ChangeEvent} from "react"
 import Image from "next/image"
 import {useRouter, useSearchParams} from "next/navigation"
-import ReactCrop, {
-  centerCrop,
-  makeAspectCrop,
-  type Crop,
-  type PixelCrop,
-} from "react-image-crop"
+import ReactCrop from "react-image-crop"
 import {Loading, BottomSheet} from "@/components"
 import {ProfileStore} from "./Context"
 import useRequest from "@/hooks/use-request"
+import useImageCrop from "@/hooks/use-image-crop"
 import {OPEN, PROFILE_EDIT, ROUTE} from "@/constants/service"
-import "react-image-crop/dist/ReactCrop.css"
 
 // TODO: API 연동 후 삭제
 const data: string[] = [
@@ -35,22 +23,29 @@ const data: string[] = [
 const Profile = () => {
   const [defaultProfiles, setDefaultProfiles] = useState<string[]>([])
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
-  const [image, setImage] = useState("")
-  const [crop, setCrop] = useState<Crop>()
-  const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
 
   const {profile, setProfile} = useContext(ProfileStore)
-
-  const imageRef = useRef<HTMLImageElement>(null)
-  const cropRef = useRef<ReactCrop>(null)
-  const blobRef = useRef("")
 
   const {request} = useRequest()
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const isOpenSearchParams = searchParams.get(OPEN) === PROFILE_EDIT
   const aspect = 1
+  const {
+    image,
+    imageRef,
+    crop,
+    cropRef,
+    setCrop,
+    setCompletedCrop,
+    convertBlobToDataUrl,
+    initializeAspect,
+    makeCropAsBlobImage,
+    revokeBlob,
+    revokeImage,
+  } = useImageCrop(aspect)
+
+  const isOpenSearchParams = searchParams.get(OPEN) === PROFILE_EDIT
 
   useEffect(() => {
     if (!!image) {
@@ -59,11 +54,6 @@ const Profile = () => {
       closeBottomSheet()
     }
     setDefaultProfiles(data)
-
-    return () => {
-      revokeBlob()
-      revokeImage()
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -71,119 +61,23 @@ const Profile = () => {
     setIsBottomSheetOpen(isOpenSearchParams)
   }, [isOpenSearchParams])
 
-  useEffect(() => {
-    if (cropRef.current) {
-      const cropMask = cropRef.current.componentRef.current?.querySelector(
-        ".ReactCrop__crop-mask"
-      )
-
-      const realImageHeight =
-        cropRef.current.componentRef.current?.getBoundingClientRect().height
-
-      if (realImageHeight) {
-        cropMask?.setAttribute("height", realImageHeight.toString())
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageRef.current])
-
   function uploadProfile(event: ChangeEvent<HTMLInputElement>) {
     if (!event.target?.files?.length) {
       return
     }
 
     openBottomSheet()
-
-    const reader = new FileReader()
-    reader.addEventListener("load", () =>
-      setImage(reader.result?.toString() || "")
-    )
-    reader.readAsDataURL(event.target.files[0])
+    convertBlobToDataUrl(event.target.files[0])
   }
 
-  function initializeAspect(event: SyntheticEvent<HTMLImageElement>) {
-    const {width, height} = event.currentTarget
-
-    const initialCrop = centerCrop(
-      makeAspectCrop(
-        {
-          unit: "px",
-          width,
-          height,
-        },
-        aspect,
-        width,
-        height
-      ),
-      width,
-      height
-    )
-    setCrop(initialCrop)
-    setCompletedCrop(initialCrop)
-  }
-
-  async function makeCropAsBlobImage() {
-    if (!completedCrop || !imageRef.current) {
-      throw new Error("completed crop 없음")
-    }
-
-    const offscreen = new OffscreenCanvas(
-      completedCrop.width,
-      completedCrop.height
-    )
-    const ctx = offscreen.getContext("2d")
-    if (!ctx) {
-      throw new Error("canvas 2d 없음")
-    }
-
-    const scaleX = imageRef.current.naturalWidth / imageRef.current.width
-    const scaleY = imageRef.current.naturalHeight / imageRef.current.height
-    const targetSize = 216
-
-    offscreen.width = targetSize
-    offscreen.height = targetSize
-
-    ctx.drawImage(
-      imageRef.current,
-      completedCrop.x * scaleX,
-      completedCrop.y * scaleY,
-      completedCrop.width * scaleX,
-      completedCrop.height * scaleY,
-      0,
-      0,
-      targetSize,
-      targetSize
-    )
-
-    console.warn(completedCrop)
-
-    const blob = await offscreen.convertToBlob({
-      type: "image/webp",
-    })
-
-    revokeBlob()
-    const profileUrl = URL.createObjectURL(blob)
+  async function makeCropAsProfile() {
+    const profileUrl = await makeCropAsBlobImage()
     setProfile(profileUrl)
-    blobRef.current = profileUrl
-
     closeBottomSheet()
   }
 
-  function revokeBlob() {
-    if (blobRef.current) {
-      URL.revokeObjectURL(blobRef.current)
-    }
-  }
-
-  function revokeImage() {
-    if (image) {
-      URL.revokeObjectURL(image)
-    }
-    setImage("")
-  }
-
   function selectProfile(index: number) {
+    revokeBlob()
     setProfile(defaultProfiles[index])
   }
 
@@ -256,7 +150,7 @@ const Profile = () => {
               </ReactCrop>
               <button
                 className="confirm sm mt-4 radius-md"
-                onClick={makeCropAsBlobImage}
+                onClick={makeCropAsProfile}
               >
                 사진 가져오기
               </button>
