@@ -1,0 +1,218 @@
+@import "../../common/variables";
+@import "../../common/colors";
+
+.back {
+  position: absolute;
+  top: 64px;
+  left: 20px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+}
+
+.my-setting {
+  .title {
+    margin-top: 36px;
+
+    font-family: dohyeon, "dohyeon fallback";
+
+    text-align: center;
+
+    span {
+      font-size: 8px;
+    }
+  }
+
+  .main {
+    $INPUT_NAME_WIDTH: 54px;
+
+    padding: 0 6%;
+
+    .subtitle {
+      position: relative;
+
+      font-weight: 700;
+      font-size: 12px;
+      font-family: "hanna-11-years", "hanna-11-years fallback";
+    }
+
+    .subtitle::before {
+      content: "";
+
+      display: inline-block;
+
+      position: absolute;
+      left: -8px;
+      top: 4px;
+
+      width: 4px;
+      height: 4px;
+
+      background-color: #000;
+
+      border-radius: 50%;
+    }
+
+    .input-wrapper {
+      font-size: 11px;
+
+      .input-name {
+        flex: 0 0 $INPUT_NAME_WIDTH;
+
+        margin-right: 4px;
+
+        font-weight: 700;
+        font-family: "hanna-11-years", "hanna-11-years fallback";
+      }
+
+      .input {
+        flex-grow: 1;
+
+        font-family: "hanna-air", "hanna-air fallback";
+      }
+
+      input[type="password"],
+      input[type="text"],
+      input[type="email"] {
+        padding: 6px 10px;
+      }
+
+      .nickname-regenerator {
+        cursor: pointer;
+      }
+
+      .email-verification {
+        color: #fff;
+        font-size: 6px;
+
+        background-color: #000;
+      }
+    }
+
+    .profile-wrapper {
+      display: flex;
+
+      .profile {
+        border-radius: 50%;
+      }
+
+      .selected {
+        flex-direction: column;
+      }
+
+      .upload-profile {
+        position: relative;
+
+        min-width: 70px;
+
+        color: #fff;
+        font-size: 8px;
+
+        background-color: #000;
+
+        &.uploading {
+          background-color: #fff;
+        }
+
+        label {
+          width: 100%;
+          height: 100%;
+        }
+
+        input[type="file"] {
+          position: absolute;
+
+          opacity: 0;
+          z-index: -1;
+        }
+      }
+
+      #bottom-sheet {
+        .content {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          .confirm {
+            color: #fff;
+
+            background-color: #000;
+          }
+        }
+      }
+
+      .default-profiles {
+        @include fill-light-4;
+
+        flex-grow: 1;
+
+        padding: 4px;
+
+        text-align: center;
+
+        .profiles-box {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 10px 20px;
+          justify-items: center;
+
+          width: 100%;
+
+          .profile {
+            cursor: pointer;
+
+            &.selected {
+              border: 2px solid map-get($COLOR, INFO);
+            }
+          }
+        }
+      }
+    }
+
+    .validity {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+
+      margin-left: $INPUT_NAME_WIDTH;
+
+      font-size: 10px;
+
+      .valid-light,
+      .invalid-light {
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+      }
+
+      .valid-light {
+        background-color: map-get($COLOR, NORMAL);
+      }
+
+      .invalid-light {
+        background-color: map-get($COLOR, DANGER);
+      }
+    }
+
+    .description {
+      margin-left: $INPUT_NAME_WIDTH;
+
+      font-size: 8px;
+    }
+
+    .submit-button {
+      width: 100%;
+      height: 56px;
+
+      color: #fff;
+      font-size: 15px;
+
+      background-color: map-get($COLOR, DARK_4);
+
+      cursor: pointer;
+    }
+  }
+}

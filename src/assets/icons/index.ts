@@ -1,3 +1,4 @@
+import ArrowCycle from "./arrow-cycle.svg"
 import Bell from "./bell.svg"
 import Bulb from "./bulb.svg"
 import ClipboardCheck from "./clipboard-check.svg"
@@ -16,6 +17,7 @@ import UserCircle from "./user-circle.svg"
 import WritePaper from "./write-paper.svg"
 
 export {
+  ArrowCycle,
   Bell,
   Bulb,
   ClipboardCheck,

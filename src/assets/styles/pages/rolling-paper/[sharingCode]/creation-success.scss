@@ -5,7 +5,7 @@
   .title {
     flex-direction: column;
 
-    font-family: dohyeon;
+    font-family: dohyeon, "dohyeon fallback";
   }
 
   .link {

@@ -1,7 +1,7 @@
 import {render, screen, waitFor} from "@testing-library/react"
 import OauthMiddleware from "@/app/oauth-middleware/page"
 import type {TProps as TPortalProps} from "@/components/Portal"
-import {SIGN_IN} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 import {createLocalStorageMock} from "@/__mocks__/window"
 
@@ -58,7 +58,7 @@ describe("OAuthMiddleware", () => {
     const profile = "testProfile"
 
     const responseMock = {
-      code: SIGN_IN.SUCCESS,
+      code: AUTH.SIGN_IN.SUCCESS,
       data: {nickName, profile},
     }
     requestMock.mockResolvedValueOnce(responseMock)
@@ -91,7 +91,7 @@ describe("OAuthMiddleware", () => {
     const profile = "testProfile"
 
     const responseMock = {
-      code: SIGN_IN.SUCCESS,
+      code: AUTH.SIGN_IN.SUCCESS,
       data: {nickName, profile},
     }
     requestMock.mockResolvedValueOnce(responseMock)
@@ -122,7 +122,7 @@ describe("OAuthMiddleware", () => {
   it("Oauth에 실패하면 ErrorAlert 호출 후 MAIN으로 리다이렉트되어야 한다.", async () => {
     // given, when
     const responseMock = {
-      code: "SIGN_IN.FAILURE",
+      code: "AUTH.SIGN_IN.FAILURE",
       message: "Failed to sign in.",
       data: null,
     }

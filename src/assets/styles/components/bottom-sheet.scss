@@ -1,21 +1,18 @@
 #bottom-sheet.background {
-  $TRANSLATE_TIME: 0.5s;
-  $TRANSFORM: top $TRANSLATE_TIME ease-in-out;
-
-  top: 100vh;
+  $TRANSLATE_DISTANCE: 100vh;
+  $MOVING_TIME: 0.5s;
 
   &.open {
     background-color: rgba(#000, 0.3);
-
-    top: 0;
-    transition: $TRANSFORM, background-color 0s linear $TRANSLATE_TIME;
+    transform: translateY(0);
+    transition: transform $MOVING_TIME ease-in-out,
+    background-color 0.2s $MOVING_TIME linear;
   }
 
   &.close {
     background-color: transparent;
-
-    top: 100vh;
-    transition: $TRANSFORM, background-color 0s linear 0s;
+    transform: translateY($TRANSLATE_DISTANCE);
+    transition: transform $MOVING_TIME ease-in-out;
   }
 
   .wrapper {

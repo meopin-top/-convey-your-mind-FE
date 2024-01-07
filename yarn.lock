@@ -3587,6 +3587,7 @@ __metadata:
     next: ^13.4.4
     react: 18.2.0
     react-dom: 18.2.0
+    react-image-crop: ^11.0.1
     sass: ^1.62.1
     typescript: 5.0.4
   languageName: unknown
@@ -7273,6 +7274,15 @@ __metadata:
   peerDependencies:
     react: ">=16.13.1"
   checksum: f36270a5d775a25c8920f854c0d91649ceea417b15b5bc51e270a959b0476647bb79abb4da3be7dd9a4597b029214e8fe43ea914a7f16fa7543c91f784977f1b
+  languageName: node
+  linkType: hard
+
+"react-image-crop@npm:^11.0.1":
+  version: 11.0.1
+  resolution: "react-image-crop@npm:11.0.1"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 1652648b449392cd14c3106a8bf96e0923b6a7a0aa29431d5b3587bc7d027478c5683e1fa9ddd759f2147d33a5a4c54c2b7e3bb3e8335128d3b9b58a06ead768
   languageName: node
   linkType: hard
 

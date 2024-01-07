@@ -48,6 +48,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["next", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:13.4.4"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:18.2.0"],\
+            ["react-image-crop", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:11.0.1"],\
             ["sass", "npm:1.62.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
           ],\
@@ -5501,6 +5502,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["next", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:13.4.4"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:18.2.0"],\
+            ["react-image-crop", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:11.0.1"],\
             ["sass", "npm:1.62.1"],\
             ["typescript", "patch:typescript@npm%3A5.0.4#~builtin<compat/typescript>::version=5.0.4&hash=b5f058"]\
           ],\
@@ -9835,6 +9837,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["react-error-boundary", "virtual:8b081141052630909e8b1feeeb1dd79b030890b7c6d7c40f5fdb0cee97791ddf191718d0d7ce5076efa75955fcf2726807e44cdfc1b7aa22ee61e89c9c5a62e8#npm:3.1.4"],\
             ["@babel/runtime", "npm:7.22.3"],\
+            ["@types/react", "npm:18.2.7"],\
+            ["react", "npm:18.2.0"]\
+          ],\
+          "packagePeers": [\
+            "@types/react",\
+            "react"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["react-image-crop", [\
+        ["npm:11.0.1", {\
+          "packageLocation": "./.yarn/cache/react-image-crop-npm-11.0.1-e8222aa2cb-1652648b44.zip/node_modules/react-image-crop/",\
+          "packageDependencies": [\
+            ["react-image-crop", "npm:11.0.1"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:11.0.1", {\
+          "packageLocation": "./.yarn/__virtual__/react-image-crop-virtual-cd54a12d1c/0/cache/react-image-crop-npm-11.0.1-e8222aa2cb-1652648b44.zip/node_modules/react-image-crop/",\
+          "packageDependencies": [\
+            ["react-image-crop", "virtual:317e68110ec70cdc5c01efeeca6055384a1c6a5b93ac00cd3bef44a8b44c1e045130cd340ef7b52ccc596e75a675c4beed5d55b21fd2a0c9ad6845a0a6461875#npm:11.0.1"],\
             ["@types/react", "npm:18.2.7"],\
             ["react", "npm:18.2.0"]\
           ],\

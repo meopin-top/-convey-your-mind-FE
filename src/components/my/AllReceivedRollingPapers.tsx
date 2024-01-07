@@ -9,69 +9,35 @@ import useInput, {type TInputChangeEvent} from "@/hooks/use-input"
 import usePagination from "@/hooks/use-pagination"
 import useRequest from "@/hooks/use-request"
 import {OPEN, ALL_RECEIVED_ROLLING_PAPERS, ROUTE} from "@/constants/service"
+import {PROJECT_TYPE} from "@/constants/request"
+import {TRollingPaperInformation} from "@/@types/rolling-paper"
 
 const BottomSheet = dynamic(() => import("../BottomSheet"), {
   loading: () => <></>,
 })
-
-type TRollingPaper = {
-  id: number
-  name: string
-  link: string
-}
+const Portal = dynamic(() => import("../Portal"), {
+  loading: () => <></>,
+})
+const Loading = dynamic(() => import("../Loading"), {
+  loading: () => <></>,
+})
 
 type TResponse = {
-  totalCount: number
-  rollingPapers: TRollingPaper[]
+  totalLength: number
+  pageResult: TRollingPaperInformation[]
 }
 
-const data: TResponse = {
-  totalCount: 47,
-  rollingPapers: [
-    {
-      id: 1,
-      name: "프로젝트 이름 텍스트 노출 완전 길게 테스트해보기 완전 길겡ㅇㅇㅇㅇㅇㅇ",
-      link: "https://www.naver.com",
-    },
-    {
-      id: 2,
-      name: "프로젝트 이름 텍스트 노출",
-      link: "https://www.naver.com",
-    },
-    {
-      id: 3,
-      name: "프로젝트 이름 텍스트 노출",
-      link: "https://www.naver.com",
-    },
-    {
-      id: 4,
-      name: "프로젝트 이름 텍스트 노출",
-      link: "https://www.naver.com",
-    },
-    {
-      id: 5,
-      name: "프로젝트 이름 텍스트 노출",
-      link: "https://www.naver.com",
-    },
-    {
-      id: 6,
-      name: "프로젝트 이름 텍스트 노출",
-      link: "https://www.naver.com",
-    },
-  ],
-}
-
-const INITIAL_RECEIVED_ROLLING_PAPER_DATA: TResponse = {
-  totalCount: 0,
-  rollingPapers: [],
+const INITIAL_ROLLING_PAPER_DATA = {
+  totalLength: 0,
+  pageResult: [],
 }
 
 const AllReceivedRollingPapers = () => {
   const {getFirstPage, getLastPage} = usePagination() // useState 초깃값으로 사용하기 위함
 
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false) // TODO: handle 함수들이랑 함께 훅으로 뺄 수 있음
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
   const [receivedRollingPaperData, setReceivedRollingPapersData] =
-    useState<TResponse>(INITIAL_RECEIVED_ROLLING_PAPER_DATA)
+    useState<TResponse>(INITIAL_ROLLING_PAPER_DATA)
   const [page, setPage] = useState(getFirstPage())
 
   const router = useRouter()
@@ -81,8 +47,7 @@ const AllReceivedRollingPapers = () => {
     getFirstPage().toString()
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {request} = useRequest()
+  const {request, isLoading} = useRequest()
 
   const COUNT_PER_PAGE = 6
   const isOpenSearchParams =
@@ -101,9 +66,20 @@ const AllReceivedRollingPapers = () => {
     if (isOpenSearchParams) {
       fetchReceivedRollingPaperData()
     } else {
-      setReceivedRollingPapersData(INITIAL_RECEIVED_ROLLING_PAPER_DATA)
+      setPage(getFirstPage())
+      setInputPage(getFirstPage().toString())
+      setReceivedRollingPapersData(INITIAL_ROLLING_PAPER_DATA)
     }
-  }, [isOpenSearchParams])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpenSearchParams, page])
+
+  async function fetchReceivedRollingPaperData() {
+    const {data} = await request({
+      path: `/projects/page?pageSize=${COUNT_PER_PAGE}&pageNum=${page}&type=${PROJECT_TYPE.RECEIVER}`,
+    })
+
+    setReceivedRollingPapersData(data)
+  }
 
   function openBottomSheet() {
     router.push(ROUTE.MY_ROLLING_PAPERS)
@@ -111,7 +87,13 @@ const AllReceivedRollingPapers = () => {
 
   function closeBottomSheet() {
     router.push(ROUTE.MY_PAGE)
-    setPage(getFirstPage())
+  }
+
+  function clickPaginationArrow(page: number) {
+    setPage(page)
+    handleInputPage({
+      target: {value: page.toString()},
+    } as TInputChangeEvent)
   }
 
   function searchPage(event: KeyboardEvent<HTMLInputElement>) {
@@ -123,7 +105,7 @@ const AllReceivedRollingPapers = () => {
     const page = parseInt(inputPage)
     const firstPage = getFirstPage()
     const lastPage = getLastPage({
-      totalCount: receivedRollingPaperData.totalCount,
+      totalCount: receivedRollingPaperData.totalLength,
       countPerPage: COUNT_PER_PAGE,
     })
     if (page < firstPage) {
@@ -135,50 +117,35 @@ const AllReceivedRollingPapers = () => {
     } else {
       setPage(page)
     }
-
-    fetchReceivedRollingPaperData()
-  }
-
-  function clickPaginationArrow(page: number) {
-    setPage(page)
-    handleInputPage({
-      target: {value: page.toString()},
-    } as TInputChangeEvent)
-    fetchReceivedRollingPaperData()
-  }
-
-  async function fetchReceivedRollingPaperData() {
-    // TODO: API 연동
-
-    setReceivedRollingPapersData(data)
-    alert("API 연동") // TODO: request로 변경하기
   }
 
   return (
     <>
-      <button
-        className="view-all shadow-lg"
-        onClick={openBottomSheet}
-      >{`> 전체 보기`}</button>
+      <button className="view-all shadow-lg" onClick={openBottomSheet}>
+        {`> 전체 보기`}
+      </button>
+
       <BottomSheet isOpen={isBottomSheetOpen} onClose={closeBottomSheet}>
         <div className="all-rolling-papers f-center mb-2">
           <h5 className="title mb-2">참여 중인 프로젝트</h5>
           <span className="description mb-4">
             프로젝트 클릭 시, 해당 페이지로 이동합니다.
           </span>
-          {receivedRollingPaperData &&
-          receivedRollingPaperData.rollingPapers.length > 0 ? (
-            <ul className="rolling-paper">
-              {receivedRollingPaperData.rollingPapers.map((rollingPaper) => (
+          {receivedRollingPaperData.pageResult.length > 0 ? (
+            <ul className="rolling-paper ml-2 mr-2">
+              {receivedRollingPaperData.pageResult.map((rollingPaper) => (
                 <li key={rollingPaper.id} className="shadow-sm">
-                  <Link href={rollingPaper.link} className="f-center pl-2 pr-2">
-                    <div className="name">{rollingPaper.name}</div>
+                  <Link
+                    href={`rolling-paper/view/${rollingPaper.inviteCode}`}
+                    className="f-center pl-2 pr-2"
+                  >
+                    <div className="name">{rollingPaper.destination}</div>
                   </Link>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="no-rolling-paper">
+            <div className="no-rolling-paper mb-4">
               참여 중인 프로젝트가 없습니다.
             </div>
           )}
@@ -186,13 +153,15 @@ const AllReceivedRollingPapers = () => {
         <Pagination
           page={page}
           inputPage={inputPage}
-          totalCount={receivedRollingPaperData.totalCount}
+          totalCount={receivedRollingPaperData.totalLength}
           countPerPage={COUNT_PER_PAGE}
           handleInputPage={handleInputPage}
           clickPaginationArrow={clickPaginationArrow}
           searchPage={searchPage}
         />
       </BottomSheet>
+
+      <Portal render={() => <Loading isLoading={isLoading} />} />
     </>
   )
 }

@@ -8,7 +8,7 @@ import Store from "@/store/setting-auth"
 import useInput from "@/hooks/use-input"
 import useRequest from "@/hooks/use-request"
 import {ROUTE} from "@/constants/service"
-import {SIGN_UP} from "@/constants/response-code"
+import {AUTH} from "@/constants/response-code"
 
 const Loading = dynamic(() => import("../Loading"), {
   loading: () => <></>,
@@ -47,7 +47,7 @@ const UserInformation = () => {
       body: {password},
     })
 
-    if (code === SIGN_UP.DIFFERENT_PASSWORDS) {
+    if (code === AUTH.SIGN_UP.DIFFERENT_PASSWORDS) {
       setErrorMessage(message)
 
       return

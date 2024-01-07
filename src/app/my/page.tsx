@@ -1,7 +1,7 @@
 import {Suspense} from "react"
 import Link from "next/link"
 import {calculateRemainingDay} from "@/utils/formatter"
-import {PROJECT_TYPE} from "@/constants/request"
+import {PROJECT_TYPE, ROLLING_PAPER_STATUS} from "@/constants/request"
 import {NeedLoggedIn, Header, Loading} from "@/components"
 import {
   UserInformation,
@@ -9,69 +9,7 @@ import {
   AllProjects,
   AllReceivedRollingPapers,
 } from "@/components/my"
-
-// TODO: 왜 빌드할 때 서버 컴포넌트가 실행되고, start할 때는 실행이 안 되냐
-// static? fetch? 뭐하고 관련된 걸까
-
-// TODO: API 명세 작성되면 각각 알파벳 매핑 변경
-// TODO: API 연동 어떻게 되는건지 DB 확인 필요
-const statusMapper = {
-  D: "참여 완료",
-  E: "작성 전",
-  F: "전달 완료",
-} as const
-
-type TResponse = {
-  id: number
-  title: string
-  description: string
-  inviteCode: string
-  maxInviteNum: number
-  destination: string
-  type: (typeof PROJECT_TYPE)[keyof typeof PROJECT_TYPE]
-  status: keyof typeof statusMapper
-  expiredDatetime: string
-  owner: boolean
-}
-
-// const projectsMockData: TResponse[] = [
-//   {
-//     id: 1,
-//     title: "관리자 프로젝트 ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-//     description: "관리자 프로젝트 설명",
-//     inviteCode: "관리자코드",
-//     maxInviteNum: 10,
-//     destination: "관리자",
-//     type: "D",
-//     status: "D",
-//     expiredDatetime: "2023-09-30T04:55:55.272243",
-//     owner: true,
-//   },
-//   {
-//     id: 2,
-//     title: "관리자 프로젝트",
-//     description: "관리자 프로젝트 설명",
-//     inviteCode: "관리자코드",
-//     maxInviteNum: 10,
-//     destination: "관리자",
-//     type: "D",
-//     status: "E",
-//     expiredDatetime: "2023-09-30T04:55:55.272243",
-//     owner: false,
-//   },
-//   {
-//     id: 3,
-//     title: "관리자 프로젝트",
-//     description: "관리자 프로젝트 설명",
-//     inviteCode: "관리자코드",
-//     maxInviteNum: 10,
-//     destination: "관리자",
-//     type: "D",
-//     status: "F",
-//     expiredDatetime: "2023-09-30T04:55:55.272243",
-//     owner: false,
-//   },
-// ]
+import type {TRollingPaperInformation} from "@/@types/rolling-paper"
 
 async function getMyProjects() {
   const fetchPromises = [
@@ -92,13 +30,14 @@ async function getMyProjects() {
       }
     ),
   ]
-  const jsonPromises: Promise<{data: {pageResult: TResponse[]}}>[] =
-    await Promise.all(fetchPromises).then(
-      ([fetchedProjects, fetchedRollingPapers]) => [
-        fetchedProjects.json(),
-        fetchedRollingPapers.json(),
-      ]
-    )
+  const jsonPromises: Promise<{
+    data: {pageResult: TRollingPaperInformation[]}
+  }>[] = await Promise.all(fetchPromises).then(
+    ([fetchedProjects, fetchedRollingPapers]) => [
+      fetchedProjects.json(),
+      fetchedRollingPapers.json(),
+    ]
+  )
 
   const [
     {
@@ -117,8 +56,6 @@ async function getMyProjects() {
 
 const MyPage = async () => {
   const {projects, rollingPapers} = await getMyProjects()
-
-  console.log(projects, rollingPapers)
 
   return (
     <Suspense fallback={<Loading isLoading />}>
@@ -141,7 +78,9 @@ const MyPage = async () => {
                 {projects.map((project) => (
                   <li key={project.id} className="project mb-2">
                     {project.owner && <span className="crown">👑</span>}
-                    <span className="name txt-ellipsis">{project.title}</span>
+                    <span className="name txt-ellipsis">
+                      {project.destination}
+                    </span>
                     {project.status !== "D" && (
                       <span className="until">
                         D-
@@ -157,7 +96,7 @@ const MyPage = async () => {
                     <span
                       className={`status ${project.status} f-center radius-xl mr-1 ml-1`}
                     >
-                      {statusMapper[project.status]}
+                      {ROLLING_PAPER_STATUS[project.status]}
                     </span>
                     <span className="to">
                       <Link
@@ -185,7 +124,7 @@ const MyPage = async () => {
                       href={`rolling-paper/view/${rollingPaper.inviteCode}`}
                       className="f-center pl-2 pr-2"
                     >
-                      <div className="name">{rollingPaper.title}</div>
+                      <div className="name">{rollingPaper.destination}</div>
                     </Link>
                   </li>
                 ))}

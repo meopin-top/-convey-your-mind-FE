@@ -16,7 +16,10 @@ const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
   const data = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_HOST
-    }/api/projects/invite-code/${encodeURIComponent(sharingCode)}`
+    }/api/projects/invite-code/${encodeURIComponent(sharingCode)}`,
+    {
+      cache: "no-cache",
+    }
   )
 
   const {code} = await data.json()
