@@ -9,7 +9,8 @@ type TProps = {
 
 type TProfile = {
   type: "dataUrl" | "uploadUrl"
-  data: string
+  url: string
+  data: string | Blob
 }
 
 const UserIdStore = createContext<{
@@ -62,6 +63,7 @@ const ProfileStore = createContext<{
   profile: {
     type: "uploadUrl",
     data: "",
+    url: "",
   },
   setProfile: function () {},
 })
@@ -70,6 +72,7 @@ const ProfileProvider = ({children}: TProps) => {
   const [profile, setProfile] = useState<TProfile>({
     type: "uploadUrl",
     data: "",
+    url: "",
   })
 
   return (

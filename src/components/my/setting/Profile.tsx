@@ -72,10 +72,14 @@ const Profile = () => {
   }
 
   async function makeCropAsProfile() {
-    const profileUrl = await makeCropAsBlobImage()
+    const {url: profileUrl, blob: profileBlob} = await makeCropAsBlobImage(
+      216,
+      216
+    )
     setProfile({
       type: "dataUrl",
-      data: profileUrl,
+      url: profileUrl,
+      data: profileBlob,
     })
     closeBottomSheet()
   }
@@ -84,6 +88,7 @@ const Profile = () => {
     revokeBlob()
     setProfile({
       type: "uploadUrl",
+      url: defaultProfiles[index],
       data: defaultProfiles[index],
     })
   }
@@ -101,9 +106,9 @@ const Profile = () => {
     <div className="profile-wrapper input-wrapper mb-2">
       <span className="input-name mb-2">프로필 사진</span>
       <div className="selected f-center mr-4">
-        {profile.data ? (
+        {profile.url ? (
           <Image
-            src={profile.data}
+            src={profile.url}
             className="profile"
             alt="프로필 이미지"
             loading="eager"

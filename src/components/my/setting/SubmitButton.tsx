@@ -10,6 +10,7 @@ import Storage from "@/store/local-storage"
 import {AUTH} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 
+const Loading = dynamic(() => import("../../Loading"), {loading: () => <></>})
 const Portal = dynamic(() => import("../../Portal"), {loading: () => <></>})
 const FlowAlert = dynamic(() => import("../../FlowAlert"), {
   loading: () => <></>,
@@ -29,7 +30,7 @@ const SubmitButton = () => {
   const {request, isLoading} = useRequest()
 
   async function submit() {
-    if (!VALIDATOR.PASSWORD.test(password)) {
+    if (password && !VALIDATOR.PASSWORD.test(password)) {
       setErrorMessage(
         <>
           비밀번호의 조건을 충족하지 않았습니다.
@@ -41,7 +42,7 @@ const SubmitButton = () => {
       return
     }
 
-    if (password !== passwordConfirm) {
+    if ((password || passwordConfirm) && password !== passwordConfirm) {
       setErrorMessage(
         <>
           비밀번호가 일치하지 않습니다.
@@ -59,29 +60,31 @@ const SubmitButton = () => {
       return
     }
 
-    if (!!email && !VALIDATOR.EMAIL.test(email)) {
+    if (email && !VALIDATOR.EMAIL.test(email)) {
       setErrorMessage(<>이메일 형식이 올바르지 않습니다.</>)
 
       return
     }
 
+    const form = new FormData()
+    if (password) {
+      form.append("password", password)
+    }
+    if (profile.data) {
+      form.append(
+        profile.type === "dataUrl" ? "profile" : "profileUri",
+        profile.data
+      )
+    }
+    form.append("nickname", nickname)
+    if (email) {
+      form.append("email", email)
+    }
+
     const {code, data} = await request({
       method: "put",
       path: "/users",
-      body:
-        profile.type === "dataUrl"
-          ? {
-              password,
-              profile: profile.data,
-              nickname,
-              email,
-            }
-          : {
-              password,
-              profileUri: profile.data,
-              nickname,
-              email,
-            },
+      body: form,
     })
 
     if (code === AUTH.USER.DUPLICATED_EMAIL) {
@@ -110,7 +113,7 @@ const SubmitButton = () => {
         disabled={isLoading}
         onClick={submit}
       >
-        저장하기
+        {isLoading ? <Loading isLoading /> : "저장하기"}
       </button>
 
       <Portal
