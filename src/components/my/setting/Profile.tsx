@@ -49,7 +49,7 @@ const Profile = () => {
   const isOpenSearchParams = searchParams.get(OPEN) === PROFILE_EDIT
 
   useEffect(() => {
-    if (!!image) {
+    if (!!image && isOpenSearchParams) {
       openBottomSheet()
     } else {
       closeBottomSheet()
@@ -76,6 +76,7 @@ const Profile = () => {
       216,
       216
     )
+
     setProfile({
       type: "dataUrl",
       url: profileUrl,
