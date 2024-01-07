@@ -4,27 +4,23 @@ import {
   useState,
   useEffect,
   useContext,
+  useRef,
   type ChangeEvent,
   type SyntheticEvent,
 } from "react"
-import dynamic from "next/dynamic"
 import Image from "next/image"
 import {useRouter, useSearchParams} from "next/navigation"
 import ReactCrop, {
   centerCrop,
   makeAspectCrop,
-  Crop,
-  PixelCrop,
+  type Crop,
+  type PixelCrop,
 } from "react-image-crop"
-import {Loading} from "@/components"
+import {Loading, BottomSheet} from "@/components"
 import {ProfileStore} from "./Context"
 import useRequest from "@/hooks/use-request"
 import {OPEN, PROFILE_EDIT, ROUTE} from "@/constants/service"
 import "react-image-crop/dist/ReactCrop.css"
-
-const BottomSheet = dynamic(() => import("../../BottomSheet"), {
-  loading: () => <></>,
-})
 
 // TODO: API 연동 후 삭제
 const data: string[] = [
@@ -39,14 +35,16 @@ const data: string[] = [
 const Profile = () => {
   const [defaultProfiles, setDefaultProfiles] = useState<string[]>([])
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false)
-  const [image, setImage] = useState<string>("")
+  const [image, setImage] = useState("")
   const [crop, setCrop] = useState<Crop>()
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
 
   const {profile, setProfile} = useContext(ProfileStore)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const imageRef = useRef<HTMLImageElement>(null)
+  const cropRef = useRef<ReactCrop>(null)
+  const blobRef = useRef("")
+
   const {request} = useRequest()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -55,21 +53,17 @@ const Profile = () => {
   const aspect = 1
 
   useEffect(() => {
-    if (isOpenSearchParams) {
-      if (!!image) {
-        openBottomSheet()
-      } else {
-        closeBottomSheet()
-      }
+    if (!!image) {
+      openBottomSheet()
+    } else {
+      closeBottomSheet()
     }
     setDefaultProfiles(data)
 
     return () => {
-      if (image) {
-        URL.revokeObjectURL(image)
-      }
+      revokeBlob()
+      revokeImage()
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -77,16 +71,35 @@ const Profile = () => {
     setIsBottomSheetOpen(isOpenSearchParams)
   }, [isOpenSearchParams])
 
-  function uploadProfile(event: ChangeEvent<HTMLInputElement>) {
-    if (event.target?.files?.length) {
-      openBottomSheet()
-
-      const reader = new FileReader()
-      reader.addEventListener("load", () =>
-        setImage(reader.result?.toString() || "")
+  useEffect(() => {
+    if (cropRef.current) {
+      const cropMask = cropRef.current.componentRef.current?.querySelector(
+        ".ReactCrop__crop-mask"
       )
-      reader.readAsDataURL(event.target.files[0])
+
+      const realImageHeight =
+        cropRef.current.componentRef.current?.getBoundingClientRect().height
+
+      if (realImageHeight) {
+        cropMask?.setAttribute("height", realImageHeight.toString())
+      }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageRef.current])
+
+  function uploadProfile(event: ChangeEvent<HTMLInputElement>) {
+    if (!event.target?.files?.length) {
+      return
+    }
+
+    openBottomSheet()
+
+    const reader = new FileReader()
+    reader.addEventListener("load", () =>
+      setImage(reader.result?.toString() || "")
+    )
+    reader.readAsDataURL(event.target.files[0])
   }
 
   function initializeAspect(event: SyntheticEvent<HTMLImageElement>) {
@@ -95,9 +108,9 @@ const Profile = () => {
     const initialCrop = centerCrop(
       makeAspectCrop(
         {
-          unit: "%",
-          width: 100,
-          height: 100,
+          unit: "px",
+          width,
+          height,
         },
         aspect,
         width,
@@ -107,6 +120,67 @@ const Profile = () => {
       height
     )
     setCrop(initialCrop)
+    setCompletedCrop(initialCrop)
+  }
+
+  async function makeCropAsBlobImage() {
+    if (!completedCrop || !imageRef.current) {
+      throw new Error("completed crop 없음")
+    }
+
+    const offscreen = new OffscreenCanvas(
+      completedCrop.width,
+      completedCrop.height
+    )
+    const ctx = offscreen.getContext("2d")
+    if (!ctx) {
+      throw new Error("canvas 2d 없음")
+    }
+
+    const scaleX = imageRef.current.naturalWidth / imageRef.current.width
+    const scaleY = imageRef.current.naturalHeight / imageRef.current.height
+    const targetSize = 216
+
+    offscreen.width = targetSize
+    offscreen.height = targetSize
+
+    ctx.drawImage(
+      imageRef.current,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
+      0,
+      0,
+      targetSize,
+      targetSize
+    )
+
+    console.warn(completedCrop)
+
+    const blob = await offscreen.convertToBlob({
+      type: "image/webp",
+    })
+
+    revokeBlob()
+    const profileUrl = URL.createObjectURL(blob)
+    setProfile(profileUrl)
+    blobRef.current = profileUrl
+
+    closeBottomSheet()
+  }
+
+  function revokeBlob() {
+    if (blobRef.current) {
+      URL.revokeObjectURL(blobRef.current)
+    }
+  }
+
+  function revokeImage() {
+    if (image) {
+      URL.revokeObjectURL(image)
+    }
+    setImage("")
   }
 
   function selectProfile(index: number) {
@@ -118,6 +192,7 @@ const Profile = () => {
   }
 
   function closeBottomSheet() {
+    revokeImage()
     router.push(ROUTE.MY_SETTING)
   }
 
@@ -158,23 +233,36 @@ const Profile = () => {
             </>
           )}
         </button>
-        {image && (
-          <BottomSheet isOpen={isBottomSheetOpen} onClose={closeBottomSheet}>
-            <h5>사진 편집하기</h5>
-            <ReactCrop
-              crop={crop}
-              onChange={(_, percentCrop) => setCrop(percentCrop)}
-              onComplete={setCompletedCrop}
-              aspect={aspect}
-              minHeight={68}
-              minWidth={68}
-              circularCrop
-            >
-              <img src={image} alt="" onLoad={initializeAspect} />
-            </ReactCrop>
-            <button className="confirm lg radius-md">사진 가져오기</button>
-          </BottomSheet>
-        )}
+        <BottomSheet isOpen={isBottomSheetOpen} onClose={closeBottomSheet}>
+          {!!image && (
+            <>
+              <h2 className="mb-2">사진 편집하기</h2>
+              <ReactCrop
+                ref={cropRef}
+                crop={crop}
+                onChange={setCrop}
+                onComplete={setCompletedCrop}
+                aspect={aspect}
+                minHeight={68}
+                minWidth={68}
+                circularCrop
+              >
+                <img
+                  ref={imageRef}
+                  src={image}
+                  alt="편집할 프로필 이미지"
+                  onLoad={initializeAspect}
+                />
+              </ReactCrop>
+              <button
+                className="confirm sm mt-4 radius-md"
+                onClick={makeCropAsBlobImage}
+              >
+                사진 가져오기
+              </button>
+            </>
+          )}
+        </BottomSheet>
       </div>
       <div className="default-profiles">
         <span>리스트에서 선택하기</span>
