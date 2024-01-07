@@ -130,8 +130,6 @@
       }
 
       #bottom-sheet {
-        // TODO: 스타일 추가되어야 함
-
         .content {
           display: flex;
           flex-direction: column;
@@ -203,6 +201,18 @@
       margin-left: $INPUT_NAME_WIDTH;
 
       font-size: 8px;
+    }
+
+    .submit-button {
+      width: 100%;
+      height: 56px;
+
+      color: #fff;
+      font-size: 15px;
+
+      background-color: map-get($COLOR, DARK_4);
+
+      cursor: pointer;
     }
   }
 }

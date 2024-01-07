@@ -26,6 +26,7 @@ const Profile = () => {
 
   const {profile, setProfile} = useContext(ProfileStore)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const {request} = useRequest()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -72,13 +73,19 @@ const Profile = () => {
 
   async function makeCropAsProfile() {
     const profileUrl = await makeCropAsBlobImage()
-    setProfile(profileUrl)
+    setProfile({
+      type: "dataUrl",
+      data: profileUrl,
+    })
     closeBottomSheet()
   }
 
   function selectProfile(index: number) {
     revokeBlob()
-    setProfile(defaultProfiles[index])
+    setProfile({
+      type: "uploadUrl",
+      data: defaultProfiles[index],
+    })
   }
 
   function openBottomSheet() {
@@ -94,9 +101,9 @@ const Profile = () => {
     <div className="profile-wrapper input-wrapper mb-2">
       <span className="input-name mb-2">프로필 사진</span>
       <div className="selected f-center mr-4">
-        {profile ? (
+        {profile.data ? (
           <Image
-            src={profile as string}
+            src={profile.data}
             className="profile"
             alt="프로필 이미지"
             loading="eager"
@@ -166,7 +173,7 @@ const Profile = () => {
               key={index}
               src={defaultProfile}
               className={`${
-                profile === defaultProfile ? "selected" : ""
+                profile.data === defaultProfile ? "selected" : ""
               } profile`}
               alt="기본 프로필 이미지"
               loading="eager"

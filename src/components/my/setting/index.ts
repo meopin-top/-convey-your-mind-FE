@@ -5,6 +5,7 @@ import Nickname from "./Nickname"
 import Password from "./Password"
 import Profile from "./Profile"
 import QuitAlert from "./QuitAlert"
+import SubmitButton from "./SubmitButton"
 import UserId from "./UserId"
 
 export {
@@ -15,5 +16,6 @@ export {
   Password,
   Profile,
   QuitAlert,
+  SubmitButton,
   UserId,
 }

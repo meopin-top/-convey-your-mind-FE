@@ -7,7 +7,10 @@ type TProps = {
   children: ReactNode
 }
 
-type TProfile = File | string
+type TProfile = {
+  type: "dataUrl" | "uploadUrl"
+  data: string
+}
 
 const UserIdStore = createContext<{
   userId: string
@@ -56,12 +59,18 @@ const ProfileStore = createContext<{
   profile: TProfile
   setProfile: (profile: TProfile) => void
 }>({
-  profile: "",
+  profile: {
+    type: "uploadUrl",
+    data: "",
+  },
   setProfile: function () {},
 })
 
 const ProfileProvider = ({children}: TProps) => {
-  const [profile, setProfile] = useState<TProfile>("")
+  const [profile, setProfile] = useState<TProfile>({
+    type: "uploadUrl",
+    data: "",
+  })
 
   return (
     <ProfileStore.Provider value={{profile, setProfile}}>

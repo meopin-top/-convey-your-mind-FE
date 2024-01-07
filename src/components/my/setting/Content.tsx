@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 import {useRouter} from "next/navigation"
 import {Portal, Loading} from "@/components"
 import {EmailStore, NicknameStore, ProfileStore, UserIdStore} from "./Context"
-import {Email, Nickname, Password, Profile, UserId} from "./"
+import {UserId, Password, Profile, Nickname, Email, SubmitButton} from "./"
 import useRequest from "@/hooks/use-request"
 import Storage from "@/store/local-storage"
 import {AUTH} from "@/constants/response-code"
@@ -41,7 +41,10 @@ const Content = () => {
       }
 
       setUserId(data.id)
-      setProfile(Storage.get("profile") ?? "")
+      setProfile({
+        type: "uploadUrl",
+        data: Storage.get("profile") ?? "",
+      })
       setNickname(data.nickName)
       setEmail(data.email ?? "")
     }
@@ -65,6 +68,8 @@ const Content = () => {
       <Profile />
       <Nickname />
       <Email />
+
+      <SubmitButton />
 
       <Portal
         render={() => (
