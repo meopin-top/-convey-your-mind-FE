@@ -46,9 +46,9 @@ export default function useImageCrop(aspect: number) {
 
   function convertBlobToDataUrl(file: File) {
     const reader = new FileReader()
-    reader.addEventListener("load", () =>
+    reader.addEventListener("load", () => {
       setImage(reader.result?.toString() || "")
-    )
+    })
     reader.readAsDataURL(file)
   }
 

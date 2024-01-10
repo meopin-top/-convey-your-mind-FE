@@ -33,7 +33,7 @@ const SubmitButton = () => {
     if (password && !VALIDATOR.PASSWORD.test(password)) {
       setErrorMessage(
         <>
-          비밀번호의 조건을 충족하지 않았습니다.
+          비밀번호 조건을 충족하지 않았습니다.
           <br />
           다시 한 번 확인해주세요.
         </>
