@@ -112,3 +112,43 @@ export function createShareMock() {
 export function removeShareMock() {
   delete (window.navigator as {share: any}).share
 }
+
+export function createCreateObjectURL(url?: string) {
+  Object.defineProperty(window.URL, "createObjectURL", {
+    value: jest.fn(() => url),
+    configurable: true,
+  })
+}
+
+export function removeCreateObjectURL() {
+  delete (window.URL as {createObjectURL: any}).createObjectURL
+}
+
+export function createRevokeObjectURL() {
+  Object.defineProperty(window.URL, "revokeObjectURL", {
+    value: jest.fn(),
+    configurable: true,
+  })
+}
+
+export function removeRevokeObjectURL() {
+  delete (window.URL as {revokeObjectURL: any}).revokeObjectURL
+}
+
+export function createOffscreenCanvas() {
+  Object.defineProperty(window, "OffscreenCanvas", {
+    value: jest.fn(() => ({
+      getContext: jest.fn(() => ({
+        drawImage: jest.fn(),
+      })),
+      convertToBlob: jest.fn(() =>
+        Promise.resolve(new Blob(["(mocked blob content)"]))
+      ),
+    })),
+    configurable: true,
+  })
+}
+
+export function removeOffscreenCanvas() {
+  delete (window as {OffscreenCanvas: any}).OffscreenCanvas
+}

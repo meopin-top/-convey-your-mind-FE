@@ -5,7 +5,7 @@ import useLogOut from "./use-log-out"
 type TRequestParameter = {
   path: string
   method?: "get" | "post" | "put" | "delete"
-  body?: Object
+  body?: Object | FormData
 }
 
 export default function useRequest() {
@@ -32,16 +32,23 @@ export default function useRequest() {
 
       latestRequest.set(path, currentTime)
 
+      const isForm = body instanceof FormData
       const data = await fetch(
         `${process.env.NEXT_PUBLIC_API_HOST}/api${path}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method,
-          body: body ? JSON.stringify(body) : null,
-          signal: controller.signal,
-        }
+        isForm
+          ? {
+              method,
+              body,
+              signal: controller.signal,
+            }
+          : {
+              headers: {
+                "Content-Type": "application/json",
+              },
+              method,
+              body: body ? JSON.stringify(body) : null,
+              signal: controller.signal,
+            }
       )
 
       if (!data.ok) {

@@ -43,7 +43,8 @@ const Content = () => {
       setUserId(data.id)
       setProfile({
         type: "uploadUrl",
-        data: Storage.get("profile") ?? "",
+        url: Storage.get("profile") ?? "",
+        data: "",
       })
       setNickname(data.nickName)
       setEmail(data.email ?? "")

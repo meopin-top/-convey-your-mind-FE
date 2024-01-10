@@ -46,9 +46,9 @@ export default function useImageCrop(aspect: number) {
 
   function convertBlobToDataUrl(file: File) {
     const reader = new FileReader()
-    reader.addEventListener("load", () =>
+    reader.addEventListener("load", () => {
       setImage(reader.result?.toString() || "")
-    )
+    })
     reader.readAsDataURL(file)
   }
 
@@ -73,7 +73,10 @@ export default function useImageCrop(aspect: number) {
     setCompletedCrop(initialCrop)
   }
 
-  async function makeCropAsBlobImage() {
+  async function makeCropAsBlobImage(
+    targetWidth?: number,
+    targetHeight?: number
+  ) {
     if (!completedCrop || !imageRef.current) {
       throw new Error("completed crop 없음")
     }
@@ -89,10 +92,9 @@ export default function useImageCrop(aspect: number) {
 
     const scaleX = imageRef.current.naturalWidth / imageRef.current.width
     const scaleY = imageRef.current.naturalHeight / imageRef.current.height
-    const targetSize = 216
 
-    offscreen.width = targetSize
-    offscreen.height = targetSize
+    offscreen.width = targetWidth ?? completedCrop.width * scaleX
+    offscreen.height = targetHeight ?? completedCrop.height * scaleY
 
     ctx.drawImage(
       imageRef.current,
@@ -102,8 +104,8 @@ export default function useImageCrop(aspect: number) {
       completedCrop.height * scaleY,
       0,
       0,
-      targetSize,
-      targetSize
+      offscreen.width,
+      offscreen.width
     )
 
     const blob = await offscreen.convertToBlob({
@@ -114,7 +116,10 @@ export default function useImageCrop(aspect: number) {
     const url = URL.createObjectURL(blob)
     blobRef.current = url
 
-    return url
+    return {
+      blob,
+      url,
+    }
   }
 
   function revokeBlob() {
