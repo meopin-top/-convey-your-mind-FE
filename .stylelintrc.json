@@ -1,0 +1,107 @@
+{
+  "plugins": ["stylelint-order"],
+  "rules": {
+    "declaration-empty-line-before": null,
+    "order/order": ["at-rules", "dollar-variables", "declarations", "rules"],
+    "order/properties-order": [
+      {
+        "groupName": "pseudo",
+        "emptyLineBefore": "always",
+        "properties": ["content"]
+      },
+      {
+        "groupName": "display",
+        "emptyLineBefore": "always",
+        "properties": [
+          "display",
+          "grid-template-columns",
+          "grid-template-rows",
+          "flex",
+          "flex-basis",
+          "flex-direction",
+          "flex-flow",
+          "flex-grow",
+          "flex-shrink",
+          "flex-wrap",
+          "justify-content",
+          "align-content",
+          "align-items",
+          "align-self",
+          "gap",
+          "row-gap",
+          "column-gap"
+        ]
+      },
+      {
+        "groupName": "box",
+        "emptyLineBefore": "always",
+        "properties": [
+          "margin",
+          "margin-top",
+          "margin-right",
+          "margin-bottom",
+          "margin-left",
+          "padding",
+          "padding-top",
+          "padding-right",
+          "padding-bottom",
+          "padding-left"
+        ]
+      },
+      {
+        "groupName": "position",
+        "emptyLineBefore": "always",
+        "properties": ["position", "top", "right", "bottom", "left", "z-index"]
+      },
+      {
+        "groupName": "box-sizing",
+        "emptyLineBefore": "always",
+        "properties": [
+          "width",
+          "max-width",
+          "min-width",
+          "height",
+          "max-height",
+          "min-height",
+          "box-sizing"
+        ]
+      },
+      {
+        "groupName": "font",
+        "emptyLineBefore": "always",
+        "properties": [
+          "font",
+          "font-size",
+          "font-weight",
+          "font-family",
+          "color",
+          "text-align"
+        ]
+      },
+      {
+        "groupName": "layout-in-style",
+        "emptyLineBefore": "always",
+        "properties": ["background", "background-color"]
+      },
+      {
+        "groupName": "layout-out-style",
+        "emptyLineBefore": "always",
+        "properties": [
+          "border",
+          "border-radius",
+          "border-color",
+          "border-top",
+          "border-right",
+          "border-bottom",
+          "border-left",
+          "box-shadow"
+        ]
+      },
+      {
+        "groupName": "animation",
+        "emptyLineBefore": "always",
+        "properties": ["transform", "transition", "animation"]
+      }
+    ]
+  }
+}

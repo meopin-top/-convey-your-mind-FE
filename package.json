@@ -12,7 +12,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "depcheck": "npx depcheck",
-    "lint:scss": "stylelint ./src/**/app.scss --fix"
+    "lint:scss": "stylelint ./src/**/*.scss --fix"
   },
   "dependencies": {
     "next": "^13.4.4",
