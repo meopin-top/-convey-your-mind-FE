@@ -1,11 +1,11 @@
 #toast {
-  position: fixed;
 
   @for $i from 1 through 3 {
     &.out-in-#{$i}-sec {
       animation: fade-out 1s linear #{$i - 1}s;
     }
   }
+  position: fixed;
 }
 
 @keyframes fade-out {

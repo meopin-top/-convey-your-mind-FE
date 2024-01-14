@@ -50,3 +50,10 @@ certificate 문제로 실패한다면 strict-ssl을 false로 설정한다.
 3. default formatter, foramt on save 두 가지 옵션을 아래 사진과 같이 변경한다.
 
 ![settings format](https://user-images.githubusercontent.com/63287638/235683944-b374be2c-0431-4cd2-ba44-ea900bd21a23.jpg)
+
+## husky
+
+1. `yarn prepare`
+2. 실행할 수 있도록 권한 변경
+
+- (mac or linux) `chmod 7xx ./.husky/*`

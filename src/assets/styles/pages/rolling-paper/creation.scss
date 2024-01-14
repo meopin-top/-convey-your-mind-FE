@@ -102,15 +102,15 @@
           font-size: 15px;
           color: unset;
 
-          background-color: unset;
-
           text-align: center;
+
+          background-color: unset;
 
           &.active {
             @include default;
+            font-weight: 700;
 
             color: map-get($COLOR, DEFAULT);
-            font-weight: 700;
 
             border-width: 2px;
           }
@@ -136,8 +136,9 @@
             top: 0;
             left: 0;
 
-            height: $HEIGHT;
             width: 100%;
+
+            height: $HEIGHT;
 
             font: 700 20px "hanna-11-years";
             color: #fff;
@@ -152,16 +153,34 @@
       margin-top: 32px;
 
       .selection {
-        .sub-description {
-          font: normal 12px "hanna-air";
+
+        @media screen and (min-width: 1024px) {
+          .option {
+            padding-right: 25vw;
+          }
+        }
+
+        @media screen and (max-width: 1023px) {
+          .option {
+            padding-right: 20vw;
+          }
+        }
+
+        @media screen and (max-width: 767px) {
+          .option {
+            padding-right: 10vw;
+          }
         }
 
         display: flex;
         align-items: center;
 
-        border: none;
-
         font-size: 14px;
+
+        border: none;
+        .sub-description {
+          font: normal 12px "hanna-air";
+        }
 
         .option {
           display: flex;
@@ -170,13 +189,13 @@
           position: relative;
 
           input {
+            padding: 0;
+
             position: relative;
             top: 1px;
 
             width: 1.25em;
             height: 1.25em;
-
-            padding: 0;
 
             border: 4px solid $DISABLED_COLOR;
             border-radius: 50%;
@@ -205,24 +224,6 @@
             background-color: unset;
           }
         }
-
-        @media screen and (min-width: 1024px) {
-          .option {
-            padding-right: 25vw;
-          }
-        }
-
-        @media screen and (max-width: 1023px) {
-          .option {
-            padding-right: 20vw;
-          }
-        }
-
-        @media screen and (max-width: 767px) {
-          .option {
-            padding-right: 10vw;
-          }
-        }
       }
 
       .datetime {
@@ -243,6 +244,7 @@
 
         .highlight {
           text-decoration: none;
+
           font-weight: 700;
         }
       }
@@ -256,15 +258,15 @@
       }
 
       .service-domain {
-        font-weight: 300;
         font-size: 13px;
+        font-weight: 300;
       }
 
       input {
+        padding: 0 5px;
+
         width: calc(100% - 160px);
         height: 20px;
-
-        padding: 0 5px;
       }
     }
 
