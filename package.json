@@ -11,7 +11,8 @@
     "lint": "next lint",
     "test": "jest",
     "test:watch": "jest --watch",
-    "depcheck": "npx depcheck"
+    "depcheck": "npx depcheck",
+    "lint:scss": "stylelint ./src/**/app.scss --fix"
   },
   "dependencies": {
     "next": "^13.4.4",
@@ -37,7 +38,10 @@
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
     "lint-staged": "^13.2.2",
+    "postcss": "^8.4.33",
     "sass": "^1.62.1",
+    "stylelint": "^16.1.0",
+    "stylelint-order": "^6.0.4",
     "typescript": "5.0.4"
   }
 }
