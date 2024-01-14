@@ -58,53 +58,6 @@ export default function Button({disabled, children, onClick}: TProps) {
 }
 ```
 
-## Style Sheet
-
-1. CSS 방법론은 프로젝트마다 원하는 방향으로 가져간다. 하지만 많이 사용하는 `margin`, `display: flex`, `text-overflow: ellipsis` 등은 utility-first css(`src/assets/styles/utility-first.scss`)를 이용한다.
-2. 색은 소문자 hex 값으로 표현한다. [3-digit으로 표현 가능한 경우](https://www.w3schools.com/css/css_colors_hex.asp) 3-digit으로 표현한다. 불가능하다면 6-digit으로 표현한다. 다만 rgba에서 alpha 값이 필요하다면 rgba를 사용한다.
-3. 스타일 코드에서 스코프(`{}`) 사이에는 반드시 하나의 개행을 가진다.
-4. 스타일 코드는 다음과 같은 순서대로 선언하고, 그룹화한다.
-
-- 가상선택자 `::after`, `::before`에 대한 `content`
-- 변수 선언
-- mixin
-- `display`와 `display` 설정으로 필요한 스타일 관련
-- `margin`, `padding` 관련
-- `position`과 `position` 설정으로 필요한 스타일 관련
-- `width`,`height` 관련
-- `font`, `text` 관련
-- `background` 관련
-- `border` 관련
-- animation 관련
-- 기타
-- 가상 선택자
-- 자식 선택자
-
-```scss
-/* 예를 들어 */
-.parent {
-  display: flex;
-  justify-content: center;
-
-  position: relative;
-
-  color: #000;
-  font-size: 18px;
-
-  background-color: #abcdef;
-
-  border: 1px solid black;
-
-  &:hover {
-    cursor: pointer;
-  }
-
-  .child {
-    // something
-  }
-}
-```
-
 ## 테스트 코드
 
 1. 테스트 코드에는 반드시 "given", "when", "then"을 주석으로 작성한다.
@@ -134,12 +87,13 @@ jest.mock("../../components/app", () => ({
 ## 기타
 
 1. eslint는 [eslint-config-react-app](https://www.npmjs.com/package/eslint-config-react-app), [@typescript-eslint/eslint-plugin](https://www.npmjs.com/package/@typescript-eslint/eslint-plugin)를 참고한다.
-2. `src/assets` 또는 `src/components`는 import, export 해야 하는 모듈들이 많기 때문에 [barrel](https://basarat.gitbook.io/typescript/main-1/barrel) 파일을 사용한다.
-3. commit은 [udacity git commit convention](http://udacity.github.io/git-styleguide/)에 안 쓰는 코드 / 파일 삭제를 의미하는 "remove" type을 추가해서 사용한다. 다만 subject만으로 충분히 표현이 가능하거나 간단한 수정이면 body와 footer를 생략할 수 있다.
-4. commit 시 바뀐 path를 제외한 파일 이름을 추가한다(ex. fix: \~\~버그 수정(Loading.tsx)). 다만 많이 바뀌었다면 commit body에 바뀐 내용 각각을 기록하고 해당하는 파일의 이름을 추가한다. 또한 "chore"를 사용하면 설치 또는 삭제한 모듈을 커밋 내용에 추가한다(ex. chore: CSS in JS로 변경(+ styled-components, - node-sass)).
-5. git-hook으로 husky를 사용한다. pre-commit으로 `yarn lint` 명령어로 검사하고, pre-push로 `yarn test` 명령어로 검사한다.
-6. 이미지는 용량이 작은 webp 포맷을 사용한다. 이미지 barrel 파일에서는 camelCase를 사용한다.
-7. 아이콘은 사이즈가 커져도 깨지지 않는 svg 포맷을 사용한다. ~(디자이너가 없기 때문에 사이즈별로 아이콘 만들기 힘들다)~ 작은 크기 파일에 적합하지 않은 ico나 `img` 태그의 src 속성을 사용하는 png(적용할 수 있는 css가 더 적음)는 사용을 지양한다. barrel 파일에서는 PascalCase를 사용한다.
+2. scss은 stylelint를 따른다.
+3. `src/assets` 또는 `src/components`는 import, export 해야 하는 모듈들이 많기 때문에 [barrel](https://basarat.gitbook.io/typescript/main-1/barrel) 파일을 사용한다.
+4. commit은 [udacity git commit convention](http://udacity.github.io/git-styleguide/)에 안 쓰는 코드 / 파일 삭제를 의미하는 "remove" type을 추가해서 사용한다. 다만 subject만으로 충분히 표현이 가능하거나 간단한 수정이면 body와 footer를 생략할 수 있다.
+5. commit 시 바뀐 path를 제외한 파일 이름을 추가한다(ex. fix: \~\~버그 수정(Loading.tsx)). 다만 많이 바뀌었다면 commit body에 바뀐 내용 각각을 기록하고 해당하는 파일의 이름을 추가한다. 또한 "chore"를 사용하면 설치 또는 삭제한 모듈을 커밋 내용에 추가한다(ex. chore: CSS in JS로 변경(+ styled-components, - node-sass)).
+6. git-hook으로 husky를 사용한다. pre-commit으로 `yarn lint` 명령어로 검사하고, pre-push로 `yarn test` 명령어로 검사한다.
+7. 이미지는 용량이 작은 webp 포맷을 사용한다. 이미지 barrel 파일에서는 camelCase를 사용한다.
+8. 아이콘은 사이즈가 커져도 깨지지 않는 svg 포맷을 사용한다. ~(디자이너가 없기 때문에 사이즈별로 아이콘 만들기 힘들다)~ 작은 크기 파일에 적합하지 않은 ico나 `img` 태그의 src 속성을 사용하는 png(적용할 수 있는 css가 더 적음)는 사용을 지양한다. barrel 파일에서는 PascalCase를 사용한다.
 
 ## 프로젝트 구조
 
