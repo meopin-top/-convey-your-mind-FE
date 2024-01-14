@@ -51,7 +51,15 @@
       {
         "groupName": "position",
         "emptyLineBefore": "always",
-        "properties": ["position", "top", "right", "bottom", "left", "z-index"]
+        "properties": [
+          "position",
+          "top",
+          "right",
+          "bottom",
+          "left",
+          "inset",
+          "z-index"
+        ]
       },
       {
         "groupName": "box-sizing",
