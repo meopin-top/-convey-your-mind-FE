@@ -1,6 +1,12 @@
 "use client"
 
-import {useState, useContext, type ReactNode, type KeyboardEvent} from "react"
+import {
+  useState,
+  useContext,
+  useEffect,
+  type ReactNode,
+  type KeyboardEvent,
+} from "react"
 import {useRouter} from "next/navigation"
 import dynamic from "next/dynamic"
 import useInput from "@/hooks/use-input"
@@ -8,6 +14,8 @@ import useRequest from "@/hooks/use-request"
 import SignInStore from "@/store/sign-in"
 import {ROLLING_PAPER} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
+import useFingerprint from "@/hooks/use-fingerprint"
+import Storage from "@/store/local-storage"
 
 const Portal = dynamic(() => import("../Portal"), {
   loading: () => <></>,
@@ -25,11 +33,18 @@ const WithoutSignUp = () => {
 
   const {setTab, setRedirectTo} = useContext(SignInStore)
 
+  const router = useRouter()
+
   const [sharedCode, handleSharedCode] = useInput()
 
   const {isLoading, request} = useRequest()
 
-  const router = useRouter()
+  const {feature, getHash} = useFingerprint()
+
+  useEffect(() => {
+    getHash(feature).then((hash) => Storage.set("fingerprint", hash))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   async function writeRollingPaper() {
     if (sharedCode.length === 0) {
