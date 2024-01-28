@@ -165,7 +165,7 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 아무 공유 코드를 입력하지 않았다면 '공유코드나 URL을 입력해주세요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
+  it("입력 버튼 클릭 시 아무 공유코드를 입력하지 않았다면 '공유코드나 URL을 입력해주세요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
     // given
     await waitFor(() => {
       render(<WithoutSignUp />)
@@ -184,7 +184,7 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 참여 가능하지 않은 프로젝트의 공유 코드라면 '유효하지 않은 공유코드/URL입니다'라는 문구가 포함된 FlowAlert 노출된다.", async () => {
+  it("입력 버튼 클릭 시 참여 가능하지 않은 프로젝트의 공유코드라면 '유효하지 않은 공유코드/URL입니다'라는 문구가 포함된 FlowAlert 노출된다.", async () => {
     // then
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE,
@@ -213,7 +213,7 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 참여 가능한 프로젝트의 공유 코드라면 '로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
+  it("입력 버튼 클릭 시 참여 가능한 프로젝트의 공유코드라면 '로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
     // given
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,

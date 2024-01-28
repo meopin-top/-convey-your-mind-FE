@@ -32,7 +32,7 @@ const SharingCode = ({}: TProps) => {
     <>
       <div className="sharing-code">
         <section className="description mb-1">
-          롤링페이퍼의 공유 코드는 무엇인가요?
+          롤링페이퍼의 공유코드는 무엇인가요?
         </section>
         <section className="sub-description mb-1">
           * 기본 코드를 수정할 수 있습니다(빈 칸일 경우 진행 불가).
@@ -41,7 +41,7 @@ const SharingCode = ({}: TProps) => {
         <input
           className="radius-sm"
           type="text"
-          placeholder="공유 코드를 입력해주세요"
+          placeholder="공유코드를 입력해주세요"
           value={sharingCode}
           maxLength={20}
           onChange={handleSharingCode}
