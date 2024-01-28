@@ -17,21 +17,17 @@ async function validateSharingCode(sharingCode: string) {
     `${
       process.env.NEXT_PUBLIC_API_HOST
     }/api/projects/invite-code/${encodeURIComponent(sharingCode)}`,
-    {
-      cache: "no-cache",
-    }
+    {next: {revalidate: 10}}
   )
-
-  return await data.json()
-}
-
-const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
-  const {code} = await validateSharingCode(sharingCode)
-
+  const {code} = await data.json()
   if (code === ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE) {
     // 존재하지 않는 공유 코드면
     redirect(ROUTE.MY_PAGE)
   }
+}
+
+const CreationSuccess = async ({params: {sharingCode}}: TProps) => {
+  await validateSharingCode(sharingCode)
 
   return (
     <Suspense fallback={<Loading isLoading />}>
