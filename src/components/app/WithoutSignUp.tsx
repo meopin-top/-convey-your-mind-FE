@@ -92,14 +92,13 @@ const WithoutSignUp = () => {
 
   function startWithSignIn() {
     setTab("signIn")
-    setRedirectTo(ROUTE.ROLLING_PAPER_EDIT)
+    setRedirectTo(`${ROUTE.ROLLING_PAPER_EDIT}/${sharedCode}`)
 
     closeAlert()
   }
 
   function startWithoutSignIn() {
-    router.push(ROUTE.ROLLING_PAPER_EDIT)
-    // router.push(sharedCode) // TODO: 롤링페이퍼 작성 화면 생성 후 수정
+    router.push(`${ROUTE.ROLLING_PAPER_EDIT}/${sharedCode}`)
   }
 
   return (
