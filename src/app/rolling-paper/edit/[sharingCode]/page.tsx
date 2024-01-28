@@ -3,7 +3,7 @@ import {Canvas, Redirection} from "@/components/rolling-paper/edit"
 import {ROLLING_PAPER} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
 import {Suspense} from "react"
-import {Redirecting} from "@/components"
+import {Header, Redirecting} from "@/components"
 
 type TProps = {
   params: {
@@ -49,7 +49,10 @@ const RollingPaperEdit = async ({params: {sharingCode}}: TProps) => {
       {code === ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE ? (
         <Redirection sharingCode={sharingCode} />
       ) : (
-        <Canvas projectId={projectId} />
+        <div className="rolling-paper-edit root-wrapper">
+          <Header />
+          <Canvas projectId={projectId} />
+        </div>
       )}
     </Suspense>
   )

@@ -55,7 +55,7 @@ describe("CreationSuccess", () => {
     render(await CreationSuccess({params: {sharingCode: "test"}}))
 
     // then
-    expect(redirect).toBeCalledWith(ROUTE.MY_PAGE)
+    expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
   })
 
   it("공유코드가 존재하면 올바르게 렌더링한다.", async () => {

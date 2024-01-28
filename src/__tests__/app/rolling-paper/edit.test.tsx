@@ -1,11 +1,11 @@
 import {render, screen} from "@testing-library/react"
-import Edit from "@/app/rolling-paper/edit/[sharingCode]/page"
+import RollingPaperEdit from "@/app/rolling-paper/edit/[sharingCode]/page"
 import {redirect} from "next/navigation"
 import {ROUTE} from "@/constants/service"
 import {createFetchMock, deleteFetchMock} from "@/__mocks__/window"
 import {ROLLING_PAPER} from "@/constants/response-code"
 
-// const HEADER = "Header"
+const HEADER = "Header"
 const REDIRECTION = "Redirection"
 const CANVAS = "Canvas"
 
@@ -13,10 +13,10 @@ jest.mock("next/navigation", () => ({
   __esModule: true,
   redirect: jest.fn(),
 }))
-// jest.mock("../../../../components/Header.tsx", () => ({
-//   __esModule: true,
-//   default: () => <>{HEADER}</>,
-// }))
+jest.mock("../../../components/Header.tsx", () => ({
+  __esModule: true,
+  default: () => <>{HEADER}</>,
+}))
 jest.mock("../../../components/rolling-paper/edit/Redirection.tsx", () => ({
   __esModule: true,
   default: () => <>{REDIRECTION}</>,
@@ -26,7 +26,7 @@ jest.mock("../../../components/rolling-paper/edit/Canvas.tsx", () => ({
   default: () => <>{CANVAS}</>,
 }))
 
-describe("CreationSuccess", () => {
+describe("RollingPaperEdit", () => {
   afterEach(() => {
     deleteFetchMock()
     jest.clearAllMocks()
@@ -44,7 +44,7 @@ describe("CreationSuccess", () => {
       })
     )
 
-    render(await Edit({params: {sharingCode: "test"}}))
+    render(await RollingPaperEdit({params: {sharingCode: "test"}}))
 
     // then
     expect(redirect).toHaveBeenCalledWith(ROUTE.MY_PAGE)
@@ -62,16 +62,17 @@ describe("CreationSuccess", () => {
       })
     )
 
-    render(await Edit({params: {sharingCode: "test"}}))
+    render(await RollingPaperEdit({params: {sharingCode: "test"}}))
 
-    // const header = screen.getByText(new RegExp(HEADER))
-    const canvas = screen.getByText(CANVAS)
+    const header = screen.getByText(new RegExp(HEADER))
+    const canvas = screen.getByText(new RegExp(CANVAS))
 
     // then
+    expect(header).toBeInTheDocument()
     expect(canvas).toBeInTheDocument()
   })
 
-  it("공유코드가 존재하지만 올바른 프로젝트 아이디가 아니면 헤더와 Redirection를 렌더링한다.", async () => {
+  it("공유코드가 존재하지만 올바른 프로젝트 아이디가 아니면 Redirection를 렌더링한다.", async () => {
     // given, when
     createFetchMock(
       jest.fn().mockImplementation((url: string) => {
@@ -94,10 +95,9 @@ describe("CreationSuccess", () => {
       })
     )
 
-    render(await Edit({params: {sharingCode: "test"}}))
+    render(await RollingPaperEdit({params: {sharingCode: "test"}}))
 
-    // const header = screen.getByText(new RegExp(HEADER))
-    const redirection = screen.getByText(REDIRECTION)
+    const redirection = screen.getByText(new RegExp(REDIRECTION))
 
     // then
     expect(redirection).toBeInTheDocument()
