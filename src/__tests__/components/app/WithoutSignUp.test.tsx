@@ -311,7 +311,9 @@ describe("WithoutSignUp", () => {
       expect(setTabMock).toHaveBeenCalledTimes(1)
       expect(setTabMock).toHaveBeenCalledWith("signIn")
       expect(setRedirectToMock).toHaveBeenCalledTimes(1)
-      expect(setRedirectToMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
+      expect(setRedirectToMock).toHaveBeenCalledWith(
+        `${ROUTE.ROLLING_PAPER_EDIT}/test`
+      )
     })
   })
 
@@ -349,7 +351,9 @@ describe("WithoutSignUp", () => {
 
     // then
     await waitFor(() => {
-      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
+      expect(routerPushMock).toHaveBeenCalledWith(
+        `${ROUTE.ROLLING_PAPER_EDIT}/test`
+      )
     })
   })
 })

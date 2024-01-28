@@ -107,7 +107,10 @@ describe("CreationSuccess", () => {
       .querySelector(":first-child")
 
     // then
-    expect(rollingPaperButtonAnchor).toHaveAttribute("href", `#`)
+    expect(rollingPaperButtonAnchor).toHaveAttribute(
+      "href",
+      `${ROUTE.ROLLING_PAPER_EDIT}/test`
+    )
   })
 
   it("'마이 페이지' 버튼을 누르면 로그인 페이지로 이동한다.", async () => {
