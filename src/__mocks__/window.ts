@@ -152,3 +152,7 @@ export function createOffscreenCanvas() {
 export function removeOffscreenCanvas() {
   delete (window as {OffscreenCanvas: any}).OffscreenCanvas
 }
+
+export function removeVisualViewport() {
+  delete (window as any).visualViewport
+}

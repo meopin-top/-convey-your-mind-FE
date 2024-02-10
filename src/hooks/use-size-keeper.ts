@@ -50,12 +50,12 @@ export default function useSizeKeeper(initialSizes: number[]) {
 
     window.addEventListener("resize", maintainSize)
     window.addEventListener("touchmove", pinchZoomResizeHandler)
-    window.addEventListener("wheel", maintainSize)
+    window.addEventListener("wheel", maintainSizeWithDelay)
 
     return () => {
       window.removeEventListener("resize", maintainSize)
       window.removeEventListener("touchmove", pinchZoomResizeHandler)
-      window.removeEventListener("wheel", maintainSize)
+      window.removeEventListener("wheel", maintainSizeWithDelay)
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
