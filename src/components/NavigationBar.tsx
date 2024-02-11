@@ -33,7 +33,11 @@ const LoginAlert = dynamic(() => import("./FlowAlert"), {
   loading: () => <></>,
 })
 
-const NavigationBar = () => {
+type TProps = {
+  size: number
+}
+
+const NavigationBar = ({size}: TProps) => {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false)
   const [isLogOutCalled, setIsLogOutCalled] = useState(false)
   const [isAlerting, setIsAlerting] = useState(false)
@@ -121,7 +125,7 @@ const NavigationBar = () => {
 
   return (
     <>
-      <Hamburger onClick={handleNavigationBar} className="md" />
+      <Hamburger onClick={handleNavigationBar} width={size} height={size} />
       <nav
         id="navigation-bar"
         className={`${isNavigationOpen ? "open" : "close"} background`}

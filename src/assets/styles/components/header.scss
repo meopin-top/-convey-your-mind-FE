@@ -1,5 +1,6 @@
 @import "../common/colors";
 @import "../common/user";
+@import "../common/variables";
 
 // 헤더 사용하는 페이지 최상단 wrapper 추가
 .my-page,
@@ -11,6 +12,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    position: absolute;
+
+    background-color: rgba(#fff, 0.9);
   }
 
   #navigation-bar.background {

@@ -2,14 +2,11 @@
 
 import {useState, useEffect} from "react"
 import {debounce} from "@/utils/optimization"
+import type {TPosition} from "@/@types/viewport"
 
 export default function useSizeKeeper(initialSizes: number[]) {
   const [sizes, setSizes] = useState([...initialSizes])
-  const [position, setPosition] = useState<{
-    top: number
-    left: number
-    width: number
-  }>({
+  const [position, setPosition] = useState<TPosition>({
     top: 0,
     left: 0,
     width: 0,
