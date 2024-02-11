@@ -86,6 +86,7 @@ describe("Sharing", () => {
   it("일정 시간이 지난 뒤 다시 'URL 복사' 버튼을 렌더링하고 토스트 팝업이 사라진다.", async () => {
     // given
     jest.useFakeTimers()
+
     render(<Sharing sharingCode="test" />)
 
     const copyButton = screen.getByRole("button", {

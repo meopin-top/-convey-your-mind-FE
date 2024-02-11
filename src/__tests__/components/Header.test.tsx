@@ -9,25 +9,25 @@ jest.mock("../../components/NavigationBar", () => ({
 describe("Header", () => {
   it("로고를 렌더링한다.", async () => {
     // given, when
-    render(<Header />)
+    await waitFor(() => {
+      render(<Header />)
+    })
 
     const image = screen.getByAltText("logo")
 
     // then
-    await waitFor(() => {
-      expect(image).toBeInTheDocument()
-    })
+    expect(image).toBeInTheDocument()
   })
 
   it("네이게이션 바를 렌더링한다.", async () => {
     // given, when
-    render(<Header />)
+    await waitFor(() => {
+      render(<Header />)
+    })
 
     const navigationBar = screen.getByText("네비게이션 바")
 
     // then
-    await waitFor(() => {
-      expect(navigationBar).toBeInTheDocument()
-    })
+    expect(navigationBar).toBeInTheDocument()
   })
 })

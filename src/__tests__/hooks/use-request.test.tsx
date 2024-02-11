@@ -1,5 +1,4 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/react"
-import {renderHook} from "@testing-library/react-hooks" // react 17 warning 발생
 import useRequest from "@/hooks/use-request"
 import useLogOut from "@/hooks/use-log-out"
 import {
@@ -57,11 +56,14 @@ describe("useRequest", () => {
     createDateMock({})
     createFetchMock(jest.fn().mockResolvedValueOnce(undefined))
 
-    const {result} = renderHook(() => useRequest())
+    render(<TestComponent />)
 
     // then
-    expect(result.current.error).toBeNull()
-    expect(result.current.isLoading).toBe(false)
+    const button = screen.getByRole("button", {name: "버튼"})
+    const errorBox = screen.queryByTestId(testid)
+
+    expect(button).toBeInTheDocument()
+    expect(errorBox).not.toBeInTheDocument()
   })
 
   it("request 호출 시 에러가 없다면 isLoading true를 반환한 뒤 request 끝난 이후 isLoading false를 반환한다.", async () => {
@@ -174,7 +176,9 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(abortMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   it("500ms를 넘은 간격으로 같은 API 경로로 요청이 발생하면 이전 API 호출을 중단하지 않는다.", async () => {
@@ -199,7 +203,9 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(abortMock).not.toHaveBeenCalled()
+    })
   })
 
   it("500번대 에러가 반환되면 '서버 측 오류'가 콘솔에 출력된다.", async () => {
