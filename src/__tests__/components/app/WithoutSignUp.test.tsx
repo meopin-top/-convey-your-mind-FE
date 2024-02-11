@@ -7,10 +7,6 @@ import type {TProps as TPortalProps} from "@/components/Portal"
 import type {TProps as TFlowAlertProps} from "@/components/FlowAlert"
 import type {TRoute, TTab} from "@/@types/sign-in"
 import {ROUTE} from "@/constants/service"
-import {
-  createLocalStorageMock,
-  removeLocalStorageMock,
-} from "@/__mocks__/window"
 
 const setTabMock = jest.fn()
 const setRedirectToMock = jest.fn()
@@ -31,7 +27,6 @@ const WithoutSignUp = () => {
 
 const isLoading = false
 const requestMock = jest.fn()
-const feature = ""
 
 jest.mock("next/navigation", () => ({
   __esModule: true,
@@ -72,25 +67,10 @@ jest.mock("../../../hooks/use-request.ts", () => ({
     isLoading,
   }),
 }))
-jest.mock("../../../hooks/use-fingerprint.ts", () => ({
-  __esModule: true,
-  default: () => ({
-    feature,
-    getHash: jest.fn().mockResolvedValue(feature),
-  }),
-}))
 
 describe("WithoutSignUp", () => {
-  beforeAll(() => {
-    createLocalStorageMock()
-  })
-
   afterEach(() => {
     jest.clearAllMocks()
-  })
-
-  afterAll(() => {
-    removeLocalStorageMock()
   })
 
   it("인풋과 버튼을 올바르게 렌더링한다.", async () => {
@@ -109,16 +89,6 @@ describe("WithoutSignUp", () => {
     // then
     expect(sharedCodeInput).toBeInTheDocument()
     expect(participationButton).toBeInTheDocument()
-  })
-
-  it("렌더링 시 로컬스토리지 fingerprint가 set된다.", async () => {
-    // given, when
-    await waitFor(() => {
-      render(<WithoutSignUp />)
-    })
-
-    // then
-    expect(window.localStorage.setItem).toBeCalledWith("fingerprint", feature)
   })
 
   it("공유코드 state를 올바르게 변경한다.", async () => {
