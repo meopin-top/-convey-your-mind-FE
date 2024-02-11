@@ -1,4 +1,4 @@
-import {Reducer} from "@/components"
+import {Reducer, Fingerprint} from "@/components"
 import {Provider as SignInProvider} from "@/store/sign-in"
 import {Provider as SettingAuthProvider} from "@/store/setting-auth"
 import "@/assets/styles/index.scss"
@@ -12,12 +12,10 @@ const RootLayout = ({children}: {children: JSX.Element}) => {
   return (
     <html lang="ko">
       <body>
-        <Reducer components={[
-          SignInProvider,
-          SettingAuthProvider,
-        ]}>
+        <Reducer components={[SignInProvider, SettingAuthProvider]}>
           {children}
         </Reducer>
+        <Fingerprint />
         <div id="portal" />
       </body>
     </html>
