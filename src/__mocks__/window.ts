@@ -156,3 +156,14 @@ export function removeOffscreenCanvas() {
 export function removeVisualViewport() {
   delete (window as any).visualViewport
 }
+
+export function createScrollBy() {
+  Object.defineProperty(window, "scrollBy", {
+    value: jest.fn(),
+    configurable: true,
+  })
+}
+
+export function removeScrollBy() {
+  delete (window as any).scrollBy
+}
