@@ -46,12 +46,11 @@ button {
 }
 
 textarea {
-  border: none;
+  border: 1px solid #020202;
 
   outline: none;
 
-  /* stylelint-disable-line */
-  // resize: none; // TODO: 이거 키면 resize가 안됨.
+  resize: none;
 }
 
 input {
@@ -69,10 +68,17 @@ input {
 #portal > *:not(#toast),
 #redirecting,
 #bottom-sheet,
+#header,
 #navigation-bar {
   position: fixed;
-  inset: 0;
   z-index: 99;
+}
+
+#portal > *:not(#toast),
+#redirecting,
+#bottom-sheet,
+#navigation-bar {
+  inset: 0;
 }
 
 .root-wrapper {

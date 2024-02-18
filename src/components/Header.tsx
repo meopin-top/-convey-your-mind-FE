@@ -25,6 +25,7 @@ const Header = () => {
           width: position.width !== 0 ? position.width : "100%",
           padding: `${padding / 2}px ${padding}px`,
         }}
+        id="header"
       >
         <Image src={logo} alt="logo" width={logoSize} height={logoSize} />
         <NavigationBar size={menuSize} />
