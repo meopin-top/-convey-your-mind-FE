@@ -10,7 +10,11 @@ const NavigationBar = dynamic(() => import("./NavigationBar"), {
   loading: () => <></>,
 })
 
-const Header = () => {
+type TProps = {
+  isControllingScroll?: boolean
+}
+
+const Header = ({isControllingScroll = true}: TProps) => {
   const {
     sizes: [logoSize, menuSize, padding],
     position,
@@ -28,7 +32,10 @@ const Header = () => {
         id="header"
       >
         <Image src={logo} alt="logo" width={logoSize} height={logoSize} />
-        <NavigationBar size={menuSize} />
+        <NavigationBar
+          size={menuSize}
+          isControllingScroll={isControllingScroll}
+        />
       </header>
       <div className="block" style={{height: logoSize}} />
     </>

@@ -19,13 +19,11 @@
   }
 
   #navigation-bar.background {
-    $TRANSLATE_DISTANCE: 100vw;
     $MOVING_TIME: 0.5s;
 
     &.open {
       background-color: rgba(#000, 0.3);
 
-      transform: translateX(0);
       transition: transform $MOVING_TIME ease-in-out,
         background-color 0.2s $MOVING_TIME linear;
     }
@@ -33,7 +31,7 @@
     &.close {
       background-color: transparent;
 
-      transform: translateX($TRANSLATE_DISTANCE);
+      transform: translateX(100vw);
       transition: transform $MOVING_TIME ease-in-out;
     }
 

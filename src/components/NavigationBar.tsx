@@ -35,9 +35,10 @@ const LoginAlert = dynamic(() => import("./FlowAlert"), {
 
 type TProps = {
   size: number
+  isControllingScroll: boolean
 }
 
-const NavigationBar = ({size}: TProps) => {
+const NavigationBar = ({size, isControllingScroll}: TProps) => {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false)
   const [isLogOutCalled, setIsLogOutCalled] = useState(false)
   const [isAlerting, setIsAlerting] = useState(false)
@@ -57,15 +58,22 @@ const NavigationBar = ({size}: TProps) => {
 
   useEffect(() => {
     if (isNavigationOpen) {
-      lockScroll()
       setFullPath(location.pathname + location.search)
-    } else {
+    }
+  }, [isNavigationOpen])
+
+  function openNavigationBar() {
+    if (isControllingScroll) {
+      lockScroll()
+    }
+    setIsNavigationOpen(true)
+  }
+
+  function closeNavigationBar() {
+    if (isControllingScroll) {
       unlockScroll()
     }
-  }, [isNavigationOpen, lockScroll, unlockScroll])
-
-  function handleNavigationBar() {
-    setIsNavigationOpen(!isNavigationOpen)
+    setIsNavigationOpen(false)
   }
 
   function preventPropagation(event: MouseEvent<HTMLDivElement>) {
@@ -103,7 +111,7 @@ const NavigationBar = ({size}: TProps) => {
         className={`shortcut-link f-center ${
           fullPath === route ? "active" : ""
         }`}
-        onClick={handleNavigationBar}
+        onClick={closeNavigationBar}
       >
         {children}
       </Link>
@@ -125,15 +133,15 @@ const NavigationBar = ({size}: TProps) => {
 
   return (
     <>
-      <Hamburger onClick={handleNavigationBar} width={size} height={size} />
+      <Hamburger onClick={openNavigationBar} width={size} height={size} />
       <nav
         id="navigation-bar"
         className={`${isNavigationOpen ? "open" : "close"} background`}
-        onClick={handleNavigationBar}
+        onClick={closeNavigationBar}
       >
         <div className="wrapper" onClick={preventPropagation}>
           <div className="close">
-            <button onClick={handleNavigationBar}>
+            <button onClick={closeNavigationBar}>
               <Close className="sm" />
             </button>
           </div>
