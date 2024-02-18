@@ -37,21 +37,13 @@ export default function useSizeKeeper(initialSizes: number[]) {
 
     const maintainSizeWithDelay = debounce(maintainSize, 50)
 
-    function pinchZoomResizeHandler(event: TouchEvent) {
-      if (event.touches.length !== 2) {
-        return
-      }
-
-      maintainSizeWithDelay()
-    }
-
     window.addEventListener("resize", maintainSize)
-    window.addEventListener("touchmove", pinchZoomResizeHandler)
+    window.addEventListener("touchmove", maintainSize)
     window.addEventListener("wheel", maintainSizeWithDelay)
 
     return () => {
       window.removeEventListener("resize", maintainSize)
-      window.removeEventListener("touchmove", pinchZoomResizeHandler)
+      window.removeEventListener("touchmove", maintainSize)
       window.removeEventListener("wheel", maintainSizeWithDelay)
     }
 
