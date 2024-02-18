@@ -89,7 +89,7 @@ describe("NavigationBar", () => {
   it("햄버거 메뉴와 네비게이션 바가 렌더링된다.", async () => {
     // given, when
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -103,7 +103,7 @@ describe("NavigationBar", () => {
   it("햄버거 메뉴를 누르면 네비게이션 바가 open된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -119,7 +119,7 @@ describe("NavigationBar", () => {
   it("네비게이션 바가 open되어 있을 때 background를 누르면 네비게이션 바가 close된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -136,7 +136,7 @@ describe("NavigationBar", () => {
   it("네비게이션 바가 open되어 있을 때 close 버튼을 누르면 네비게이션 바가 close된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -151,20 +151,10 @@ describe("NavigationBar", () => {
     expect(navigationBar.classList).toContain("close")
   })
 
-  it("초기에는 scroll이 unlock 상태이다.", async () => {
-    // given, when
-    await waitFor(() => {
-      render(<NavigationBar size={10} />)
-    })
-
-    // then
-    expect(unlockScrollMock).toHaveBeenCalledTimes(1)
-  })
-
   it("네비게이션 바가 open되면 scroll이 lock 상태이다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -179,7 +169,7 @@ describe("NavigationBar", () => {
   it("네비게이션 바가 close 되면 scroll이 unlock 상태이다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const hamburger = screen.getByText("hamburger")
@@ -190,13 +180,31 @@ describe("NavigationBar", () => {
     fireEvent.click(close)
 
     // then
-    expect(unlockScrollMock).toHaveBeenCalledTimes(2)
+    expect(unlockScrollMock).toHaveBeenCalledTimes(1)
+  })
+
+  it("네비게이션 바에 scroll을 제어하지 않으면 scroll이 lock/unlock 되지 않는다.", async () => {
+    // given
+    await waitFor(() => {
+      render(<NavigationBar size={10} isControllingScroll={false} />)
+    })
+
+    const hamburger = screen.getByText("hamburger")
+    const close = screen.getByText("close")
+
+    // when
+    fireEvent.click(hamburger)
+    fireEvent.click(close)
+
+    // then
+    expect(lockScrollMock).toHaveBeenCalledTimes(0)
+    expect(unlockScrollMock).toHaveBeenCalledTimes(0)
   })
 
   it("로그인되지 않았을 때 회원가입과 로그인 버튼이 노출된다.", async () => {
     // given, when
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const signUpButton = screen.getByRole("link", {
@@ -214,7 +222,7 @@ describe("NavigationBar", () => {
   it("회원가입 버튼을 누르면 메인 페이지로 이동한다.", async () => {
     // given, when
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const signUpButton = screen.getByRole("link", {
@@ -228,7 +236,7 @@ describe("NavigationBar", () => {
   it("로그인 버튼을 누르면 메인 페이지로 이동한다.", async () => {
     // given, when
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const signInButton = screen.getByRole("link", {
@@ -244,7 +252,7 @@ describe("NavigationBar", () => {
     login()
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const profile = screen.getByText("프로필")
@@ -263,7 +271,7 @@ describe("NavigationBar", () => {
     window.localStorage.setItem("profile", "profile")
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const logOutButton = screen.getByRole("button", {
@@ -283,7 +291,7 @@ describe("NavigationBar", () => {
     window.localStorage.setItem("profile", "profile")
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const logOutButton = screen.getByRole("button", {
@@ -300,7 +308,7 @@ describe("NavigationBar", () => {
   it("미로그인 시 마이페이지 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("button", {
@@ -321,7 +329,7 @@ describe("NavigationBar", () => {
     login()
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("link", {
@@ -335,7 +343,7 @@ describe("NavigationBar", () => {
   it("미로그인 시 참여 중인 프로젝트 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("button", {
@@ -356,7 +364,7 @@ describe("NavigationBar", () => {
     login()
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("link", {
@@ -370,7 +378,7 @@ describe("NavigationBar", () => {
   it("미로그인 시 내가 받은 롤링페이퍼 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("button", {
@@ -391,7 +399,7 @@ describe("NavigationBar", () => {
     login()
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("link", {
@@ -405,7 +413,7 @@ describe("NavigationBar", () => {
   it("미로그인 시 롤링페이퍼 만들기 링크를 누르면 LoginAlert가 open된다.", async () => {
     // given
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("button", {
@@ -426,7 +434,7 @@ describe("NavigationBar", () => {
     login()
 
     await waitFor(() => {
-      render(<NavigationBar size={10} />)
+      render(<NavigationBar size={10} isControllingScroll />)
     })
 
     const myPageButton = screen.getByRole("link", {
