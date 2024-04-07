@@ -1,8 +1,8 @@
+import {Suspense} from "react"
 import {redirect} from "next/navigation"
 import {Canvas, Redirection} from "@/components/rolling-paper/edit"
 import {ROLLING_PAPER} from "@/constants/response-code"
 import {ROUTE} from "@/constants/service"
-import {Suspense} from "react"
 import {Header, Redirecting} from "@/components"
 
 type TProps = {
@@ -34,24 +34,30 @@ async function validateSharingCode(sharingCode: string) {
       },
     }
   )
-  const {code: projectIdCode} = await projectIdData.json()
+  const {
+    code: projectIdCode,
+    data: {destination, type},
+  } = await projectIdData.json()
 
-  return {id, projectIdCode}
+  return {id, projectIdCode, destination, type}
 }
 
 const RollingPaperEdit = async ({params: {sharingCode}}: TProps) => {
-  const {id: projectId, projectIdCode: code} = await validateSharingCode(
-    sharingCode
-  )
+  const {
+    id: projectId,
+    projectIdCode: code,
+    destination: toWhom,
+    type,
+  } = await validateSharingCode(sharingCode)
 
   return (
     <Suspense fallback={<Redirecting isRedirecting />}>
       {code === ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE ? (
-        <Redirection sharingCode={sharingCode} />
+        <Redirection />
       ) : (
-        <div className="rolling-paper-edit root-wrapper">
-          <Header />
-          <Canvas projectId={projectId} />
+        <div className="rolling-paper-edit root-wrapper f-center">
+          <Canvas projectId={projectId} toWhom={toWhom} type={type} />
+          <Header isControllingScroll={false} />
         </div>
       )}
     </Suspense>
