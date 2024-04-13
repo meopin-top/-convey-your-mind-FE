@@ -97,7 +97,6 @@ export default function useCanvas() {
       // drag 이벤트를 쓸 필요가 없음: https://ko.javascript.info/mouse-drag-and-drop
       if (isPreview) {
         confirmation.addEventListener("click", () => {
-          console.warn("zz")
           setIsConfirmAlerting(true)
         })
         close.addEventListener("click", () => {
