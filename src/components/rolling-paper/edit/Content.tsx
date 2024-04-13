@@ -1,14 +1,10 @@
 "use client"
 
 import {type ReactNode, useContext} from "react"
-import dynamic from "next/dynamic"
 import Store from "@/store/rolling-paper"
+import {BottomSheet} from "@/components"
 import {TEXT_CONTENT, IMAGE_CONTENT} from "@/constants/service"
 import type {TInputChangeEvent} from "@/hooks/use-input"
-
-const BottomSheet = dynamic(() => import("../../BottomSheet"), {
-  loading: () => <></>,
-})
 
 type TProps = {
   isBottomSheetOpen: boolean
