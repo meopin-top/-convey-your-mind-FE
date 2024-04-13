@@ -167,3 +167,14 @@ export function createScrollBy() {
 export function removeScrollBy() {
   delete (window as any).scrollBy
 }
+
+export function createRandomUUID(randomValue: string = "random") {
+  Object.defineProperty(window.crypto, "randomUUID", {
+    value: jest.fn(() => randomValue),
+    configurable: true,
+  })
+}
+
+export function removeRandomUUID() {
+  delete (window.crypto as {randomUUID: any}).randomUUID
+}

@@ -17,7 +17,7 @@ jest.mock("react", () => ({
   useEffect: jest.fn(),
 }))
 
-describe("useCanvas hook", () => {
+describe("useCanvas", () => {
   beforeEach(() => {
     ;(window as any).visualViewport = {
       width: 0,
