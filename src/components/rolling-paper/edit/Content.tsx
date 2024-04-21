@@ -10,7 +10,7 @@ type TProps = {
   isBottomSheetOpen: boolean
   type: typeof TEXT_CONTENT | typeof IMAGE_CONTENT
   isSenderDisabled: boolean
-  handleSetIsSenderDisabled: () => void
+  handleIsSenderDisabled: () => void
   sender: string
   handleSender: (event: TInputChangeEvent) => void
   onClose: () => void
@@ -21,7 +21,7 @@ const Content = ({
   isBottomSheetOpen,
   type,
   isSenderDisabled,
-  handleSetIsSenderDisabled,
+  handleIsSenderDisabled,
   sender,
   handleSender,
   onClose,
@@ -64,7 +64,7 @@ const Content = ({
             id={`toggle-${type}`}
             hidden
             checked={!isSenderDisabled}
-            onChange={handleSetIsSenderDisabled}
+            onChange={handleIsSenderDisabled}
           />
           <label htmlFor={`toggle-${type}`} className="switch mt-1">
             <span />

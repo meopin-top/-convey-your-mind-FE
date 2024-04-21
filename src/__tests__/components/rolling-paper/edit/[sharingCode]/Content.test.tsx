@@ -16,7 +16,7 @@ const Content = ({isSenderDisabled}: {isSenderDisabled: boolean}) => {
         type="text"
         sender=""
         isSenderDisabled={isSenderDisabled}
-        handleSetIsSenderDisabled={jest.fn()}
+        handleIsSenderDisabled={jest.fn()}
         handleSender={jest.fn()}
         onClose={jest.fn()}
       />
