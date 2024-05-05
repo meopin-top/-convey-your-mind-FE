@@ -26,7 +26,7 @@ const TextContent = ({isBottomSheetOpen, onClose, onComplete}: TProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  function handleSetIsSenderDisabled() {
+  function handleIsSenderDisabled() {
     setIsSenderDisabled(!isSenderDisabled)
   }
 
@@ -51,7 +51,7 @@ const TextContent = ({isBottomSheetOpen, onClose, onComplete}: TProps) => {
       isBottomSheetOpen={isBottomSheetOpen}
       type={TEXT_CONTENT}
       isSenderDisabled={isSenderDisabled}
-      handleSetIsSenderDisabled={handleSetIsSenderDisabled}
+      handleIsSenderDisabled={handleIsSenderDisabled}
       sender={sender}
       handleSender={handleSender}
       onClose={closeBottomSheet}
@@ -71,7 +71,7 @@ const TextContent = ({isBottomSheetOpen, onClose, onComplete}: TProps) => {
           됩니다!
         </span>
         <button
-          className="confirm radius-lg shadow-md"
+          className="confirm mb-2 radius-lg shadow-md"
           disabled={isNotFinished}
           onClick={finishInput}
         >

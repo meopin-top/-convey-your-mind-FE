@@ -11,16 +11,16 @@ jest.mock("../../../../../components/rolling-paper/edit/Content.tsx", () => ({
   __esModule: true,
   default: ({
     children,
-    handleSetIsSenderDisabled,
+    handleIsSenderDisabled,
     handleSender,
   }: {
     children: ReactNode
-    handleSetIsSenderDisabled: () => void
+    handleIsSenderDisabled: () => void
     handleSender: (event: TInputChangeEvent) => void
   }) => (
     <>
       {children}
-      <button onClick={handleSetIsSenderDisabled} data-testid="sender disable">
+      <button onClick={handleIsSenderDisabled} data-testid="sender disable">
         sender disable
       </button>
       <input type="text" onChange={handleSender} data-testid="sender input" />
