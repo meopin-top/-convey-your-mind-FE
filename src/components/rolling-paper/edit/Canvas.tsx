@@ -7,6 +7,12 @@ import useRollingPaperSocket from "@/hooks/use-rolling-paper-socket"
 import useRequest from "@/hooks/use-request"
 import useWheelScroll from "@/hooks/use-wheel-scroll"
 import useCanvas from "@/hooks/use-canvas"
+import {
+  TextPreviewItem,
+  ImagePreviewItem,
+  TextItem,
+  ImageItem,
+} from "@/helpers/canvas"
 import Store from "@/store/rolling-paper"
 import Storage from "@/store/local-storage"
 import type {
@@ -118,51 +124,56 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
   }
 
   function drawTextContent(content: TRollingPaperTextContent) {
-    createContent({
-      content: {
-        sender: content.sender,
-        text: content.text,
-      },
-      position: {
-        pageY: content.y,
-        pageX: content.x,
-      },
-      size: {
-        width: content.width,
-        height: content.height,
-      },
-    })
+    createContent(
+      new TextItem({
+        content: {
+          sender: content.sender,
+          text: content.text,
+        },
+        position: {
+          pageY: content.y,
+          pageX: content.x,
+        },
+        size: {
+          width: content.width,
+          height: content.height,
+        },
+      })
+    )
   }
 
   function drawTextPreviewContent(sender: string, text: string) {
-    createContent({
-      content: {
-        sender,
-        text,
-      },
-      position: {
-        pageY: tooltip.pageY,
-        pageX: tooltip.pageX,
-      },
-      isPreview: true,
-    })
+    createContent(
+      new TextPreviewItem({
+        content: {
+          sender,
+          text,
+        },
+        position: {
+          pageY: tooltip.pageY,
+          pageX: tooltip.pageX,
+        },
+      })
+    )
   }
 
   function drawImageContent(content: TRollingPaperImageContent) {
-    createContent({
-      content: {
-        image: content.image_url,
-        sender: content.sender,
-      },
-      position: {
-        pageY: content.y,
-        pageX: content.x,
-      },
-      size: {
-        width: content.width,
-        height: content.height,
-      },
-    })
+    createContent(
+      new ImageItem({
+        content: {
+          image: content.image_url,
+          sender: content.sender,
+        },
+        position: {
+          pageY: content.y,
+          pageX: content.x,
+        },
+        size: {
+          width: content.width,
+          height: content.height,
+        },
+      })
+    )
   }
 
   function drawImagePreviewContent(
@@ -170,18 +181,19 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
     imageUrl: string,
     size: TRollingPaperContentSize
   ) {
-    createContent({
-      content: {
-        sender,
-        image: imageUrl,
-      },
-      position: {
-        pageY: tooltip.pageY,
-        pageX: tooltip.pageX,
-      },
-      size,
-      isPreview: true,
-    })
+    createContent(
+      new ImagePreviewItem({
+        content: {
+          sender,
+          image: imageUrl,
+        },
+        position: {
+          pageY: tooltip.pageY,
+          pageX: tooltip.pageX,
+        },
+        size,
+      })
+    )
   }
 
   function removeUnsavedContent() {
