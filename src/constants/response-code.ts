@@ -1,4 +1,4 @@
-export const UNAUTHORIZED = 0
+export const UNAUTHORIZED = 0 as const
 
 export const AUTH = {
   SIGN_UP: {
@@ -42,4 +42,9 @@ export const ROLLING_PAPER = {
 export const ACCOUNT_INQUIRY = {
   SUCCESS: 1303,
   FAILURE: 1311,
-}
+} as const
+
+export const IMAGE_UPLOAD = {
+  SUCCESS: 2001,
+  FAILURE: 2011,
+} as const

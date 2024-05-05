@@ -18,8 +18,6 @@ export type TRollingPaperType = {
   text: string
 }
 
-export type TCanvasElement = "textarea" | "img"
-
 export type TStore = {
   toWhom: string
 }
@@ -35,6 +33,8 @@ export type TRollingPaperInformation = {
   owner: boolean
 }
 
+export type TContentType = "text" | "image" | ""
+
 export type TRollingPaperTextContent = {
   user_id: string
   content_id: string
@@ -43,10 +43,8 @@ export type TRollingPaperTextContent = {
   y: number
   width: number
   height: number
-  text: {
-    text: string
-    sender: string
-  }
+  text: string
+  sender: string
 }
 
 export type TRollingPaperImageContent = {
@@ -58,6 +56,12 @@ export type TRollingPaperImageContent = {
   width: number
   height: number
   image_url: string
+  sender: string
+}
+
+export type TRollingPaperContentSize = {
+  width: number
+  height: number
 }
 
 export type TRollingPaperContent =

@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react"
-import type {TPosition} from "@/@types/rolling-paper"
+import type {TPosition, TRollingPaperContentSize} from "@/@types/rolling-paper"
 
 type TCanvasComponent = HTMLDivElement | null
 
@@ -22,15 +22,18 @@ export default function useCanvas() {
     return document.querySelector(".root-wrapper") as HTMLDivElement
   }
 
+  // TODO: content, isPreview에 따라 클래스 변경한 뒤 리팩토링 필요
   function createContent({
     content,
     position,
     size,
     isPreview = false,
   }: {
-    content: {sender: string; text: string}
+    content:
+      | {sender: string; text: string; image?: null}
+      | {sender: string; text?: null; image: string}
     position: TPosition
-    size?: {width: number; height: number}
+    size?: TRollingPaperContentSize
     isPreview?: boolean
   }) {
     let sizable = false
@@ -50,7 +53,7 @@ export default function useCanvas() {
     const contentPreview = document.createElement("div")
 
     setStyle()
-    setInnerText()
+    setInner()
     setEvent()
     show()
     positionSender(contentPreview, sender)
@@ -69,12 +72,14 @@ export default function useCanvas() {
         ? `${size.width}px`
         : `${(visualViewport?.width ?? 100) / 4}px`
       contentPreview.style.height = size ? `${size.height}px` : "unset"
-      contentPreview.classList.add("text-content")
+      contentPreview.classList.add("paper-content")
       contentPreview.classList.add("edit")
-      contentPreview.classList.add("pt-2")
-      contentPreview.classList.add("pr-2")
-      contentPreview.classList.add("pb-4")
-      contentPreview.classList.add("pl-2")
+      if (content.text) {
+        contentPreview.classList.add("pt-2")
+        contentPreview.classList.add("pr-2")
+        contentPreview.classList.add("pb-4")
+        contentPreview.classList.add("pl-2")
+      }
 
       sender.classList.add("sender")
       sender.classList.add("pt-1")
@@ -83,13 +88,19 @@ export default function useCanvas() {
       sender.classList.add("pl-1")
     }
 
-    function setInnerText() {
+    function setInner() {
       if (isPreview) {
         confirmation.innerText = "V"
         close.innerText = "X"
       }
 
-      contentPreview.innerText = content.text
+      if (content.text) {
+        contentPreview.innerText = content.text
+      }
+      if (content.image) {
+        // contentPreview 드래그 이벤트를 간단히 구현하기 위해 img 엘리먼트를 생성하지 않음
+        contentPreview.style.backgroundImage = `url("${content.image}")`
+      }
       ;(sender as HTMLSpanElement).innerText = content.sender
     }
 
@@ -121,7 +132,7 @@ export default function useCanvas() {
             }
           }
         })
-        resize.addEventListener("mousemove", ({pageX, pageY}) => {
+        document.addEventListener("mousemove", ({pageX, pageY}) => {
           if (sizable) {
             contentPreview.style.height = `${
               pageY - dragOffsetPosition.pageY
@@ -149,7 +160,7 @@ export default function useCanvas() {
             }
           }
         )
-        contentPreview.addEventListener("mousemove", ({pageX, pageY}) => {
+        document.addEventListener("mousemove", ({pageX, pageY}) => {
           if (draggable) {
             contentPreview.style.top = `${pageY - dragOffsetPosition.pageY}px`
             contentPreview.style.left = `${pageX - dragOffsetPosition.pageX}px`

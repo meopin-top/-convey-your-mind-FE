@@ -12,6 +12,8 @@ import Storage from "@/store/local-storage"
 import type {
   TRollingPaperImageContent,
   TRollingPaperTextContent,
+  TRollingPaperContentSize,
+  TContentType,
 } from "@/@types/rolling-paper"
 
 const Portal = dynamic(() => import("../../Portal"), {
@@ -32,10 +34,12 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
     isOpen: boolean
     pageY: number
     pageX: number
+    type: TContentType
   }>({
     isOpen: false,
     pageY: 0,
     pageX: 0,
+    type: "",
   })
   const [isTextBottomSheetOpen, setIsTextBottomSheetOpen] = useState(false) // 쿼리스트링을 이용하여 바텀 시트 open/close를 조절하면, 바텀 시트 open 시 자동으로 scrollY가 0이 됨
   const [isImageBottomSheetOpen, setIsImageBottomSheetOpen] = useState(false)
@@ -75,6 +79,7 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
         isOpen: false,
         pageY: event.pageY,
         pageX: event.pageX,
+        type: tooltip.type,
       })
 
       return
@@ -84,14 +89,16 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
       isOpen: !tooltip.isOpen,
       pageY: event.pageY,
       pageX: event.pageX,
+      type: tooltip.type,
     })
   }
 
-  function closeTooltip() {
+  function closeTooltip(type: TContentType = tooltip.type) {
     setTooltip({
       isOpen: false,
       pageY: tooltip.pageY,
       pageX: tooltip.pageX,
+      type,
     })
   }
 
@@ -102,14 +109,19 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
 
   function openTextContentBottomSheet() {
     setIsTextBottomSheetOpen(true)
-    closeTooltip()
+    closeTooltip("text")
+  }
+
+  function openImageContentBottomSheet() {
+    setIsImageBottomSheetOpen(true)
+    closeTooltip("image")
   }
 
   function drawTextContent(content: TRollingPaperTextContent) {
     createContent({
       content: {
-        sender: content.text.sender,
-        text: content.text.text,
+        sender: content.sender,
+        text: content.text,
       },
       position: {
         pageY: content.y,
@@ -137,12 +149,39 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
   }
 
   function drawImageContent(content: TRollingPaperImageContent) {
-    console.warn(content)
+    createContent({
+      content: {
+        image: content.image_url,
+        sender: content.sender,
+      },
+      position: {
+        pageY: content.y,
+        pageX: content.x,
+      },
+      size: {
+        width: content.width,
+        height: content.height,
+      },
+    })
   }
 
-  function openImageContentBottomSheet() {
-    setIsImageBottomSheetOpen(true)
-    closeTooltip()
+  function drawImagePreviewContent(
+    sender: string,
+    imageUrl: string,
+    size: TRollingPaperContentSize
+  ) {
+    createContent({
+      content: {
+        sender,
+        image: imageUrl,
+      },
+      position: {
+        pageY: tooltip.pageY,
+        pageX: tooltip.pageX,
+      },
+      size,
+      isPreview: true,
+    })
   }
 
   function removeUnsavedContent() {
@@ -158,26 +197,58 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
     setIsUnsavedContentAlerting(false)
   }
 
-  function sendTextContent() {
+  function sendContent() {
     if (!contentPreview) {
       return
     }
 
+    if (tooltip.type === "text") {
+      sendTextContent()
+    } else if (tooltip.type === "image") {
+      sendImageContent()
+    } else {
+      console.error("invalid send content type")
+    }
+  }
+
+  function sendTextContent() {
     const separator = "\nV\nX\n"
-    const [text, sender] = contentPreview.innerText.split(separator)
+    const [text, sender] = contentPreview!.innerText.split(separator)
 
     send({
       user_id:
         Storage.get("nickName") ?? (Storage.get("fingerprint") as string),
       content_type: "text",
-      x: contentPreview.getBoundingClientRect().x,
-      y: contentPreview.getBoundingClientRect().y,
-      width: contentPreview.getBoundingClientRect().width,
-      height: contentPreview.getBoundingClientRect().height,
-      text: {
-        text,
-        sender,
-      },
+      x: contentPreview!.getBoundingClientRect().x,
+      y: contentPreview!.getBoundingClientRect().y,
+      width: contentPreview!.getBoundingClientRect().width,
+      height: contentPreview!.getBoundingClientRect().height,
+      text,
+      sender,
+    })
+    closeConfirmAlerting()
+    removeContent()
+  }
+
+  function sendImageContent() {
+    const separator = "V\nX\n"
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, sender] = contentPreview!.innerText.split(separator)
+    const image = contentPreview!.style.backgroundImage.slice(
+      5,
+      contentPreview!.style.backgroundImage.length - 2
+    )
+
+    send({
+      user_id:
+        Storage.get("nickName") ?? (Storage.get("fingerprint") as string),
+      content_type: "image",
+      x: contentPreview!.getBoundingClientRect().x,
+      y: contentPreview!.getBoundingClientRect().y,
+      width: contentPreview!.getBoundingClientRect().width,
+      height: contentPreview!.getBoundingClientRect().height,
+      image_url: image,
+      sender,
     })
     closeConfirmAlerting()
     removeContent()
@@ -198,7 +269,7 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
           onMouseDownCapture={handleMouseDown}
           onMouseMoveCapture={handleMouseMove}
           onMouseUpCapture={handleMouseUp}
-          onClickCapture={closeTooltip}
+          onClickCapture={() => closeTooltip()}
         >
           {toWhom}
         </div>
@@ -232,6 +303,7 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
         <ImageContent
           isBottomSheetOpen={isImageBottomSheetOpen}
           onClose={closeBottomSheet}
+          onComplete={drawImagePreviewContent}
         />
       </Store.Provider>
 
@@ -264,7 +336,7 @@ const Canvas = ({projectId, toWhom, type}: TProps) => {
               }
               defaultButton="취소"
               additionalButton="확인"
-              onClick={sendTextContent}
+              onClick={sendContent}
             />
             <FlowAlert
               isAlerting={isRemovalAlerting}

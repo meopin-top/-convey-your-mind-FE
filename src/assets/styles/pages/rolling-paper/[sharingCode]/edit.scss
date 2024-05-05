@@ -76,14 +76,15 @@
     }
   }
 
-  .text-content,
-  .image-content {
+  .paper-content {
     position: absolute;
 
     font-size: 24px;
     font-family: "hanna-air", "hanna-air fallback";
 
     background-color: $BOX_COLOR;
+    background-repeat: no-repeat;
+    background-size: cover;
 
     &.edit {
       $RADIUS: 10px;
@@ -231,6 +232,32 @@
           }
         }
 
+        .image-edit-goback {
+          position: absolute;
+          top: 8px;
+
+          font-size: 16px;
+          font-weight: 700;
+        }
+
+        .image-edit-title {
+          text-align: center;
+        }
+
+        .confirm {
+          @include fill-dark-4;
+
+          width: 100%;
+          height: 56px;
+          font-size: 15px;
+          transition: background-color 0.1s linear;
+          cursor: pointer;
+
+          &:disabled {
+            background-color: #d9d9d9;
+          }
+        }
+
         .f-center {
           flex-direction: column;
 
@@ -238,7 +265,12 @@
 
           text-align: center;
 
-          .text {
+          &.image-selected {
+            height: unset;
+          }
+
+          .text,
+          .image {
             width: 100%;
             height: 100%;
           }
@@ -246,20 +278,6 @@
           .information {
             font-family: "hanna-air", "hanna-air fallback";
             font-size: 13px;
-          }
-
-          .confirm {
-            @include fill-dark-4;
-
-            width: 100%;
-            height: 56px;
-            font-size: 15px;
-            transition: background-color 0.1s linear;
-            cursor: pointer;
-
-            &:disabled {
-              background-color: #d9d9d9;
-            }
           }
         }
       }
