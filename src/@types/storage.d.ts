@@ -1,1 +1,1 @@
-export type TLocalStorageKey = "nickName" | "profile"
+export type TLocalStorageKey = "nickName" | "profile" | "fingerprint"

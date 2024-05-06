@@ -1,5 +1,8 @@
+"use client"
+
 import {useState, useEffect} from "react"
 
+// 테스트 필요 X
 export default function usePortal() {
   const [portal, setPortal] = useState<HTMLElement | null>(null)
 

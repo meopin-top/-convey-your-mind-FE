@@ -152,3 +152,29 @@ export function createOffscreenCanvas() {
 export function removeOffscreenCanvas() {
   delete (window as {OffscreenCanvas: any}).OffscreenCanvas
 }
+
+export function removeVisualViewport() {
+  delete (window as any).visualViewport
+}
+
+export function createScrollBy() {
+  Object.defineProperty(window, "scrollBy", {
+    value: jest.fn(),
+    configurable: true,
+  })
+}
+
+export function removeScrollBy() {
+  delete (window as any).scrollBy
+}
+
+export function createRandomUUID(randomValue: string = "random") {
+  Object.defineProperty(window.crypto, "randomUUID", {
+    value: jest.fn(() => randomValue),
+    configurable: true,
+  })
+}
+
+export function removeRandomUUID() {
+  delete (window.crypto as {randomUUID: any}).randomUUID
+}

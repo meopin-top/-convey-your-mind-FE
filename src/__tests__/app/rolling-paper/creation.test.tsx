@@ -8,7 +8,7 @@ const PROGRESS = "진행 상태"
 const WHOM = "받는 사람"
 const PERSONNEL = "참여 인원"
 const TYPES = "롤링페이퍼 타입"
-const SHARING_CODE = "공유 코드"
+const SHARING_CODE = "공유코드"
 const SUBMIT_BUTTON = "제출 버튼"
 
 jest.mock("../../../components/LoginChecker.tsx", () => ({

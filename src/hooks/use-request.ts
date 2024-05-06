@@ -83,9 +83,14 @@ export default function useRequest() {
     }
   }
 
+  function resetError() {
+    setError(null)
+  }
+
   return {
     error,
     isLoading,
     request,
+    resetError,
   }
 }

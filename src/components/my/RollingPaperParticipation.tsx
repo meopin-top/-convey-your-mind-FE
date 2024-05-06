@@ -89,7 +89,7 @@ const RollingPaperParticipation = () => {
         롤링페이퍼 새로 시작하기
       </Link>
       <span className="shared-code-description">
-        롤링페이퍼의 공유 코드를 알고 계신가요?
+        롤링페이퍼의 공유코드를 알고 계신가요?
       </span>
       <div className="shared-code f-center">
         <input

@@ -10,7 +10,7 @@ import {
   Types,
   DueDate,
   SharingCode,
-  SubmitButton
+  SubmitButton,
 } from "@/components/rolling-paper/creation"
 import {
   Provider,
@@ -18,7 +18,7 @@ import {
   PersonnelProvider,
   TypeProvider,
   DDayProvider,
-  SharingCodeProvider
+  SharingCodeProvider,
 } from "@/components/rolling-paper/creation/Context"
 
 const Creation = () => {
@@ -32,14 +32,16 @@ const Creation = () => {
       <div className="creation root-wrapper">
         <Header />
 
-        <Reducer components={[
-          Provider,
-          WhomProvider,
-          PersonnelProvider,
-          TypeProvider,
-          DDayProvider,
-          SharingCodeProvider,
-        ]}>
+        <Reducer
+          components={[
+            Provider,
+            WhomProvider,
+            PersonnelProvider,
+            TypeProvider,
+            DDayProvider,
+            SharingCodeProvider,
+          ]}
+        >
           <main className="main">
             <h2 className="title">롤링페이퍼 시작하기</h2>
             <Progress totalCount={TOTAL_STEP} />

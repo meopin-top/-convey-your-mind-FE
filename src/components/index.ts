@@ -1,5 +1,6 @@
 import Alert from "./Alert"
 import BottomSheet from "./BottomSheet"
+import Fingerprint from "./Fingerprint"
 import FlowAlert from "./FlowAlert"
 import Header from "./Header"
 import Loading from "./Loading"
@@ -16,6 +17,7 @@ import User from "./User"
 export {
   Alert,
   BottomSheet,
+  Fingerprint,
   FlowAlert,
   Header,
   Loading,

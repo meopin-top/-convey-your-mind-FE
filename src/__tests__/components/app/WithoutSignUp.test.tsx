@@ -73,9 +73,11 @@ describe("WithoutSignUp", () => {
     jest.clearAllMocks()
   })
 
-  it("인풋과 버튼을 올바르게 렌더링한다.", () => {
+  it("인풋과 버튼을 올바르게 렌더링한다.", async () => {
     // given, when
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const sharedCodeInput = screen.getByPlaceholderText(
       "공유코드로 바로 편지쓰기"
@@ -89,9 +91,11 @@ describe("WithoutSignUp", () => {
     expect(participationButton).toBeInTheDocument()
   })
 
-  it("공유코드 state를 올바르게 변경한다.", () => {
+  it("공유코드 state를 올바르게 변경한다.", async () => {
     // given
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const sharedCodeInput = screen.getByPlaceholderText(
       "공유코드로 바로 편지쓰기"
@@ -105,9 +109,11 @@ describe("WithoutSignUp", () => {
     expect(sharedCodeInput.value).toEqual(value)
   })
 
-  it("입력 버튼 disabled 상태는 isLoading 상태와 동일하다.", () => {
+  it("입력 버튼 disabled 상태는 isLoading 상태와 동일하다.", async () => {
     // given, when
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -117,9 +123,11 @@ describe("WithoutSignUp", () => {
     expect(participationButton).not.toBeDisabled()
   })
 
-  it("입력 버튼 클릭 인터렉션이 없다면 FlowAlert는 렌더링되지 않는다.", () => {
+  it("입력 버튼 클릭 인터렉션이 없다면 FlowAlert는 렌더링되지 않는다.", async () => {
     // given, when
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const flowAlert = screen.getByText(/FlowAlert close/)
 
@@ -127,9 +135,11 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 아무 공유 코드를 입력하지 않았다면 '공유코드나 URL을 입력해주세요'라는 문구가 포함된 FlowAlert가 노출된다.", () => {
+  it("입력 버튼 클릭 시 아무 공유코드를 입력하지 않았다면 '공유코드나 URL을 입력해주세요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
     // given
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -144,13 +154,15 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 참여 가능하지 않은 프로젝트의 공유 코드라면 '유효하지 않은 공유코드/URL입니다'라는 문구가 포함된 FlowAlert 노출된다.", async () => {
+  it("입력 버튼 클릭 시 참여 가능하지 않은 프로젝트의 공유코드라면 '유효하지 않은 공유코드/URL입니다'라는 문구가 포함된 FlowAlert 노출된다.", async () => {
     // then
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_FAILURE,
     })
 
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -171,13 +183,15 @@ describe("WithoutSignUp", () => {
     expect(flowAlert).toBeInTheDocument()
   })
 
-  it("입력 버튼 클릭 시 참여 가능한 프로젝트의 공유 코드라면 '로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
+  it("입력 버튼 클릭 시 참여 가능한 프로젝트의 공유코드라면 '로그인 후 더욱 편리하게 사용할 수 있어요'라는 문구가 포함된 FlowAlert가 노출된다.", async () => {
     // given
     ;(requestMock as jest.Mock).mockResolvedValueOnce({
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -205,7 +219,9 @@ describe("WithoutSignUp", () => {
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -237,7 +253,9 @@ describe("WithoutSignUp", () => {
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -263,7 +281,9 @@ describe("WithoutSignUp", () => {
       expect(setTabMock).toHaveBeenCalledTimes(1)
       expect(setTabMock).toHaveBeenCalledWith("signIn")
       expect(setRedirectToMock).toHaveBeenCalledTimes(1)
-      expect(setRedirectToMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
+      expect(setRedirectToMock).toHaveBeenCalledWith(
+        `${ROUTE.ROLLING_PAPER_EDIT}/test`
+      )
     })
   })
 
@@ -277,7 +297,9 @@ describe("WithoutSignUp", () => {
       code: ROLLING_PAPER.INVITATION_CODE.QUERY_SUCCESS,
     })
 
-    render(<WithoutSignUp />)
+    await waitFor(() => {
+      render(<WithoutSignUp />)
+    })
 
     const participationButton = screen.getByRole("button", {
       name: "입력",
@@ -299,7 +321,9 @@ describe("WithoutSignUp", () => {
 
     // then
     await waitFor(() => {
-      expect(routerPushMock).toHaveBeenCalledWith(ROUTE.ROLLING_PAPER_EDIT)
+      expect(routerPushMock).toHaveBeenCalledWith(
+        `${ROUTE.ROLLING_PAPER_EDIT}/test`
+      )
     })
   })
 })

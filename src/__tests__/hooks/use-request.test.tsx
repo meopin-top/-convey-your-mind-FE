@@ -1,5 +1,4 @@
 import {fireEvent, render, screen, waitFor} from "@testing-library/react"
-import {renderHook} from "@testing-library/react-hooks" // react 17 warning 발생
 import useRequest from "@/hooks/use-request"
 import useLogOut from "@/hooks/use-log-out"
 import {
@@ -23,7 +22,7 @@ jest.mock("../../hooks/use-log-out.ts")
 const testid = "error-box"
 
 function TestComponent() {
-  const {isLoading, error, request} = useRequest()
+  const {isLoading, error, request, resetError} = useRequest()
 
   async function getDataMock() {
     await request({
@@ -36,6 +35,7 @@ function TestComponent() {
       <button onClick={getDataMock} disabled={isLoading}>
         버튼
       </button>
+      <button onClick={resetError}>에러 리셋 버튼</button>
       {error ? <div data-testid={testid}>에러 박스</div> : <></>}
     </>
   )
@@ -57,11 +57,14 @@ describe("useRequest", () => {
     createDateMock({})
     createFetchMock(jest.fn().mockResolvedValueOnce(undefined))
 
-    const {result} = renderHook(() => useRequest())
+    render(<TestComponent />)
 
     // then
-    expect(result.current.error).toBeNull()
-    expect(result.current.isLoading).toBe(false)
+    const button = screen.getByRole("button", {name: "버튼"})
+    const errorBox = screen.queryByTestId(testid)
+
+    expect(button).toBeInTheDocument()
+    expect(errorBox).not.toBeInTheDocument()
   })
 
   it("request 호출 시 에러가 없다면 isLoading true를 반환한 뒤 request 끝난 이후 isLoading false를 반환한다.", async () => {
@@ -73,7 +76,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // then
     expect(button).not.toBeDisabled()
@@ -98,7 +103,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // then
     expect(button).not.toBeDisabled()
@@ -138,7 +145,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // when
     fireEvent.click(button)
@@ -161,7 +170,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // when
     fireEvent.click(button)
@@ -174,7 +185,9 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(abortMock).toHaveBeenCalledTimes(1)
+    })
   })
 
   it("500ms를 넘은 간격으로 같은 API 경로로 요청이 발생하면 이전 API 호출을 중단하지 않는다.", async () => {
@@ -186,7 +199,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // when
     fireEvent.click(button)
@@ -199,7 +214,9 @@ describe("useRequest", () => {
     fireEvent.click(button)
 
     // then
-    expect(abortMock).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(abortMock).not.toHaveBeenCalled()
+    })
   })
 
   it("500번대 에러가 반환되면 '서버 측 오류'가 콘솔에 출력된다.", async () => {
@@ -210,7 +227,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // when
     fireEvent.click(button)
@@ -229,7 +248,9 @@ describe("useRequest", () => {
 
     render(<TestComponent />)
 
-    const button = screen.getByRole("button") as HTMLButtonElement
+    const button = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
 
     // when
     fireEvent.click(button)
@@ -238,5 +259,41 @@ describe("useRequest", () => {
     await waitFor(() => {
       expect(consoleErrorMock).toHaveBeenCalledWith("데이터 fetch 오류")
     })
+  })
+
+  it("에러 발생 시 에러 처리 후 에러를 리셋하면 에러는 falsy가 된다.", async () => {
+    // given
+    createFetchMock(jest.fn().mockResolvedValue({ok: false, status: 500}))
+    createDateMock({})
+
+    render(<TestComponent />)
+
+    const submitButton = screen.getByRole("button", {
+      name: "버튼",
+    }) as HTMLButtonElement
+
+    // when
+    fireEvent.click(submitButton)
+
+    // then
+    let errorBox: HTMLElement | null
+
+    await waitFor(() => {
+      errorBox = screen.getByTestId(testid)
+
+      expect(errorBox).toBeInTheDocument()
+    })
+
+    // when
+    const resetButton = screen.getByRole("button", {
+      name: "에러 리셋 버튼",
+    }) as HTMLButtonElement
+
+    fireEvent.click(resetButton)
+
+    // then
+    errorBox = screen.queryByTestId(testid)
+
+    expect(errorBox).not.toBeInTheDocument()
   })
 })

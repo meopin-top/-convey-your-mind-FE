@@ -33,9 +33,14 @@ export default function useImageCrop(aspect: number) {
         ".ReactCrop__crop-mask"
       )
 
+      const realImageWidth =
+        cropRef.current.componentRef.current?.getBoundingClientRect().width
       const realImageHeight =
         cropRef.current.componentRef.current?.getBoundingClientRect().height
 
+      if (realImageWidth) {
+        cropMask?.setAttribute("width", realImageWidth.toString())
+      }
       if (realImageHeight) {
         cropMask?.setAttribute("height", realImageHeight.toString())
       }
@@ -105,7 +110,7 @@ export default function useImageCrop(aspect: number) {
       0,
       0,
       offscreen.width,
-      offscreen.width
+      offscreen.height
     )
 
     const blob = await offscreen.convertToBlob({
