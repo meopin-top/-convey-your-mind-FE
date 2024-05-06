@@ -1,8 +1,9 @@
 import {render, screen, fireEvent, waitFor} from "@testing-library/react"
 import Component from "@/components/rolling-paper/edit/Canvas"
-import type {TProps as TPortalProps} from "@/components/Portal"
 import {FakeMouseEvent} from "@/__mocks__/event"
 import {removeVisualViewport} from "@/__mocks__/window"
+import type {TProps as TPortalProps} from "@/components/Portal"
+import type {TRollingPaperContentSize} from "@/@types/rolling-paper"
 
 const requestMock = jest.fn()
 
@@ -56,8 +57,31 @@ jest.mock(
   "../../../../../components/rolling-paper/edit/ImageContent.tsx",
   () => ({
     __esModule: true,
-    default: ({isBottomSheetOpen}: {isBottomSheetOpen: boolean}) => (
-      <div>image bottom sheet {isBottomSheetOpen ? "open" : "close"} </div>
+    default: ({
+      isBottomSheetOpen,
+      onComplete,
+    }: {
+      isBottomSheetOpen: boolean
+      onComplete: (
+        sender: string,
+        imageUrl: string,
+        size: TRollingPaperContentSize
+      ) => void
+    }) => (
+      <>
+        <div>image bottom sheet {isBottomSheetOpen ? "open" : "close"} </div>{" "}
+        <button
+          type="button"
+          onClick={() =>
+            onComplete("sender", "blob:http://localhost:3000/abcdefg", {
+              width: 100,
+              height: 100,
+            })
+          }
+        >
+          draw image preview
+        </button>
+      </>
     ),
   })
 )
@@ -188,7 +212,23 @@ describe("Canvas", () => {
   })
 
   it("image contentPreview가 있을 때 캔버스 빈 화면을 클릭하면 입력한 컨텐츠가 사라질 수 있다는 경고 얼럿이 노출된다.", async () => {
-    // TODO
+    // given
+    await waitFor(() => {
+      render(<Canvas />)
+    })
+
+    const button = screen.getByRole("button", {name: "draw image preview"})
+    const canvas = document.querySelector(`.type-${TYPE}`) as HTMLDivElement
+
+    fireEvent.click(button)
+
+    // when
+    fireEvent.click(canvas)
+
+    // then
+    const flowAlert = screen.getByText(/편집 중인 컨텐츠는 저장되지 않습니다./)
+
+    expect(flowAlert).toBeInTheDocument()
   })
 
   it("입력한 컨텐츠가 사라질 수 있다는 경고 얼럿의 '취소' 버튼을 누르면 경고 얼럿이 닫힌다.", async () => {

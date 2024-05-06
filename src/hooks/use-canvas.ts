@@ -24,7 +24,7 @@ export default function useCanvas() {
       onClickConfirmation: () => setIsConfirmAlerting(true),
       onClickClose: () => setIsRemovalAlerting(true),
     })
-    item.show(getWrapper())
+    item.show(wrapper || getWrapper())
     item.positionSender()
     setContentPreview(item.getContentPreview())
   }
